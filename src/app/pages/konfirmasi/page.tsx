@@ -1,156 +1,114 @@
 "use client";
-
+import { useEffect } from "react";
 import CustomLayout from "@/app/_components/layout";
-import { useEffect, useState } from "react";
 import Button from "@/app/_components/_partials/button";
-import { useRouter } from "next/navigation";
-// import Select from "@/app/_components/_partials/select";
-import { toast } from "react-toastify";
-import { validateFormDataKonfirmasi } from "@/app/_backend/_utils/validationAlert";
 import Label from "@/app/_components/_partials/label";
 import Input from "@/app/_components/_partials/input";
 import PaymentOption from "@/app/_components/_partials/paymentOption";
-import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
-import { defaultFormData } from "@/app/_backend/_utils/formData";
 import BottomSheet from "@/app/_components/_partials/sheet";
 import Modal from "@/app/_components/_partials/modal";
 import PrivacyPolicy from "@/app/_components/_partials/privacyPolicy";
+import { useConfirmationPageHooks } from "@/app/hooks/useConfirmationPageHook";
+import { useFormDataStore } from "@/app/hooks/useFormDataStore";
+import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
+import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
+import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
+import { useGradeDataStore } from "@/app/hooks/useGradeDataStore";
 
 export default function KonfirmasiPage() {
-  const router = useRouter();
-  const [formData, setFormData] = useState(defaultFormData)
-  const [accepted, setAccepted] = useState(false);
-  const [akomodasi, setAkomodasi] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const { formData, updateField, modalTosIsOpen, setModalTosIsOpen } = useFormDataStore();
 
+  const { 
+    handleTosConfirmation, 
+    akomodasi, 
+    errors, 
+    isOpen, 
+    setIsOpen, 
+    router, 
+    handleSubmit, 
+    capitalizeFirstLetter, 
+    handleVoucherChange, 
+    calculateVoucher,
+    isSubmitting
+  } = useConfirmationPageHooks();
+
+  const { selectedCourse } = useCourseDataStore();
+  const { selectedPickup, selectedLocation } = useAccomodationDataStore();
+  const { selectedGrade } = useGradeDataStore();
 
   useEffect(() => {
-    const savedData = sessionStorage.getItem("formData");
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setFormData(parsedData);
+    // Pastikan semua nilai tersedia sebelum menghitung
+    if (selectedCourse && formData) {
+      const courseFee = selectedCourse.price || formData.pembayaranCourse || 0;
+      const pickupFee = formData.pembayaranPenjemputan || 0;
+      const adminFee = Number(process.env.NEXT_PUBLIC_ADMIN_FEE) || 0;
 
-      const isAkomodasi = Boolean(
-        parsedData.cabang === "PARE - JATIM" &&
-        parsedData.lokasijemput !== "ga_perlu_dijemput" &&
-        parsedData.kendaraan &&
-        parsedData.penumpang
-      );
+      // Update pembayaran course jika belum ada
+      if (formData.pembayaranCourse !== courseFee) {
+        updateField("pembayaranCourse", courseFee);
+      }
 
-      setAkomodasi(isAkomodasi);
+      // Update pembayaran penjemputan jika belum ada
+      if (formData.pembayaranPenjemputan !== pickupFee) {
+        updateField("pembayaranPenjemputan", pickupFee);
+      }
+
+      // Update total pembayaran
+      const totalPayment = courseFee + pickupFee + adminFee;
+      updateField("pembayaran", totalPayment);
+
+      if(formData.diskonNominal > 0){
+        calculateVoucher(formData.diskonNominal);
+      }
+
+      if(formData.diskonNominal === 0){
+        calculateVoucher(0);
+      }
     }
-  }, []);
+  }, [selectedCourse, selectedPickup, formData.pembayaranCourse, formData.pembayaranPenjemputan]);
 
-  // Handle submit form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const result = konfirmasiSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: { [key: string]: string } = {};
-      result.error.errors.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
-      });
-      setErrors(fieldErrors);
-    } else {
-      setErrors({});
-      console.log("Validasi Berhasil:", formData);
-    }
-
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(formData));
-
-    // Redirect ke halaman thankyou
-    const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
-
-    if (isValid) {
-      router.push("/pages/thankyou")
-    } else {
-      const missingLabels = missingFields.map((item) => item.label);
-      toast.error(
-        "Mohon lengkapi data berikut: " + missingLabels.join(", ")
-      );
-    }
-  };
-
-
-  function capitalizeFirstLetter(val: string | number | undefined) {
-    if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-
-    // Update state secara asinkron dan sinkronkan dengan sessionStorage
-    setFormData((oldFormData) => {
-      const updatedFormData = { ...oldFormData, [name]: value };
-      sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-      return updatedFormData;
-    });
-  };
-
-  const handlePayment = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    setErrors((prevErrors) => ({ ...prevErrors, pembayaran: "" }));
-
-    const updatedFormData = { ...formData, pembayaran: e.target.value };
-    setFormData(updatedFormData);
-    sessionStorage.setItem("formData", JSON.stringify(updatedFormData));
-  };
-
-  const pembayaran = [
+  const metode_pembayaran = [
     {
-      id: "bsm",
-      value: "Bank Syariah Indonesia",
-      checked: formData.pembayaran === "Bank Syariah Indonesia",
+      id: "1",
+      value: "bsm",
+      checked: formData.metode_pembayaran === "bsm",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/website/img/merchant_logos/idn_bsi.png",
       label: "Bank Syariah Indonesia",
     },
     {
-      id: "prismalink_bca",
-      value: "Bank BCA",
-      checked: formData.pembayaran === "Bank BCA",
+      id: "2",
+      value: "prismalink_bca",
+      checked: formData.metode_pembayaran === "prismalink_bca",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bca.png",
       label: "Bank BCA",
     },
     {
-      id: "jatelindo",
-      value: "Bank Mandiri",
-      checked: formData.pembayaran === "Bank Mandiri",
+      id: "3",
+      value: "prismalink_mandiri",
+      checked: formData.metode_pembayaran === "prismalink_mandiri",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_mandiri.png",
       label: "Bank Mandiri",
     },
     {
-      id: "bni",
+      id: "4",
       value: "BNI",
-      checked: formData.pembayaran === "BNI",
+      checked: formData.metode_pembayaran === "BNI",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bni.png",
       label: "BNI",
     },
     {
-      id: "bri",
+      id: "5",
       value: "BRI",
-      checked: formData.pembayaran === "BRI",
+      checked: formData.metode_pembayaran === "BRI",
       icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bri.png",
       label: "BRI",
     },
   ];
 
-
-
   return (
-    <CustomLayout
-      mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀"
-      line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruDiLC"
-    >
-
-      <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? 'lg:space-y-3' : 'lg:space-y-6'}`} >
+    <CustomLayout mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀" line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruDiLC">
+      <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? "lg:space-y-3" : "lg:space-y-6"}`}>
         <div className={`mx-auto lg:h-[68vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
           {/* Main Content */}
 
@@ -177,7 +135,7 @@ export default function KonfirmasiPage() {
                 <div className="space-y-2">
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Jenis Kelamin</span>
-                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender) || "Belum diisi"}</span>
+                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender === "F" ? "laki-laki" : "perempuan") || "Belum diisi"}</span>
                   </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Kesibukan</span>
@@ -193,106 +151,110 @@ export default function KonfirmasiPage() {
               <div className="space-y-3 text-[14px]">
                 <div className="flex justify-between text-gray-600">
                   <span>
-                    Paket {formData.paket?.label || ''} {formData.paketdetail?.label || ''}
+                    Biaya {selectedCourse?.name || ""} {selectedCourse?.duration_name || ""}
                   </span>
-                  <span>Rp. 9.000.000</span>
+                  <span>
+                    {formData.diskonNominal === 0 && <>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse || 0)}</>}
+                    {formData.diskonNominal > 0 && (
+                      <>
+                        <span className="line-through text-gray-400">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse || 0)}</span>
+                        <span className="text-red-500">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse - formData.diskonNominal || 0)}</span>
+                      </>
+                    )}
+                  </span>
                 </div>
-                {
-                  akomodasi ? (
-                    <div className="flex justify-between text-gray-600">
-                      <span>Biaya Tambahan</span>
-                      <span>Rp. 900.000</span>
-                    </div>
-                  ) : []
-                }
+                {selectedGrade ? (
+                  <div className="flex justify-between text-gray-600">
+                    <span>
+                      Biaya Fasilitas Kamar {selectedGrade?.name}
+                    </span>
+                    <span>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranGrade || 0)}</span>
+                  </div>
+                ) : (
+                  []
+                )}
+                {formData.pembayaranPenjemputan ? (
+                  <div className="flex justify-between text-gray-600">
+                    <span>
+                      Biaya Penjemputan {selectedPickup?.pickup_name} Ke {selectedLocation?.location_name}
+                    </span>
+                    <span>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranPenjemputan || 0)}</span>
+                  </div>
+                ) : (
+                  []
+                )}
                 <div className="flex justify-between text-gray-600">
                   <span>Biaya Admin</span>
-                  <span>Rp. 60.000</span>
+                  <span>{changeTotalPaymentToIndonesianCurrency(Number(process.env.NEXT_PUBLIC_ADMIN_FEE))}</span>
                 </div>
                 <div className="my-2 border-b border-gray-300"></div>
                 <div className="flex justify-between text-black text-[15px] font-bold">
                   <span>Total Pembayaran</span>
-                  <span className="px-2 py-1">Rp. 9.960.000</span>
+                  <span className="px-2 py-1">{changeTotalPaymentToIndonesianCurrency(formData.pembayaran)}</span>
                 </div>
               </div>
             </div>
-
           </div>
 
           <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
             <div className="flex flex-col space-y-2 w-full lg:w-1/2">
-              <Label htmlFor="diskon" className="font-bold">Kode Voucher :</Label>
-              <Input
-                type="text"
-                name="diskon"
-                placeholder="Ketikan disini (jika ada)"
-                value={formData.diskon || ""}
-                onChange={handleChange}
-              />
+              <Label htmlFor="diskon" className="font-bold">
+                Kode Voucher :
+              </Label>
+              <Input type="text" name="diskon" placeholder="Ketikan disini (jika ada)" value={formData.diskon || ""} onChange={(e) => handleVoucherChange(e)} />
             </div>
 
             <div className={`w-full lg:pt-0 lg:w-1/4 `}>
               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Total Biaya :</h2>
-                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">Rp 9.960.000</h2>
+                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaran)}</h2>
               </div>
             </div>
           </div>
 
-
           <div className="flex flex-col space-y-3 ">
-            <Label htmlFor="pembayaran" className="font-bold" required>Metode Pembayaran :</Label>
+            <Label htmlFor="pembayaran" className="font-bold" required>
+              Metode Pembayaran :
+            </Label>
 
-            <div
-              onClick={() => setIsOpen(true)}
-              className={`cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black ${errors.pembayaran ? "border-red-500" : ""}`}
-            >
-              {formData.pembayaran || "Pilih Pembayaran"}
+            <div onClick={() => setIsOpen(true)} className={`cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black ${errors.metode_pembayaran ? "border-red-500" : ""}`}>
+              {formData.metode_pembayaran || "Pilih Pembayaran"}
             </div>
 
-            {errors.pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.pembayaran}</p>}
-
+            {errors.metode_pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.metode_pembayaran}</p>}
           </div>
-     
-        {/* Privacy Policy */}
-        <div className="">
-          <div className="flex items-center justify-center space-x-2 pb-4">
-            <input
-              type="checkbox"
-              id="privacy"
-              checked={accepted}
-              onChange={(e) => setAccepted(e.target.checked)}
-            />
-            <label htmlFor="privacy" className="text-sm text-gray-500 ">
-              Dengan melanjutkan, saya menyetujui{" "}
-              <span>
-                <a onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:underline">
-                 Kebijakan Privasi dan Syarat & Ketentuan 
-              </a>
+
+          {/* Privacy Policy */}
+          <div className="">
+            <div className="flex flex-col space-x-2 pb-4 gap-3">
+              <span className="text-center">
+                <a onClick={() => setModalTosIsOpen(true)} className="text-blue-600 hover:underline animate-pulse cursor-pointer underline">
+                  Kebijakan Privasi dan Syarat & Ketentuan
+                </a>
               </span>{" "}
-              yang berlaku
-            </label>
+              <div className="flex items-center justify-between gap-4 flex-row">
+                <input type="checkbox" id="privacy" checked={formData.tos} onChange={handleTosConfirmation} />
+                <label htmlFor="privacy" className="text-sm text-red-600 ">
+                  Anda wajib membaca dan menyetujui Kebijakan Privasi dan Syarat & Ketentuan di bawah ini sebelum menekan tombol proses pendaftaran!
+                </label>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex flex-row w-full gap-4">
+              <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => (formData.cabang !== "PARE" ? router.push("/pages/program") : router.push("/pages/akomodasi"))}>
+                Kembali
+              </Button>
+
+              <Button disabled={isSubmitting || !formData.tos} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed">
+                Konfirmasi
+              </Button>
+            </div>
           </div>
-
-          {/* Submit Button */}
-          <div className="flex flex-row w-full gap-4">
-            <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => formData.cabang !== "PARE - JATIM" ? router.push("/pages/program") : router.push("/pages/akomodasi")}>Kembali</Button>
-
-            <Button
-              disabled={!accepted}
-              type="submit"
-              className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              Konfirmasi
-            </Button>
-
-          </div>
-        </div>
         </div>
       </form>
 
       <BottomSheet
-
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Pilih Metode Pembayaran"
@@ -301,7 +263,7 @@ export default function KonfirmasiPage() {
         <div className="flex flex-col h-full">
           <div className="flex-1 overflow-y-auto space-y-4 mb-12">
             {/* Payment Options */}
-            {pembayaran.map((item) => (
+            {metode_pembayaran.map((item) => (
               <PaymentOption
                 key={item.id}
                 id={item.id}
@@ -309,8 +271,8 @@ export default function KonfirmasiPage() {
                 checked={item.checked}
                 icon={item.icon}
                 label={item.label}
-                onChange={handlePayment}
-                className={`${errors.pembayaran ? "border-red-500" : ""}`}
+                onChange={(e) => updateField("metode_pembayaran", e.target.value)}
+                className={`${errors.metode_pembayaran ? "border-red-500" : ""}`}
               />
             ))}
 
@@ -318,11 +280,11 @@ export default function KonfirmasiPage() {
               key="other"
               id="other"
               value="Pembayaran Lain"
-              checked={formData.pembayaran === "Pembayaran Lain"}
+              checked={formData.metode_pembayaran === "Pembayaran Lain"}
               icon="https://www.pngplay.com/wp-content/uploads/7/Debit-Card-Icon-PNG-Clipart-Background.png"
               label="Metode Pembayaran Lain"
-              onChange={handlePayment}
-              className={` ${errors.pembayaran ? "border-red-500" : ""}`}
+              onChange={(e) => updateField("metode_pembayaran", e.target.value)}
+              className={` ${errors.metode_pembayaran ? "border-red-500" : ""}`}
             />
           </div>
 
@@ -333,33 +295,18 @@ export default function KonfirmasiPage() {
               className="w-full bg-main-color text-black py-2 rounded-lg"
               onClick={() => {
                 setIsOpen(false);
-                const syntheticEvent = {
-                  target: Object.assign(document.createElement("input"), {
-                    value: formData.pembayaran,
-                  }),
-                } as React.ChangeEvent<HTMLInputElement>;
-                handlePayment(syntheticEvent);
               }}
             >
               Pilih
             </button>
           </div>
         </div>
-
       </BottomSheet>
 
       {/* Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Kebijakan Privasi dan Syarat & Ketentuan"
-      >
-
+      <Modal isOpen={modalTosIsOpen} onClose={() => setModalTosIsOpen(false)} title="Kebijakan Privasi dan Syarat & Ketentuan">
         <PrivacyPolicy />
-  
-
       </Modal>
-
     </CustomLayout>
   );
 }

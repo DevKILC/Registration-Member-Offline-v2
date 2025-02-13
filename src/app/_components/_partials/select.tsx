@@ -1,6 +1,6 @@
 import React from "react";
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: { value: string; label: string }[]; // Data dropdown
+  options: { label: string; value: string }[]; // Data dropdown
   className?: string; // Kelas tambahan untuk styling kustom
   placeholder?: string; // Placeholder untuk dropdown
 }
@@ -35,15 +35,14 @@ export default function Select({
       `}
       {...props}
     >
-      <option value="" disabled>
+      <option value="">
         {placeholder || "Pilih salah satu"}
       </option>
-      {options.map((option) => (
+      {options.length > 1 && options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>
       ))}
     </select>
-
   );
 }

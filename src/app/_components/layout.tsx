@@ -1,6 +1,6 @@
 import Image from "next/image";
 // import Link from "next/link";
-import logo from "./_assets/logolc.png";
+import logo from "./_assets/logo.svg";
 import jk from "./_assets/jk.png";
 import tag from "./_assets/logo.png";
 import Navbar from "./_partials/navbar";
@@ -59,7 +59,7 @@ export default function CustomLayout({
               alt="Logo"
               width={150}
               height={150}
-              className="mx-auto"
+              className="mx-auto animate-bounce"
             />
 
             {/* Tagline */}

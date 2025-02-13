@@ -19,7 +19,7 @@ const Navbar = () => {
     jampertemuan?: string;
     jampertemuanprivate1?: string;
     jampertemuanprivate2?: string;
-    tipekamar?: string;
+    grade?: string;
     lokasijemput?: string;
     kendaraan?: string;
   }
@@ -97,12 +97,12 @@ useEffect(() => {
           case "private":
           return formData.jampertemuanprivate1 && formData.jampertemuanprivate2;
           default:
-          return formData.tipekamar;
+          return formData.grade;
         }
         })()
       ),
       akomodasi: Boolean(
-      formData.cabang === "PARE - JATIM" &&
+      formData.cabang === "PARE" &&
       formData.lokasijemput && 
       formData.kendaraan
       ),
@@ -126,7 +126,7 @@ useEffect(() => {
     }
   ];
 
-  const akomodasiItem = akomodasi === "PARE - JATIM" ? [
+  const akomodasiItem = akomodasi === "PARE" ? [
     {
       label: "Akomodasi",
       path: "/pages/akomodasi",
@@ -142,7 +142,7 @@ useEffect(() => {
       path: "/pages/konfirmasi",
       step: "konfirmasi",
       enabled:
-        akomodasi === "PARE - JATIM"
+        akomodasi === "PARE"
           ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
           : completedSteps.program && completedSteps.dataDiri,
       enumValue: ReferrerEnum.Konfirmasi,

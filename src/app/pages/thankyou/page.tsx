@@ -1,11 +1,11 @@
-import FeedbackPopup from "@/app/_components/_partials/feedback";
+// import FeedbackPopup from "@/app/_components/_partials/feedback";
 import Image from "next/image";
 import SuccessGif from "@/app/_components/_assets/success.gif";
 
 export default function ThankYou() {
   return (
     <div className="w-full min-h-screen flex flex-col lg:items-center md:items-center p-4">
-      <FeedbackPopup />
+      {/* <FeedbackPopup /> */}
 
       <Image
         src={SuccessGif}

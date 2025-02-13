@@ -1,6 +1,6 @@
-import { FormData } from "./Interfaces";
+import { useForm } from "./Interfaces";
 
-export const validateFormData = (formData: FormData) => {
+export const validateFormData = (formData: useForm) => {
   const requiredFields = [
     { field: "nama", label: "Nama Lengkap" },
     { field: "email", label: "Email" },
@@ -9,12 +9,10 @@ export const validateFormData = (formData: FormData) => {
     { field: "kesibukan", label: "Kesibukan" },
   ];
 
-  const missingFields = requiredFields.filter(
-    (item) => !formData[item.field as keyof typeof formData]
-  );
+  const missingFields = requiredFields.filter((item) => !formData[item.field as keyof typeof formData]);
 
-  const namaValue = String(formData.nama || '');
-  const nomorValue = String(formData.nomor || '');
+  const namaValue = String(formData.nama || "");
+  const nomorValue = String(formData.nomor || "");
 
   // Jika Field Kosong Semua maka return Isi Formulir
   if (missingFields.length === 5) {
@@ -38,15 +36,15 @@ export const validateFormData = (formData: FormData) => {
     };
   }
 
-  if (namaValue && namaValue.startsWith(' ')) {
+  if (namaValue && namaValue.startsWith(" ")) {
     return {
       isValid: false,
       missingFields: [{ field: "nama", label: "Nama Lengkap tidak boleh diawali dengan spasi" }],
     };
   }
 
-  const emailValue = String(formData.email || '');
-  if (emailValue && emailValue.startsWith(' ')) {
+  const emailValue = String(formData.email || "");
+  if (emailValue && emailValue.startsWith(" ")) {
     return {
       isValid: false,
       missingFields: [{ field: "email", label: "Email tidak boleh diawali dengan spasi" }],
@@ -58,50 +56,23 @@ export const validateFormData = (formData: FormData) => {
     missingFields,
   };
 };
-export const validateFormDataProgram = (formData: FormData) => {
-  const savedData = JSON.parse(sessionStorage.getItem("formData") || "{}");
-
+export const validateFormDataProgram = () => {
+  const savedData = JSON.parse(localStorage.getItem("form-data-storage") || "{}");
   const requiredFields = [
     { field: "cabang", label: "Cabang" },
     { field: "periode", label: "Periode" },
-    { field: "paket.value", label: "Paket" }, // Periksa `value` dalam `paket`
-    { field: "paketdetail.value", label: "Durasi Paket" }, // Periksa `value` dalam `paketdetail`
+    { field: "kategoriPaket", label: "Paket" },
+    { field: "duration", label: "Durasi Paket" },
   ];
 
-  // Tambahkan field berdasarkan nilai `paket`
-  switch (savedData?.paket?.value) {
-    case "integrated":
-      requiredFields.push(
-        { field: "jampertemuan", label: "Jam Pertemuan" }
-      );
-      break;
-    case "private":
-      requiredFields.push(
-        { field: "jampertemuanprivate1", label: "Jam Pertemuan Private 1" },
-        { field: "jampertemuanprivate2", label: "Jam Pertemuan Private 2" }
-      );
-      break;
-    default:
-      requiredFields.push(
-        { field: "tipekamar", label: "Tipe Kamar" }
-      );
-      break;
-  }
-
   // Validasi dengan mendukung properti nested seperti `paket.value`
-  const missingFields = requiredFields.filter((item) => {
-    const fieldParts = item.field.split(".");
-    
-    let value: FormData | Record<string, unknown> = formData;
+  const missingFields = requiredFields.filter(() => {
+    let value: useForm | Record<string, unknown> = savedData;
 
-    // Traverse untuk properti nested
-    for (const part of fieldParts) {
-      if (!value || !value[part]) {
-        return true; // Return true jika properti tidak ada atau kosong
-      }
-      value = value[part] as Record<string, unknown>;
+    if (!value || !value) {
+      return true; // Return true jika properti tidak ada atau kosong
     }
-
+    value = value as Record<string, unknown>;
     return false;
   });
 
@@ -112,14 +83,14 @@ export const validateFormDataProgram = (formData: FormData) => {
 };
 
 
-export const validateFormDataAkomodasi = (formData: FormData) => {
+export const validateFormDataAkomodasi = (formData: useForm) => {
 
   const requiredFields = [
     { field: "lokasijemput", label: "Penjemputan" },
   ];
 
   switch (formData.lokasijemput) {
-    case "ga_perlu_dijemput":
+    case "tidak_perlu_dijemput":
       break;
     default:
       requiredFields.push(
@@ -139,7 +110,7 @@ export const validateFormDataAkomodasi = (formData: FormData) => {
 };
 
 
-export const validateFormDataKonfirmasi = (formData: FormData) => {
+export const validateFormDataKonfirmasi = (formData: useForm) => {
 
   const requiredFields = [
     { field: "pembayaran", label: "Metode Pembayaran" },

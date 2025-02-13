@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { UserCircle2, BookOpen, Home, CheckCircle } from "lucide-react";
-import { FormData } from "@/app/_backend/_utils/Interfaces";
+import { UserCircle2, BookOpen, Car, CheckCircle } from "lucide-react";
+import { useForm } from "@/app/_backend/_utils/Interfaces";
+import { useFormDataStore } from "@/app/hooks/useFormDataStore";
 
 interface CompletedSteps {
   dataDiri: boolean;
@@ -30,7 +31,7 @@ interface NavItem {
 
 const Navbar = () => {
   const pathname = usePathname();
-  const [formData, setFormData] = useState<FormData>({} as FormData);
+  const { formData } = useFormDataStore();
   const [akomodasi, setAkomodasi] = useState("");
   const [completedSteps, setCompletedSteps] = useState<CompletedSteps>({
     dataDiri: false,
@@ -39,34 +40,22 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    const savedData = sessionStorage.getItem("formData");
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(parsedData);
-      } catch (error) {
-        console.error("Error parsing form data from sessionStorage:", error);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     setAkomodasi(formData?.cabang || "");
   }, [formData.cabang]);
 
-  const isProgramComplete = (data: FormData): boolean => {
-    if (!data.paket?.value) return false;
+  const isProgramComplete = (data: useForm): boolean => {
+    if (!data.paket) return false;
 
     const baseCondition = data.cabang && data.periode && data.paketdetail;
     if (!baseCondition) return false;
 
-    switch (data.paket.value) {
+    switch (data.paket) {
       case "intergrated":
         return Boolean(data.jampertemuan);
       case "private":
         return Boolean(data.jampertemuanprivate1 && data.jampertemuanprivate2);
       default:
-        return Boolean(data.tipekamar);
+        return Boolean(data.grade);
     }
   };
 
@@ -81,8 +70,8 @@ const Navbar = () => {
       ),
       program: isProgramComplete(formData),
       akomodasi: Boolean(
-        formData.cabang === "PARE - JATIM" &&
-        (formData.lokasijemput !== "ga_perlu_dijemput"
+        formData.cabang === "PARE" &&
+        (formData.lokasijemput !== "tidak_perlu_dijemput"
           ? [formData.kendaraan && formData.penumpang]
           : [])
       ),
@@ -125,14 +114,14 @@ const Navbar = () => {
       },
     ];
 
-    const akomodasiItems: NavItem[] = akomodasi === "PARE - JATIM" ? [
+    const akomodasiItems: NavItem[] = akomodasi === "PARE" ? [
       {
         label: "Akomodasi",
         path: "/pages/akomodasi",
         step: "akomodasi",
         enabled: completedSteps.program && completedSteps.dataDiri,
         enumValue: NavigationStep.Akomodasi,
-        icon: <Home className="w-5 h-4.5 lg:mr-2" />,
+        icon: <Car className="w-5 h-4.5 lg:mr-2" />,
       },
     ] : [];
 
@@ -141,7 +130,7 @@ const Navbar = () => {
         label: "Konfirmasi",
         path: "/pages/konfirmasi",
         step: "konfirmasi",
-        enabled: akomodasi === "PARE - JATIM"
+        enabled: akomodasi === "PARE"
           ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
           : completedSteps.program && completedSteps.dataDiri,
         enumValue: NavigationStep.Konfirmasi,
@@ -161,7 +150,7 @@ const Navbar = () => {
             className="relative flex-1"
           >
             <Link
-              href={item.enabled ? item.path : "#"}
+              href={item.path}
               className={`group flex items-center h-10 lg:text-base w-full text-xs${
                 !item.enabled ? "cursor-not-allowed" : ""
               }`}

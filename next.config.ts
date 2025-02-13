@@ -13,7 +13,6 @@ const nextConfig: NextConfig = {
   },
   async headers(): Promise<Header[]> {
     // Pastikan NEXT_PUBLIC_API_URL ada, jika tidak gunakan fallback
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
     
     return [
       {
@@ -25,7 +24,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Access-Control-Allow-Origin',
-            value: apiUrl
+            value: '*'
           },
           {
             key: 'Access-Control-Allow-Methods',

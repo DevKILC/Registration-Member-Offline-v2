@@ -60,7 +60,7 @@ export default function ProgramPage() {
                 resetPickup();
               }}
             />
-            {locationData.length === 0 && <p className="text-red-500 text-[10px] pl-2 lg:absolute">Penjemputan belum tersedia untuk saat ini 🙏🏻</p>}
+            {locationData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Penjemputan belum tersedia untuk saat ini 🙏🏻</p>}
           </div>
 
           <div className={formData.lokasijemput === "tidak_perlu_dijemput" || formData.lokasijemput === "" ? "hidden" : "block"}>
@@ -69,7 +69,7 @@ export default function ProgramPage() {
                 <Label htmlFor="kendaraan">Pilih Tipe Kendaraan :</Label>
                 <div className="lg:overflow-y-auto scroll-hidden ">
                   <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
-                    {pickupData.length === 0 && <p className="text-red-500 text-[10px] pl-2 lg:absolute">Kendaraan belum tersedia untuk saat ini 🙏🏻</p>}
+                    {pickupData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Kendaraan belum tersedia untuk saat ini 🙏🏻</p>}
                     {pickupData.map((item) => (
                       <TabList
                         key={item.value}
@@ -95,7 +95,7 @@ export default function ProgramPage() {
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="penumpang">Banyak Penumpang :</Label>
                 <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-5 gap-4 lg:gap-0">
-                  {passengerData.length === 0 && <p className="text-red-500 text-[10px] pl-2 lg:absolute">Jumlah penumpang belum tersedia untuk saat ini 🙏🏻</p>}
+                  {passengerData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Jumlah penumpang belum tersedia untuk saat ini 🙏🏻</p>}
                   {passengerData.map((item) => (
                     <TabList
                       key={item.value}
@@ -117,9 +117,7 @@ export default function ProgramPage() {
             <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "tidak_perlu_dijemput" ? "hidden" : "block"}`}>
               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
-                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">
-                  {changeTotalPaymentToIndonesianCurrency(formData.pembayaranPenjemputan)}
-                </h2>
+                <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranPenjemputan)}</h2>
               </div>
             </div>
           </div>

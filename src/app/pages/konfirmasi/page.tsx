@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import CustomLayout from "@/app/_components/layout";
 import Button from "@/app/_components/_partials/button";
 import Label from "@/app/_components/_partials/label";
@@ -13,7 +12,6 @@ import { useFormDataStore } from "@/app/hooks/useFormDataStore";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
 import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
-import { useGradeDataStore } from "@/app/hooks/useGradeDataStore";
 
 export default function KonfirmasiPage() {
 
@@ -29,44 +27,11 @@ export default function KonfirmasiPage() {
     handleSubmit, 
     capitalizeFirstLetter, 
     handleVoucherChange, 
-    calculateVoucher,
     isSubmitting
   } = useConfirmationPageHooks();
 
   const { selectedCourse } = useCourseDataStore();
   const { selectedPickup, selectedLocation } = useAccomodationDataStore();
-  const { selectedGrade } = useGradeDataStore();
-
-  useEffect(() => {
-    // Pastikan semua nilai tersedia sebelum menghitung
-    if (selectedCourse && formData) {
-      const courseFee = selectedCourse.price || formData.pembayaranCourse || 0;
-      const pickupFee = formData.pembayaranPenjemputan || 0;
-      const adminFee = Number(process.env.NEXT_PUBLIC_ADMIN_FEE) || 0;
-
-      // Update pembayaran course jika belum ada
-      if (formData.pembayaranCourse !== courseFee) {
-        updateField("pembayaranCourse", courseFee);
-      }
-
-      // Update pembayaran penjemputan jika belum ada
-      if (formData.pembayaranPenjemputan !== pickupFee) {
-        updateField("pembayaranPenjemputan", pickupFee);
-      }
-
-      // Update total pembayaran
-      const totalPayment = courseFee + pickupFee + adminFee;
-      updateField("pembayaran", totalPayment);
-
-      if(formData.diskonNominal > 0){
-        calculateVoucher(formData.diskonNominal);
-      }
-
-      if(formData.diskonNominal === 0){
-        calculateVoucher(0);
-      }
-    }
-  }, [selectedCourse, selectedPickup, formData.pembayaranCourse, formData.pembayaranPenjemputan]);
 
   const metode_pembayaran = [
     {
@@ -150,29 +115,9 @@ export default function KonfirmasiPage() {
               <h3 className="mb-3 text-[16px] font-semibold text-gray-700">Detail Pembayaran</h3>
               <div className="space-y-3 text-[14px]">
                 <div className="flex justify-between text-gray-600">
-                  <span>
-                    Biaya {selectedCourse?.name || ""} {selectedCourse?.duration_name || ""}
-                  </span>
-                  <span>
-                    {formData.diskonNominal === 0 && <>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse || 0)}</>}
-                    {formData.diskonNominal > 0 && (
-                      <>
-                        <span className="line-through text-gray-400">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse || 0)}</span>
-                        <span className="text-red-500">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse - formData.diskonNominal || 0)}</span>
-                      </>
-                    )}
-                  </span>
+                  <span>Biaya {selectedCourse?.name || ""}</span>
+                  <span>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse + formData.pembayaranGrade || 0)}</span>
                 </div>
-                {selectedGrade ? (
-                  <div className="flex justify-between text-gray-600">
-                    <span>
-                      Biaya Fasilitas Kamar {selectedGrade?.name}
-                    </span>
-                    <span>{changeTotalPaymentToIndonesianCurrency(formData.pembayaranGrade || 0)}</span>
-                  </div>
-                ) : (
-                  []
-                )}
                 {formData.pembayaranPenjemputan ? (
                   <div className="flex justify-between text-gray-600">
                     <span>
@@ -187,6 +132,12 @@ export default function KonfirmasiPage() {
                   <span>Biaya Admin</span>
                   <span>{changeTotalPaymentToIndonesianCurrency(Number(process.env.NEXT_PUBLIC_ADMIN_FEE))}</span>
                 </div>
+                {formData.diskonNominal > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Diskon</span>
+                    <span>{changeTotalPaymentToIndonesianCurrency(formData.diskonNominal)}</span>
+                  </div>
+                )}
                 <div className="my-2 border-b border-gray-300"></div>
                 <div className="flex justify-between text-black text-[15px] font-bold">
                   <span>Total Pembayaran</span>

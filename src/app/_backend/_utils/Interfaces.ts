@@ -25,6 +25,8 @@ export interface useForm {
   metode_pembayaran: string;
   rating: number;
   feedback: string;
+  is_additional_meet_hour: number;
+  meet_hour: string;
   tos: boolean;
   cs: string;
   cs_id: string;
@@ -45,6 +47,7 @@ export interface Course {
   name: string;
   price: number;
   duration: number;
+  is_additional_meet_hour: number;
   duration_name: string;
   description: string;
   category_id: string;
@@ -285,4 +288,21 @@ export interface Feedback {
   id_member: number;
   rating: number;
   feedback: string;
+}
+
+export interface MeetHour {
+  id: number;
+  hour: string;
+  status: number;
+}
+
+export interface MeetHourStore {
+  label: string;
+  value: string;
+  meetHour: MeetHour;
+}
+
+export interface MeetHourQuery {
+  course_id: number;
+  status: number;
 }

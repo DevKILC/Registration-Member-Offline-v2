@@ -12,7 +12,6 @@ import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook";
 import { PassengerSelect } from "@/app/_backend/_utils/Interfaces";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useResetFormHook } from "@/app/hooks/useResetFormHook";
-import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
 
 export default function ProgramPage() {
 
@@ -21,7 +20,7 @@ export default function ProgramPage() {
   const { errors, handleSubmit, router } = useAccomodationPageHook();
   const { getPickupData, getPassengerData } = useAccomodationDataHook();
   const { resetAccomodationPrice, resetPassenger, resetPickup } = useResetFormHook();
-  const { selectedCourse } = useCourseDataStore();
+  const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
   const locationChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const location = locationData.find((item) => item.value === e.target.value)?.pickupLocation;
@@ -35,11 +34,10 @@ export default function ProgramPage() {
     setSelectedPassenger(data.passenger);;
     updateField("pembayaranPenjemputan", data.passenger.price);
     if(data.value === selectedPassenger?.price) return;
-    const coursePrice = selectedCourse?.price || 0;
-    const gradePrice = formData.pembayaranGrade || 0;
-    const passengerPrice = data.passenger.price || 0;
-    console.log(coursePrice, gradePrice, passengerPrice);
-    const total = Number(coursePrice) + Number(gradePrice) + Number(passengerPrice);
+    const coursePrice = formData.pembayaranCourse;
+    const gradePrice = formData.pembayaranGrade;
+    const passengerPrice = data.passenger.price;
+    const total = Number(coursePrice) + Number(gradePrice) + Number(passengerPrice) + Number(adminFee);
     updateField("pembayaran", total);
   };
 

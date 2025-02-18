@@ -14,6 +14,7 @@ import { useCourseCategoryDataStore } from "@/app/hooks/useCourseCategoryDataSto
 import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
 import { useGradeDataStore } from "@/app/hooks/useGradeDataStore";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
+import { useMeetHourDataStore } from "@/app/hooks/useMeetHourDataStore";
 
 export default function ProgramPage() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function ProgramPage() {
   const { courseCategoryData } = useCourseCategoryDataStore();
   const { courseData } = useCourseDataStore();
   const { gradeData, selectedGrade } = useGradeDataStore();
+  const { meetHourData } = useMeetHourDataStore();
 
   const { 
     handleSubmit,
@@ -32,6 +34,7 @@ export default function ProgramPage() {
     handleCourseChange,
     handleDurationCourse,
     handleGradeChange,
+    handleMeethourChange,
     errors
   } = useProgramPagehooks();
 
@@ -116,6 +119,34 @@ export default function ProgramPage() {
             </div>
           </div>
 
+          {formData.is_additional_meet_hour === 1 && (
+            <div className="w-full flex flex-col space-y-2">
+              <Label htmlFor="duration" required>
+                Pilih jam pertemuan :
+              </Label>
+              <div className="lg:overflow-y-auto scroll-hidden">
+                <ul className="lg:w-max w-full lg:flex lg:flex-row lg:space-x-4 grid grid-cols-2 gap-4 lg:gap-0">
+                  {meetHourData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Pilihan jam pertemuan belum tersedia untuk saat ini 🙏🏻</p>}
+                  {meetHourData.map((option) => (
+                    <div key={option.meetHour.id}>
+                      <TabList
+                        label={option.label}
+                        value={option.value}
+                        onClick={() => handleMeethourChange(option.meetHour)}
+                        isActive={(() => {
+                          return formData.meet_hour === option.value; // Aktif untuk grade
+                        })()}
+                        className={(() => {
+                          return ` ${errors.jam_pertemuan ? "border-red-500" : ""} `;
+                        })()}
+                      />
+                    </div>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col lg:flex-row justify-between w-full space-y-4 lg:space-y-0">
             <div className="flex flex-col space-y-2 w-full lg:w-1/2">
               {/* Gunakan switch untuk menentukan label */}
@@ -157,7 +188,7 @@ export default function ProgramPage() {
 
             <div className="flex flex-col justify-center items-center w-full lg:pt-0 lg:w-1/4">
               <h2 className="text-center text-black font-semibold text-sm pb-2">Total Biaya :</h2>
-              <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaran)}</h2>
+              <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranCourse + formData.pembayaranGrade)}</h2>
             </div>
           </div>
         </div>

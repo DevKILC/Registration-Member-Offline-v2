@@ -10,9 +10,10 @@ import { registrationService } from "@/app/services/registrationService";
 import { useDebounce } from "use-debounce";
 import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore";
 
+
 export const useConfirmationPageHooks = () => {
 
-  const { formData, setTos, updateField } = useFormDataStore();
+  const { formData, setTos, updateField, setModalTosIsOpen } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -23,7 +24,8 @@ export const useConfirmationPageHooks = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [voucher, setVoucher] = useState("");
-  const [debouncedValue] = useDebounce(voucher, 1000);
+  const [debouncedValue] = useDebounce(voucher, 200);
+  const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
   // Handle submit form
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,12 +86,13 @@ export const useConfirmationPageHooks = () => {
       setTos(true);
     }{
       setTos(false);
+      setModalTosIsOpen(true);
       toast.error("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
     }
   }
 
   const calculateVoucher = (discount: number) => {
-    const totalPembayaran = (formData.pembayaranCourse - discount) + formData.pembayaranGrade + formData.pembayaranPenjemputan + formData.biayaAdmin;
+    const totalPembayaran = Number(formData.pembayaranCourse) - Number(discount) + Number(formData.pembayaranGrade) + Number(formData.pembayaranPenjemputan) + Number(adminFee);
     updateField("diskonNominal", discount);
     updateField("pembayaran", totalPembayaran);
   }
@@ -108,7 +111,6 @@ export const useConfirmationPageHooks = () => {
 
   const checkVoucher = async (code: string) => {
     toast.loading("Memeriksa kode voucher...");
-    if (formData.diskon === null)return;
     const filter = {
       voucher_code: code,
       course_id: Number(formData.paket),
@@ -157,6 +159,6 @@ export const useConfirmationPageHooks = () => {
     checkVoucher,
     calculateVoucher,
     handleVoucherChange,
-    isSubmitting,
+    isSubmitting
   };
 }

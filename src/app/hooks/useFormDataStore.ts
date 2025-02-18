@@ -25,6 +25,8 @@ const initialFormData: useForm = {
   pembayaranCourse: 0,
   pembayaranGrade: 0,
   pembayaranPenjemputan: 0,
+  is_additional_meet_hour: 0,
+  meet_hour: "",
   biayaAdmin: 0,
   metode_pembayaran: "",
   feedback: "",
@@ -57,7 +59,7 @@ export const useFormDataStore = create<FormStore>()(
       handleTabClick: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
       handleOptionTabClick: (value: string | number) =>
         set((state) => ({
-          formData: { ...state.formData, grade: String(value), jampertemuan: String(value) },
+          formData: { ...state.formData, grade: String(value)},
         })),
       isPopupOpen: true,
       setIsPopupOpen: (value: boolean) => set({ isPopupOpen: value }),

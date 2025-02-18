@@ -33,8 +33,32 @@ export const useResetFormHook = () => {
   }
 
   const resetPickup = () => {
-    updateField("kendaraan", "");
+    updateField('kendaraan', '');
   }
+
+  const resetPeriode = () => {
+    updateField('periode', '');
+  }
+
+  const resetLokasiPenjemputan = () => {
+    updateField('lokasijemput', '');
+  }
+
+  const resetKendaraanPenjemputan = () => {
+    updateField('kendaraan', '');
+  }
+
+  const resetPenumpangPenjemputan = () => {
+    updateField('penumpang', '');
+  }
+
+  const resetPembayaranPenjemputan = () => {
+    updateField('pembayaranPenjemputan', '');
+  };
+
+  const resetPembayaranPaket = () => {
+    updateField('pembayaranCourse', '');
+  };
 
   return {
     resetCategoryCourse,
@@ -44,6 +68,12 @@ export const useResetFormHook = () => {
     resetTotalPrice,
     resetAccomodationPrice,
     resetPassenger,
-    resetPickup
+    resetPickup,
+    resetPeriode,
+    resetLokasiPenjemputan,
+    resetKendaraanPenjemputan,
+    resetPenumpangPenjemputan,
+    resetPembayaranPenjemputan,
+    resetPembayaranPaket,
   };
 };

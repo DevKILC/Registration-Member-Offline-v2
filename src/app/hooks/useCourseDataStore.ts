@@ -6,7 +6,7 @@ interface CourseState {
   courseData: CourseSelect[];
   selectedCourse: Course | null;
   setCourse: (data: Course[]) => void;
-  setSelectedCourse: (data: Course) => void;
+  setSelectedCourse: (data: Course | null) => void;
 }
 
 export const useCourseDataStore = create<CourseState>()(
@@ -23,7 +23,7 @@ export const useCourseDataStore = create<CourseState>()(
             course: item,
           })),
         }),
-      setSelectedCourse: (data: Course) =>
+      setSelectedCourse: (data: Course | null) =>
         set({
           selectedCourse: data,
         }),

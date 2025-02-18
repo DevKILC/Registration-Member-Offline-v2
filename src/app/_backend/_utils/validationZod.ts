@@ -20,12 +20,12 @@ export const programSchema = z.object({
 
 export const akomodasiSchema = z
   .object({
-    lokasijemput: z.string().min(1, "Lokasi Penjemputan harus dipilih"),
+    lokasijemput: z.string().nullable(),
     kendaraan: z.string(),
     penumpang: z.string().min(1, "Banyak Penumpang harus dipilih"),
   })
   .superRefine((data, ctx) => {
-    if (data.lokasijemput !== "tidak_perlu_dijemput") {
+    if (data.lokasijemput !== "") {
       if (!data.kendaraan || data.kendaraan.trim().length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

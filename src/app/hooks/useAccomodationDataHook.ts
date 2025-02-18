@@ -36,7 +36,6 @@ export const useAccomodationDataHook = () => {
     const response = accomodationService
       .getPassenger(filter)
       .then((response) => {
-        console.log("Passenger data", response.data);
         setPassengerData(response.data);
       })
       .catch((error) => {

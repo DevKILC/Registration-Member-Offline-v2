@@ -85,12 +85,19 @@ export const validateFormDataProgram = () => {
 
 export const validateFormDataAkomodasi = (formData: useForm) => {
 
+  if(formData.lokasijemput === ""){
+    return {
+      isValid: true,
+      missingFields: [],
+    };
+  };
+
   const requiredFields = [
     { field: "lokasijemput", label: "Penjemputan" },
   ];
 
   switch (formData.lokasijemput) {
-    case "tidak_perlu_dijemput":
+    case "":
       break;
     default:
       requiredFields.push(

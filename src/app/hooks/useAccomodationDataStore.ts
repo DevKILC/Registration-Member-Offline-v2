@@ -14,7 +14,7 @@ interface AccomodationDataState {
   passengerData: { label: string; value: string; passenger: Passenger }[];
   selectedPassenger: Passenger | null;
   setPassengerData: (data: Passenger[]) => void;
-  setSelectedPassenger: (data: Passenger) => void;
+  setSelectedPassenger: (data: Passenger | null) => void;
 }
 
 export const useAccomodationDataStore = create<AccomodationDataState>()(
@@ -52,7 +52,7 @@ export const useAccomodationDataStore = create<AccomodationDataState>()(
             passenger: item,
           })),
         }),
-      setSelectedPassenger: (data: Passenger) => set({ selectedPassenger: data }),
+      setSelectedPassenger: (data: Passenger | null) => set({ selectedPassenger: data }),
     }),
     {
       name: "accomodation-data-storage",

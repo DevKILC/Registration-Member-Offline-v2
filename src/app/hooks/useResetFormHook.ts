@@ -60,6 +60,11 @@ export const useResetFormHook = () => {
     updateField('pembayaranCourse', '');
   };
 
+  const resetJamPertemuan = () => {
+    updateField("meet_hour", '');
+    updateField("is_additional_meet_hour", 0);
+  };
+
   return {
     resetCategoryCourse,
     resetSelectedCourse,
@@ -75,5 +80,6 @@ export const useResetFormHook = () => {
     resetPenumpangPenjemputan,
     resetPembayaranPenjemputan,
     resetPembayaranPaket,
+    resetJamPertemuan,
   };
 };

@@ -55,7 +55,7 @@ export default function Page() {
                 Email :
               </Label>
               <Input
-                type="text"
+                type="email"
                 name="email"
                 placeholder="youremail@gmail.com"
                 value={formData.email}

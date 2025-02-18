@@ -21,10 +21,10 @@ export const useProgramPagehooks = () => {
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
   const { updateField } = useFormDataStore();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { 
-    resetCategoryCourse, 
-    resetSelectedCourse, 
-    resetSelectedDuration, 
+  const {
+    resetCategoryCourse,
+    resetSelectedCourse,
+    resetSelectedDuration,
     resetSelectedGrade,
     resetTotalPrice,
     resetPeriode,
@@ -32,7 +32,8 @@ export const useProgramPagehooks = () => {
     resetKendaraanPenjemputan,
     resetPenumpangPenjemputan,
     resetPembayaranPenjemputan,
-    resetPembayaranPaket
+    resetPembayaranPaket,
+    resetJamPertemuan,
   } = useResetFormHook();
   const {
     setPickupData,
@@ -112,6 +113,7 @@ export const useProgramPagehooks = () => {
       resetPembayaranPenjemputan();
       resetPembayaranPaket();
       resetTotalPrice();
+      resetJamPertemuan();
       getPeriodeData(e.target.value);
 
     },
@@ -127,11 +129,13 @@ export const useProgramPagehooks = () => {
       resetSelectedGrade();
       resetSelectedDuration();
       resetSelectedGrade();
+      resetJamPertemuan();
       setSelectedCourse(null);
       resetPembayaranPaket();
       setCourse([]);
       setGrade([]);
       resetTotalPrice();
+      resetJamPertemuan();
       getCourseCategories(e.target.value);
     },
     [getCourseData]
@@ -143,9 +147,11 @@ export const useProgramPagehooks = () => {
       resetSelectedCourse();
       resetSelectedDuration();
       resetSelectedGrade();
+      resetJamPertemuan();
       setGrade([]);
       getCourseData(item.value);
       resetTotalPrice();
+      resetJamPertemuan();
       setSelectedGrade(null);
     },
     [getPeriodeData]

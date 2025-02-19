@@ -306,3 +306,10 @@ export interface MeetHourQuery {
   course_id: number;
   status: number;
 }
+
+export interface PaymentMethod {
+  id: number;
+  value: string;
+  icon: string;
+  label: string;
+}

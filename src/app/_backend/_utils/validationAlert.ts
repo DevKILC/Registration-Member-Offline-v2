@@ -84,8 +84,7 @@ export const validateFormDataProgram = () => {
 
 
 export const validateFormDataAkomodasi = (formData: useForm) => {
-
-  if(formData.lokasijemput === ""){
+  if (formData.lokasijemput === "tidak_perlu_dijemput") {
     return {
       isValid: true,
       missingFields: [],

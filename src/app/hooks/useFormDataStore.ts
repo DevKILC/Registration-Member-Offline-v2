@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useForm } from "@/app/_backend/_utils/Interfaces";
+import { useForm, PaymentMethod } from "@/app/_backend/_utils/Interfaces";
 
 const initialFormData: useForm = {
   nama: "",
@@ -36,9 +36,17 @@ const initialFormData: useForm = {
   cs_id: "",
 };
 
+const initialPaymentMethod: PaymentMethod = {
+  id: 0,
+  value: "",
+  icon: "",
+  label: "",
+};
+
 interface FormStore {
   formData: useForm;
   errors: useForm;
+  selectedPaymentMethod: PaymentMethod;
   isPopupOpen: boolean;
   modalTosIsOpen: boolean;
   updateField: (field: string, value: string | number) => void;
@@ -48,6 +56,7 @@ interface FormStore {
   setIsPopupOpen: (value: boolean) => void;
   setTos: (value: boolean) => void;
   setModalTosIsOpen: (value: boolean) => void;
+  setSelectedPaymentMethod: (value: PaymentMethod) => void;
 }
 
 export const useFormDataStore = create<FormStore>()(
@@ -67,6 +76,8 @@ export const useFormDataStore = create<FormStore>()(
       modalTosIsOpen: false,
       setModalTosIsOpen: (value: boolean) => set({ modalTosIsOpen: value }),
       errors: initialFormData,
+      selectedPaymentMethod: initialPaymentMethod,
+      setSelectedPaymentMethod: (value: PaymentMethod) => set({ selectedPaymentMethod: value }),
     }),
     {
       name: "form-data-storage", // nama key di localStorage
@@ -75,6 +86,7 @@ export const useFormDataStore = create<FormStore>()(
       // Optional: Pilih state mana yang ingin disimpan
       partialize: (state) => ({
         formData: state.formData,
+        selectedPatmentMethod: state.selectedPaymentMethod,
         isPopupOpen: state.isPopupOpen
       }),
     }

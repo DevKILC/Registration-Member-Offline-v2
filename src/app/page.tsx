@@ -7,7 +7,7 @@ import Button from "./_components/_partials/button";
 import Label from "./_components/_partials/label";
 import TabList from "./_components/_partials/tablist";
 import { useEffectHomePageHooks } from "./hooks/useHomePageHook";
-import { genderOptions } from "@/app/data/gender"
+import { genderOptions } from "@/app/data/data"
 import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";

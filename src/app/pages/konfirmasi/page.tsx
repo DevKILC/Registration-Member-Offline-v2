@@ -12,10 +12,18 @@ import { useFormDataStore } from "@/app/hooks/useFormDataStore";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
 import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
+import { metodePembayaran } from "@/app/data/data";
 
 export default function KonfirmasiPage() {
 
-  const { formData, updateField, modalTosIsOpen, setModalTosIsOpen } = useFormDataStore();
+  const { 
+    formData, 
+    updateField, 
+    modalTosIsOpen, 
+    setModalTosIsOpen, 
+    setSelectedPaymentMethod, 
+    selectedPaymentMethod 
+  } = useFormDataStore();
 
   const { 
     handleTosConfirmation, 
@@ -32,44 +40,6 @@ export default function KonfirmasiPage() {
 
   const { selectedCourse } = useCourseDataStore();
   const { selectedPickup, selectedLocation } = useAccomodationDataStore();
-
-  const metode_pembayaran = [
-    {
-      id: "1",
-      value: "bsm",
-      checked: formData.metode_pembayaran === "bsm",
-      icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/website/img/merchant_logos/idn_bsi.png",
-      label: "Bank Syariah Indonesia",
-    },
-    {
-      id: "2",
-      value: "prismalink_bca",
-      checked: formData.metode_pembayaran === "prismalink_bca",
-      icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bca.png",
-      label: "Bank BCA",
-    },
-    {
-      id: "3",
-      value: "prismalink_mandiri",
-      checked: formData.metode_pembayaran === "prismalink_mandiri",
-      icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_mandiri.png",
-      label: "Bank Mandiri",
-    },
-    {
-      id: "4",
-      value: "BNI",
-      checked: formData.metode_pembayaran === "BNI",
-      icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bni.png",
-      label: "BNI",
-    },
-    {
-      id: "5",
-      value: "BRI",
-      checked: formData.metode_pembayaran === "BRI",
-      icon: "https://idn-static-assets.s3-ap-southeast-1.amazonaws.com/emailblast/assets/merchant/img_logo_merchant_bri.png",
-      label: "BRI",
-    },
-  ];
 
   return (
     <CustomLayout mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀" line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruDiLC">
@@ -169,7 +139,7 @@ export default function KonfirmasiPage() {
             </Label>
 
             <div onClick={() => setIsOpen(true)} className={`cursor-pointer border border-gray-400 w-full p-2 rounded-[10px] text-black ${errors.metode_pembayaran ? "border-red-500" : ""}`}>
-              {formData.metode_pembayaran || "Pilih Pembayaran"}
+              {selectedPaymentMethod.label || "Pilih Pembayaran"}
             </div>
 
             {errors.metode_pembayaran && <p className="text-red-500 text-[10px] pl-2 ">{errors.metode_pembayaran}</p>}
@@ -214,15 +184,18 @@ export default function KonfirmasiPage() {
         <div className="flex flex-col h-full">
           <div className="flex-1 overflow-y-auto space-y-4 mb-12">
             {/* Payment Options */}
-            {metode_pembayaran.map((item) => (
+            {metodePembayaran.map((item) => (
               <PaymentOption
                 key={item.id}
-                id={item.id}
+                id={item.id.toString()}
                 value={item.value}
-                checked={item.checked}
+                checked={formData.metode_pembayaran === item.value}
                 icon={item.icon}
                 label={item.label}
-                onChange={(e) => updateField("metode_pembayaran", e.target.value)}
+                onChange={(e) => {
+                  updateField("metode_pembayaran", e.target.value);
+                  setSelectedPaymentMethod(item);
+                }}
                 className={`${errors.metode_pembayaran ? "border-red-500" : ""}`}
               />
             ))}

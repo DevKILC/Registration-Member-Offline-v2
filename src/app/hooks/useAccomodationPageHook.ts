@@ -29,7 +29,6 @@ export const useAccomodationPageHook = () => {
     }
 
     const { isValid, missingFields } = validateFormDataAkomodasi(formData);
-
     if (isValid) {
       router.push("/pages/konfirmasi")
     } else {  

@@ -41,8 +41,8 @@ export default function PaymentOption({
           <Image
             src={icon}
             alt=""
-            width={42}
-            height={32} 
+            width={52}
+            height={47} 
             className={` h-10 w-10 ${ checked ? 'bg-white rounded-lg ' : '' }`} 
           />
           <span

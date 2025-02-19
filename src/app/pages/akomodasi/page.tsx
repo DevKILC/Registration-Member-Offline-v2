@@ -61,7 +61,7 @@ export default function ProgramPage() {
             {locationData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Penjemputan belum tersedia untuk saat ini 🙏🏻</p>}
           </div>
 
-          <div className={formData.lokasijemput === "tidak_perlu_dijemput" || formData.lokasijemput === "" ? "hidden" : "block"}>
+          <div className={formData.lokasijemput === "" || formData.lokasijemput === "" ? "hidden" : "block"}>
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="kendaraan">Pilih Tipe Kendaraan :</Label>
@@ -112,7 +112,7 @@ export default function ProgramPage() {
           </div>
 
           <div className="flex flex-col lg:flex-row justify-center w-full space-y-4 lg:space-y-0">
-            <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "tidak_perlu_dijemput" ? "hidden" : "block"}`}>
+            <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "" ? "hidden" : "block"}`}>
               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
                 <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranPenjemputan)}</h2>

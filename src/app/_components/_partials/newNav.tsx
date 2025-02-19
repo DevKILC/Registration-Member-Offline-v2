@@ -71,7 +71,7 @@ const Navbar = () => {
       program: isProgramComplete(formData),
       akomodasi: Boolean(
         formData.cabang === "PARE" &&
-        (formData.lokasijemput !== "tidak_perlu_dijemput"
+        (formData.lokasijemput !== ""
           ? [formData.kendaraan && formData.penumpang]
           : [])
       ),

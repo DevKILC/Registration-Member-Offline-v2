@@ -22,7 +22,9 @@ export default function KonfirmasiPage() {
     modalTosIsOpen, 
     setModalTosIsOpen, 
     setSelectedPaymentMethod, 
-    selectedPaymentMethod 
+    selectedPaymentMethod,
+    courseDataIsValid,
+    personalDataIsValid
   } = useFormDataStore();
 
   const { 
@@ -167,7 +169,7 @@ export default function KonfirmasiPage() {
                 Kembali
               </Button>
 
-              <Button disabled={isSubmitting || !formData.tos} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed">
+              <Button disabled={isSubmitting || !formData.tos || !courseDataIsValid || !personalDataIsValid} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed">
                 Konfirmasi
               </Button>
             </div>
@@ -203,11 +205,14 @@ export default function KonfirmasiPage() {
             <PaymentOption
               key="other"
               id="other"
-              value="Pembayaran Lain"
-              checked={formData.metode_pembayaran === "Pembayaran Lain"}
+              value="infradigital"
+              checked={formData.metode_pembayaran === "infradigital"}
               icon="https://www.pngplay.com/wp-content/uploads/7/Debit-Card-Icon-PNG-Clipart-Background.png"
               label="Metode Pembayaran Lain"
-              onChange={(e) => updateField("metode_pembayaran", e.target.value)}
+              onChange={(e) => {
+                updateField("metode_pembayaran", e.target.value);
+                setSelectedPaymentMethod({ id: 0, value: "infradigital", icon: "", label: "Metode Pembayaran Lain" });
+              }}
               className={` ${errors.metode_pembayaran ? "border-red-500" : ""}`}
             />
           </div>

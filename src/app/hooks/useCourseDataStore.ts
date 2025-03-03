@@ -5,11 +5,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 interface CourseState {
   courseData: CourseSelect[];
   selectedCourse: Course | null;
+}
+
+interface CourseActions {
   setCourse: (data: Course[]) => void;
   setSelectedCourse: (data: Course | null) => void;
 }
 
-export const useCourseDataStore = create<CourseState>()(
+export const useCourseDataStore = create<CourseState & CourseActions>()(
   persist(
     (set) => ({
       courseData: [],

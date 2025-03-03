@@ -13,7 +13,7 @@ export const useEffectHomePageHooks = () => {
 
   // State untuk menyimpan data form
   // const [formData, setFormData] = useState(defaultFormData);
-  const { formData } = useFormDataStore();
+  const { formData, setPersonalDataIsValid } = useFormDataStore();
 
 
   // Handle submit form
@@ -38,8 +38,10 @@ export const useEffectHomePageHooks = () => {
     const { isValid, missingFields } = validateFormData(formData);
 
     if (isValid) {
+      setPersonalDataIsValid(true);
       router.push("/pages/program")
     } else {
+      setPersonalDataIsValid(false);
       const missingLabels = missingFields.map((item) => item.label);
       toast.error(
         "Mohon lengkapi data berikut: " + missingLabels.join(", ")

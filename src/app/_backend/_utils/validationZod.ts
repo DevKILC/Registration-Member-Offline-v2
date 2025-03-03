@@ -44,6 +44,6 @@ export const akomodasiSchema = z
   });
 
   export const konfirmasiSchema = z.object({
-    metode_pembayaran: z.string().min(1, "Metode Pembayaran harus dipilih"),
+    metode_pembayaran: z.string().min(3, "Metode Pembayaran harus dipilih"),
   });
   

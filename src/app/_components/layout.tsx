@@ -9,7 +9,7 @@ import "../globals.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, Bounce } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -38,7 +38,7 @@ export default function CustomLayout({
       <div className="flex flex-row w-full min-h-screen bg-img overflow-y-auto">
         <ToastContainer
           position="top-right"
-          autoClose={2000}
+          autoClose={2500}
           hideProgressBar={false}
           newestOnTop={true}
           closeOnClick={true}
@@ -47,7 +47,7 @@ export default function CustomLayout({
           draggable
           pauseOnHover
           theme="light"
-          transition={Bounce}
+          transition={Zoom}
         />
 
         {/* Container */}

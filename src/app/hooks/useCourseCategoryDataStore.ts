@@ -4,10 +4,13 @@ import { CourseCategory, CourseCategoryStore } from '../_backend/_utils/Interfac
 
 interface CourseCategoryState {
   courseCategoryData: CourseCategoryStore[];
+}
+
+interface CourseCategoryActions {
   setCourseCategory: (data: CourseCategory[]) => void;
 }
 
-export const useCourseCategoryDataStore = create<CourseCategoryState>()(
+export const useCourseCategoryDataStore = create<CourseCategoryState & CourseCategoryActions>()(
   persist(
     (set) => ({
       courseCategoryData: [],

@@ -5,10 +5,13 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 interface EducationState {
   educationData: { label: string; value: string }[];
+}
+
+interface EducationActions {
   setEducation: (data: Education[]) => void;
 }
 
-export const useEducationDataStore = create<EducationState>()(
+export const useEducationDataStore = create<EducationState & EducationActions>()(
   persist(
     (set) => ({
       educationData: [],
@@ -18,7 +21,7 @@ export const useEducationDataStore = create<EducationState>()(
             label: item.jenjang,
             value: item.code,
           })),
-      }),
+        }),
     }),
     {
       name: "education-data-storage", // name of the key in localStorage

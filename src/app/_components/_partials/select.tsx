@@ -38,7 +38,7 @@ export default function Select({
       <option value="">
         {placeholder || "Pilih salah satu"}
       </option>
-      {options.length > 1 && options.map((option) => (
+      {options.length > 0 && options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>

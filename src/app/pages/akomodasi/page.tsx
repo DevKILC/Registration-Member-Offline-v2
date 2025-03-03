@@ -12,6 +12,7 @@ import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook";
 import { PassengerSelect } from "@/app/_backend/_utils/Interfaces";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useResetFormHook } from "@/app/hooks/useResetFormHook";
+import { useEffect } from "react";
 
 export default function ProgramPage() {
 
@@ -40,6 +41,12 @@ export default function ProgramPage() {
     const total = Number(coursePrice) + Number(gradePrice) + Number(passengerPrice) + Number(adminFee);
     updateField("pembayaran", total);
   };
+
+  useEffect(() => {
+    getPickupData(formData.lokasijemput);
+  }
+  , [formData.lokasijemput]);
+
 
   return (
     <CustomLayout mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀" line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC">

@@ -1,11 +1,12 @@
+import { EducationQuery } from "../_backend/_utils/Interfaces";
 import api from "../config/api";
 import { toast } from "react-toastify";
 
 export const educationService = {
-  async getEducations() {
+  async getEducations(filter: EducationQuery) {
     toast.loading("Loading...");
     try {
-      const response = await api.get("/education");
+      const response = await api.get("/education", { params: filter });
       toast.dismiss();
       return response.data;
     } catch (error) {

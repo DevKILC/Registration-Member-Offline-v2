@@ -12,6 +12,8 @@ import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";
 import { useBranchBranch } from "./hooks/useBranchDataHook";
+import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
+import { useEffect } from "react";
 
 export default function Page() {
 
@@ -19,11 +21,16 @@ export default function Page() {
   const { getEducations } = useEducationDataHook();
   const { educationData } = useEducationDataStore();
   const { getBranchData } = useBranchBranch();
+  const { saveQueryParams } = useQueryParamsDataHook();
   const { 
     errors,
     handleSubmit,
     
   } = useEffectHomePageHooks();
+
+  useEffect(() => {
+    saveQueryParams();
+  }, []);
 
   return (
     <CustomLayout mainline="Langkah pertama untuk sukses dimulai di sini! 🚀" line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC">

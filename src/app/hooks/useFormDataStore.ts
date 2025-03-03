@@ -34,6 +34,7 @@ const initialFormData: useForm = {
   tos: false,
   cs: "",
   cs_id: "",
+  bank_code: "",
 };
 
 const initialPaymentMethod: PaymentMethod = {
@@ -43,12 +44,17 @@ const initialPaymentMethod: PaymentMethod = {
   label: "",
 };
 
-interface FormStore {
+interface formDataState {
   formData: useForm;
   errors: useForm;
+  personalDataIsValid: boolean;
+  courseDataIsValid: boolean;
   selectedPaymentMethod: PaymentMethod;
   isPopupOpen: boolean;
   modalTosIsOpen: boolean;
+}
+
+interface FormActions {
   updateField: (field: string, value: string | number) => void;
   resetForm: () => void;
   handleTabClick: (field: string, value: string | number) => void;
@@ -57,9 +63,11 @@ interface FormStore {
   setTos: (value: boolean) => void;
   setModalTosIsOpen: (value: boolean) => void;
   setSelectedPaymentMethod: (value: PaymentMethod) => void;
+  setPersonalDataIsValid: (value: boolean) => void;
+  setCourseDataIsValid: (value: boolean) => void;
 }
 
-export const useFormDataStore = create<FormStore>()(
+export const useFormDataStore = create<formDataState & FormActions>()(
   persist(
     (set) => ({
       formData: initialFormData,
@@ -68,7 +76,7 @@ export const useFormDataStore = create<FormStore>()(
       handleTabClick: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
       handleOptionTabClick: (value: string | number) =>
         set((state) => ({
-          formData: { ...state.formData, grade: String(value)},
+          formData: { ...state.formData, grade: String(value) },
         })),
       isPopupOpen: true,
       setIsPopupOpen: (value: boolean) => set({ isPopupOpen: value }),
@@ -78,6 +86,10 @@ export const useFormDataStore = create<FormStore>()(
       errors: initialFormData,
       selectedPaymentMethod: initialPaymentMethod,
       setSelectedPaymentMethod: (value: PaymentMethod) => set({ selectedPaymentMethod: value }),
+      personalDataIsValid: false,
+      setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
+      courseDataIsValid: false,
+      setPersonalDataIsValid: (value: boolean) => set({ personalDataIsValid: value }),
     }),
     {
       name: "form-data-storage", // nama key di localStorage
@@ -87,7 +99,9 @@ export const useFormDataStore = create<FormStore>()(
       partialize: (state) => ({
         formData: state.formData,
         selectedPatmentMethod: state.selectedPaymentMethod,
-        isPopupOpen: state.isPopupOpen
+        isPopupOpen: state.isPopupOpen,
+        personalDataIsValid: state.personalDataIsValid,
+        courseDataIsValid: state.courseDataIsValid,
       }),
     }
   )

@@ -47,3 +47,7 @@ export const metodePembayaran = [
     label: "Bank Permata",
   },
 ];
+
+export const toastSettings = {
+  toastLoadingId: "loading",
+}

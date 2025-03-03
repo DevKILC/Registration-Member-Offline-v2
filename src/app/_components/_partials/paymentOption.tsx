@@ -40,7 +40,7 @@ export default function PaymentOption({
         <div className="flex items-center space-x-3  ">
           <Image
             src={icon}
-            alt=""
+            alt={value}
             width={52}
             height={47} 
             className={` h-10 w-10 ${ checked ? 'bg-white rounded-lg ' : '' }`} 

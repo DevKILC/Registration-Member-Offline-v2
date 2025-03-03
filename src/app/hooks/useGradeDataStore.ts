@@ -5,11 +5,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface GradeState {
   gradeData: GradeSelect[];
   selectedGrade: Grade | null;
+}
+
+interface GradeActions {
   setGrade: (data: Grade[]) => void;
   setSelectedGrade: (data: Grade | null) => void;
 }
 
-export const useGradeDataStore = create<GradeState>()(
+export const useGradeDataStore = create<GradeState & GradeActions>()(
   persist(
     (set) => ({
       gradeData: [],
@@ -22,7 +25,7 @@ export const useGradeDataStore = create<GradeState>()(
             grade: item,
           })),
         }),
-      setSelectedGrade: (data: Grade| null) =>
+      setSelectedGrade: (data: Grade | null) =>
         set({
           selectedGrade: data,
         }),

@@ -1,13 +1,18 @@
 import branchService from "@/app/services/branchService";
 import { toast } from "react-toastify";
 import { useBranchDataStore } from "./useBranchDataStore";
+import { useQueryParamsDataStore } from './useQueryParamsDataStore';
 
 export const useBranchBranch = () => {
+  const { queryParams } = useQueryParamsDataStore();
   const { setBranch } = useBranchDataStore();
   const getBranchData = async (educationCode: string) => {
-    const education = { education: educationCode };
+    const filter = {
+      education: educationCode,
+      branch: queryParams?.br_code || "",
+    };
     await branchService
-      .getBranches(education)
+      .getBranches(filter)
       .then((response) => {
         setBranch(response.data);
       })

@@ -118,9 +118,7 @@ export const validateFormDataAkomodasi = (formData: useForm) => {
 
 export const validateFormDataKonfirmasi = (formData: useForm) => {
 
-  const requiredFields = [
-    { field: "pembayaran", label: "Metode Pembayaran" },
-  ];
+  const requiredFields = [{ field: "metode_pembayaran", label: "Metode Pembayaran" }];
   const missingFields = requiredFields.filter(
     (item) => !formData[item.field as keyof typeof formData]
   );

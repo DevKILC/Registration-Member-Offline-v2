@@ -30,6 +30,7 @@ export interface useForm {
   tos: boolean;
   cs: string;
   cs_id: string;
+  bank_code: string;
   [key: string]: string | number | boolean | { value: string; label: string };
 }
 
@@ -40,6 +41,7 @@ export interface BranchQuery {
 export interface PeriodeQuery {
   education: string | null;
   branch: string | null;
+  course: string | null;
 }
 
 export interface Course {
@@ -65,6 +67,7 @@ export interface CourseQuery {
   periode_id: string;
   category_id: string;
   gender: string;
+  course: string | null;
 }
 
 export interface Grade {
@@ -91,6 +94,7 @@ export interface CourseCategoryQuery {
   education_code: string;
   periode_id: string;
   gender: string;
+  course: string | null;
 }
 export interface CourseCategory {
   id: number;
@@ -135,6 +139,10 @@ export interface Education{
 export interface EducationSelectProps{
   label: string;
   value: string;
+}
+
+export interface EducationQuery{
+  course: string | null;
 }
 
 export interface PeriodeSelectProps{
@@ -312,4 +320,10 @@ export interface PaymentMethod {
   value: string;
   icon: string;
   label: string;
+}
+
+export interface QueryParams{
+  br_code: string | null;
+  course: string | null;
+  cs_id: string | null;
 }

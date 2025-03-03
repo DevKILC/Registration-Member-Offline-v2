@@ -13,7 +13,7 @@ import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore
 
 export const useConfirmationPageHooks = () => {
 
-  const { formData, setTos, updateField, setModalTosIsOpen } = useFormDataStore();
+  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -42,9 +42,6 @@ export const useConfirmationPageHooks = () => {
       setErrors({});
     }
 
-    // Simpan data di sessionStorage
-    sessionStorage.setItem("formData", JSON.stringify(formData));
-
     // Redirect ke halaman thankyou
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
 
@@ -56,6 +53,9 @@ export const useConfirmationPageHooks = () => {
           setIsSubmitting(false);
           if (res.status !== 500){
             setRegistrationResult(res.data.result);
+            resetForm();
+            setPersonalDataIsValid(false);
+            setCourseDataIsValid(false);
             router.push("/pages/thankyou");
           };
         })

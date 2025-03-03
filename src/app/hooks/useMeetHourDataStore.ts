@@ -4,10 +4,13 @@ import { MeetHour, MeetHourStore } from "../_backend/_utils/Interfaces";
 
 interface MeetHourState {
   meetHourData: MeetHourStore[];
+}
+
+interface MeetHourActions {
   setMeetHour: (data: MeetHour[]) => void;
 }
 
-export const useMeetHourDataStore = create<MeetHourState>()(
+export const useMeetHourDataStore = create<MeetHourState & MeetHourActions>()(
   persist(
     (set) => ({
       meetHourData: [],

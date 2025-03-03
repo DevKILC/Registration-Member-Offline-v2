@@ -17,7 +17,7 @@ import { useMeetHourDataHook } from "@/app/hooks/useMeetHourDataHook";
 
 export const useProgramPagehooks = () => {
   const router = useRouter();
-  const { formData, handleOptionTabClick } = useFormDataStore();
+  const { formData, handleOptionTabClick, setCourseDataIsValid } = useFormDataStore();
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
   const { updateField } = useFormDataStore();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -63,8 +63,10 @@ export const useProgramPagehooks = () => {
         fieldErrors[err.path[0]] = err.message;
       });
       setErrors(fieldErrors);
+      setCourseDataIsValid(false);
     } else {
       setErrors({});
+      setCourseDataIsValid(true);
       // Cek cabang untuk navigasi
       if (formData.cabang === "PARE") {
         router.push("/pages/akomodasi");
@@ -128,14 +130,12 @@ export const useProgramPagehooks = () => {
       resetSelectedDuration();
       resetSelectedGrade();
       resetSelectedDuration();
-      resetSelectedGrade();
       resetJamPertemuan();
       setSelectedCourse(null);
       resetPembayaranPaket();
       setCourse([]);
       setGrade([]);
       resetTotalPrice();
-      resetJamPertemuan();
       getCourseCategories(e.target.value);
     },
     [getCourseData]

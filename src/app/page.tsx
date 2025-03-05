@@ -187,7 +187,7 @@ export default function Page() {
             "https://connect.facebook.net/en_US/fbevents.js"
           );
           fbq("init", "1881998885434766");
-          fbq("track", "initiateCheckout");`,
+          fbq("trackCustom", "initiateCheckout");`,
         }}
       />
       <Script

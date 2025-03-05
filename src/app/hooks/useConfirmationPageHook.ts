@@ -9,14 +9,14 @@ import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/c
 import { registrationService } from "@/app/services/registrationService";
 import { useDebounce } from "use-debounce";
 import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore";
-
+import { getCookies } from "./useCookiesData";
+import { addPaymentInfo } from "./useMetaPixelEvent";
 
 export const useConfirmationPageHooks = () => {
 
   const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
   const router = useRouter();
   const [accepted, setAccepted] = useState(false);
   const [akomodasi, setAkomodasi] = useState(false);
@@ -42,9 +42,17 @@ export const useConfirmationPageHooks = () => {
       setErrors({});
     }
 
-    // Redirect ke halaman thankyou
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
-
+    const fbp = await getCookies("_fbp");
+    const fbc = await getCookies("_fbc");
+    const data = {
+      formData: formData,
+      fbp: fbp,
+      fbc: fbc
+    }
+    addPaymentInfo(data);
+    setIsSubmitting(false);
+    return;
     if (isValid) {
       await registrationService
         .register(formData)

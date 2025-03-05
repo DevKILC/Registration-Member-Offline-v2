@@ -17,6 +17,24 @@ export const useQueryParamsDataHook = () => {
       if (urlParams.has("cs_id")) {
         updateField("cs_id", urlParams.get("cs_id") as string);
       }
+      if (urlParams.has("utm_source")) {
+        updateField("utm_source", urlParams.get("utm_source") as string);
+      }
+      if (urlParams.has("utm_medium")) {
+        updateField("utm_medium", urlParams.get("utm_medium") as string);
+      }
+      if (urlParams.has("utm_campaign")) {
+        updateField("utm_campaign", urlParams.get("utm_campaign") as string);
+      }
+      if (urlParams.has("utm_content")) {
+        updateField("utm_content", urlParams.get("utm_content") as string);
+      }
+      if (urlParams.has("utm_term")) {
+        updateField("utm_term", urlParams.get("utm_term") as string);
+      }
+      if (urlParams.has("aff")) {
+        updateField("aff", urlParams.get("aff") as string);
+      }
     }
   };
 

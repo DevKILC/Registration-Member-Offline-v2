@@ -322,8 +322,14 @@ export interface PaymentMethod {
   label: string;
 }
 
-export interface QueryParams{
+export interface QueryParams {
   br_code: string | null;
   course: string | null;
   cs_id: string | null;
+  utm_medium: string | null;
+  utm_source: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  utm_term: string | null;
+  aff: string | null;
 }

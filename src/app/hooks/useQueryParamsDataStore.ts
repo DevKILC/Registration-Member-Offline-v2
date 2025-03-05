@@ -6,7 +6,13 @@ const initialQueryParams: QueryParams = {
   br_code: null,
   course: null,
   cs_id: null,
-}
+  utm_medium: null,
+  utm_source: null,
+  utm_campaign: null,
+  utm_content: null,
+  utm_term: null,
+  aff: null,
+};
 
 interface QueryParamsDataState {
   queryParams: QueryParams | null;

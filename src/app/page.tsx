@@ -14,7 +14,7 @@ import { useEducationDataStore } from "./hooks/useEducationDataStore";
 import { useBranchBranch } from "./hooks/useBranchDataHook";
 import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
 import { useEffect } from "react";
-import Head from "next/head";
+import Script from "next/script";
 
 export default function Page() {
 
@@ -160,9 +160,10 @@ export default function Page() {
           </div>
         </form>
       </CustomLayout>
-      <Head>
-        <script>
-          {`!(function (f, b, e, v, n, t, s) {
+      <Script
+        id="gtm-script"
+        dangerouslySetInnerHTML={{
+          __html: `!(function (f, b, e, v, n, t, s) {
             if (f.fbq) return;
             n = f.fbq = function () {
                 n.callMethod
@@ -186,9 +187,9 @@ export default function Page() {
             "https://connect.facebook.net/en_US/fbevents.js"
           );
           fbq("init", "1881998885434766");
-          fbq("track", "initiateCheckout");`}
-        </script>
-      </Head>
+          fbq("track", "initiateCheckout");`,
+        }}
+      />
     </>
   );
 }

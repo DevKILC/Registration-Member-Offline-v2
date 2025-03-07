@@ -42,6 +42,15 @@ export default function ProgramPage() {
     updateField("pembayaran", total);
   };
 
+  const handleSkipAccommodation = (e: React.MouseEvent) => {
+    e.preventDefault();  
+    updateField("lokasijemput", "");  
+    updateField("kendaraan", ""); 
+    updateField("penumpang", "");
+
+    router.push("konfirmasi")
+  };
+
   useEffect(() => {
     getPickupData(formData.lokasijemput);
   }
@@ -50,8 +59,15 @@ export default function ProgramPage() {
 
   return (
     <CustomLayout mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀" line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC">
+
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[6.85rem]">
+    
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
+        <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+        <p className="text-yellow-500 text-sm text-center">
+          Anda dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan. <button type="submit" onClick={handleSkipAccommodation} className="cursor-pointer underline">Klik disini untuk melewati</button>
+        </p>
+      </div>
           <div className="flex flex-col space-y-2">
             <Label htmlFor="lokasijemput">Pilih Lokasi Penjemputan :</Label>
             <Select

@@ -27,8 +27,8 @@ export const addPaymentInfo = async (data: any) => {
             fn: data.formData.nama,
             ph: data.formData.nomor,
             em: data.formData.email,
-            fbp: data.fbp.value,
-            fbc: data.fbc.value,
+            fbp: data.fbp?.value,
+            fbc: data.fbc?.value,
           });
           console.log("Meta Pixel: AddPaymentInfo event tracked");
         } else {

@@ -49,7 +49,7 @@ export const useConfirmationPageHooks = () => {
     const data = {
       formData: formData,
       fbp: fbp,
-      fbc: fbc
+      fbc: fbc ? fbc : null,
     }
     if (isValid) {
       await registrationService

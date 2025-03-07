@@ -1,107 +1,78 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UserCircle2, BookOpen, Car, CheckCircle } from "lucide-react";
-import { useForm } from "@/app/_backend/_utils/Interfaces";
+import { usePathname } from "next/navigation";
 import { useFormDataStore } from "@/app/hooks/useFormDataStore";
-
-interface CompletedSteps {
-  dataDiri: boolean;
-  program: boolean;
-  akomodasi: boolean;
-}
-
-enum NavigationStep {
-  DataDiri = 0,
-  Program = 1,
-  Akomodasi = 2,
-  Konfirmasi = 3,
-}
-
-interface NavItem {
-  label: string;
-  path: string;
-  step: keyof CompletedSteps | 'konfirmasi';
-  enabled: boolean;
-  enumValue: NavigationStep;
-  icon: React.ReactNode;
-}
+import Link from "next/link";
 
 const Navbar = () => {
   const pathname = usePathname();
   const { formData } = useFormDataStore();
-  const [akomodasi, setAkomodasi] = useState("");
-  const [completedSteps, setCompletedSteps] = useState<CompletedSteps>({
+  const [completedSteps, setCompletedSteps] = useState({
     dataDiri: false,
     program: false,
     akomodasi: false,
   });
 
-  useEffect(() => {
-    setAkomodasi(formData?.cabang || "");
-  }, [formData.cabang]);
+  // Function to check if required fields for a step are filled
+  const checkCompletedSteps = () => {
+    // Check for dataDiri completion
+    const dataDiriCompleted = Boolean(
+      formData.nama &&
+      formData.email &&
+      formData.nomor &&
+      formData.gender &&
+      formData.kesibukan
+    );
 
-  const isProgramComplete = (data: useForm): boolean => {
-    if (!data.paket) return false;
+    // Check for program completion
+    const programCompleted = Boolean(
+      formData.paket &&
+      formData.cabang &&
+      formData.periode &&
+      formData.kategoriPaket &&
+      formData.grade
+    );
 
-    const baseCondition = data.cabang && data.periode && data.paketdetail;
-    if (!baseCondition) return false;
-
-    switch (data.paket) {
-      case "intergrated":
-        return Boolean(data.jampertemuan);
-      case "private":
-        return Boolean(data.jampertemuanprivate1 && data.jampertemuanprivate2);
-      default:
-        return Boolean(data.grade);
-    }
+    const akomodasiCompleted: boolean = formData.lokasijemput === ""
+    ? true 
+    : formData.cabang === "PARE"
+      ? Boolean(formData.lokasijemput !== null && formData.kendaraan && formData.penumpang)  
+      : false;  
+  
+    // Update the completedSteps state based on the form data
+    setCompletedSteps({
+      dataDiri: dataDiriCompleted,
+      program: programCompleted,
+      akomodasi: akomodasiCompleted,
+    });
   };
 
   useEffect(() => {
-    setCompletedSteps({
-      dataDiri: Boolean(
-        formData.nama &&
-        formData.email &&
-        formData.nomor &&
-        formData.gender &&
-        formData.kesibukan
-      ),
-      program: isProgramComplete(formData),
-      akomodasi: Boolean(
-        formData.cabang === "PARE" &&
-        (formData.lokasijemput !== ""
-          ? [formData.kendaraan && formData.penumpang]
-          : [])
-      ),
-    });
+    // Check if the form data is complete whenever it changes
+    checkCompletedSteps();
   }, [formData]);
 
-  const getActiveStatus = (path: string): NavigationStep => {
-    const pathMap: Record<string, NavigationStep> = {
-      "/": NavigationStep.DataDiri,
-      "/pages/program": NavigationStep.Program,
-      "/pages/akomodasi": NavigationStep.Akomodasi,
-      "/pages/konfirmasi": NavigationStep.Konfirmasi,
+  const getActiveStatus = (path: string) => {
+    const pathMap: Record<string, number> = {
+      "/": 0,
+      "/pages/program": 1,
+      "/pages/akomodasi": 2,
+      "/pages/konfirmasi": 3,
     };
-    return pathMap[path] ?? NavigationStep.DataDiri;
+    return pathMap[path] ?? 0;
   };
 
-  const shouldBeActive = (itemStep: NavigationStep, currentStep: NavigationStep): boolean => {
-    return itemStep <= currentStep;
-  };
+  const shouldBeActive = (itemStep: number, currentStep: number) => itemStep <= currentStep;
 
   const currentStep = getActiveStatus(pathname);
 
-  const buildNavItems = (): NavItem[] => {
-    const baseItems: NavItem[] = [
+  const buildNavItems = () => {
+    const baseItems = [
       {
         label: "Data Diri",
         path: "/",
         step: "dataDiri",
         enabled: true,
-        enumValue: NavigationStep.DataDiri,
         icon: <UserCircle2 className="w-5 h-4.5 lg:mr-2" />,
       },
       {
@@ -109,31 +80,26 @@ const Navbar = () => {
         path: "/pages/program",
         step: "program",
         enabled: completedSteps.dataDiri,
-        enumValue: NavigationStep.Program,
         icon: <BookOpen className="w-5 h-4.5 lg:mr-2" />,
       },
     ];
 
-    const akomodasiItems: NavItem[] = akomodasi === "PARE" ? [
+    const akomodasiItems = formData.cabang === "PARE" ? [
       {
         label: "Akomodasi",
         path: "/pages/akomodasi",
         step: "akomodasi",
-        enabled: completedSteps.program && completedSteps.dataDiri,
-        enumValue: NavigationStep.Akomodasi,
+        enabled: completedSteps.dataDiri && completedSteps.program,
         icon: <Car className="w-5 h-4.5 lg:mr-2" />,
       },
     ] : [];
 
-    const konfirmasiItems: NavItem[] = [
+    const konfirmasiItems = [
       {
         label: "Konfirmasi",
         path: "/pages/konfirmasi",
         step: "konfirmasi",
-        enabled: akomodasi === "PARE"
-          ? completedSteps.akomodasi && completedSteps.program && completedSteps.dataDiri
-          : completedSteps.program && completedSteps.dataDiri,
-        enumValue: NavigationStep.Konfirmasi,
+        enabled: formData.cabang === "PARE" ? completedSteps.dataDiri && completedSteps.program && completedSteps.akomodasi : completedSteps.dataDiri && completedSteps.program,
         icon: <CheckCircle className="w-5 h-4.5 lg:mr-2" />,
       },
     ];
@@ -145,38 +111,51 @@ const Navbar = () => {
     <nav className="w-full">
       <div className="relative flex items-center justify-between">
         {buildNavItems().map((item, index, array) => (
-          <div
-            key={item.path}
-            className="relative flex-1"
-          >
-            <Link
-              href={item.path}
-              className={`group flex items-center h-10 lg:text-base w-full text-xs${
-                !item.enabled ? "cursor-not-allowed" : ""
-              }`}
-            >
+          <div key={item.path} className="relative flex-1">
+            {/* Conditionally render the Link or a div when disabled */}
+            {item.enabled ? (
+              <Link
+                href={item.path}
+                className={`group flex items-center h-10 lg:text-base w-full text-xs`}
+              >
+                <div
+                  className={`
+                    relative flex items-center justify-center w-full 
+                    h-10 lg:text-base text-xs lg:px-4 px-2 font-extrabold
+                    ${index !== array.length - 1 ? "chevron-shape" : "last-chevron-shape"}
+                    ${shouldBeActive(index, currentStep)
+                      ? "bg-main-color text-white"
+                      : "bg-[#E5E5E5] text-gray-500"}
+                  `}
+                  style={{
+                    clipPath: index !== array.length - 1
+                      ? 'polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%)'
+                      : 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 20px 50%)',
+                  }}
+                >
+                  <div className="flex items-center justify-center ml-[0.6rem]">
+                    <span className="lg:hidden block">{item.icon}</span>
+                    <span className="hidden lg:block">{item.label}</span>
+                  </div>
+                </div>
+              </Link>
+            ) : (
               <div
-                className={`
-                  relative flex items-center justify-center w-full 
-                  h-10 lg:text-base text-xs lg:px-4 px-2 font-extrabold
-                  ${index !== array.length - 1 ? "chevron-shape" : "last-chevron-shape"}
-                  ${shouldBeActive(item.enumValue, currentStep)
-                    ? "bg-main-color text-white"
-                    : "bg-[#E5E5E5] text-gray-500"}
-                  ${!item.enabled ? "opacity-60" : ""}
-                `}
+                className="group flex items-center h-10 lg:text-base w-full text-xs cursor-not-allowed opacity-60"
                 style={{
                   clipPath: index !== array.length - 1
                     ? 'polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%)'
                     : 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 20px 50%)',
                 }}
               >
-                <div className="flex items-center justify-center ml-[0.6rem]">
-                  <span className="lg:hidden block">{item.icon}</span>
-                  <span className="hidden lg:block">{item.label}</span>
+                <div className="relative flex items-center justify-center w-full h-10 lg:text-base text-xs lg:px-4 px-2 font-extrabold bg-[#E5E5E5] text-gray-500">
+                  <div className="flex items-center justify-center ml-[0.6rem]">
+                    <span className="lg:hidden block">{item.icon}</span>
+                    <span className="hidden lg:block">{item.label}</span>
+                  </div>
                 </div>
               </div>
-            </Link>
+            )}
 
             {!item.enabled && (
               <div className="absolute left-1/2 -translate-x-1/2 mt-2">

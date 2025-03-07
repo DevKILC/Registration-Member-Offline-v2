@@ -48,7 +48,7 @@ export const useConfirmationPageHooks = () => {
     const fbc = await getCookies("_fbc");
     const data = {
       formData: formData,
-      fbp: fbp,
+      fbp: fbp ? fbp : null,
       fbc: fbc ? fbc : null,
     }
     if (isValid) {

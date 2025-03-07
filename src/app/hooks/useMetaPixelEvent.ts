@@ -18,7 +18,6 @@ export const addPaymentInfo = async (data: any) => {
     if (typeof window !== "undefined" && window.fbq) {
       try {
         if (typeof window.fbq === "function") {
-          console.log(data.fbc.value);
           window.fbq("trackCustom", "AddPaymentInfo", {
             content_name: "Registrasi Lc Offline",
             content_category: "LC Offline",

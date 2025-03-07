@@ -51,6 +51,7 @@ export const useConfirmationPageHooks = () => {
       fbp: fbp ? fbp : null,
       fbc: fbc ? fbc : null,
     }
+    console.log(data);
     if (isValid) {
       await registrationService
         .register(formData)

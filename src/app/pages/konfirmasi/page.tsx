@@ -169,7 +169,7 @@ export default function KonfirmasiPage() {
                 Kembali
               </Button>
 
-              <Button disabled={isSubmitting || !formData.tos || !courseDataIsValid || !personalDataIsValid} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed">
+              <Button disabled={isSubmitting || !formData.tos || !courseDataIsValid || !personalDataIsValid} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed" id="submit_form">
                 Konfirmasi
               </Button>
             </div>

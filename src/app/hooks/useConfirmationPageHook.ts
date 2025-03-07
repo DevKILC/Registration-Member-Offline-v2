@@ -10,7 +10,8 @@ import { registrationService } from "@/app/services/registrationService";
 import { useDebounce } from "use-debounce";
 import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore";
 import { getCookies } from "./useCookiesData";
-import { addPaymentInfo } from "./useMetaPixelEvent";
+import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
+import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
 
 export const useConfirmationPageHooks = () => {
 
@@ -50,14 +51,13 @@ export const useConfirmationPageHooks = () => {
       fbp: fbp,
       fbc: fbc
     }
-    addPaymentInfo(data);
-    setIsSubmitting(false);
-    return;
     if (isValid) {
       await registrationService
         .register(formData)
         .then((res) => {
           toast.dismiss();
+          addPaymentInfoMetaPixel(data);
+          addPaymentInfoTiktokPixel();
           setIsSubmitting(false);
           if (res.status !== 500){
             setRegistrationResult(res.data.result);

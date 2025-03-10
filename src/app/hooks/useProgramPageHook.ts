@@ -14,11 +14,13 @@ import { usePeriodeDataStore } from "@/app/hooks/usePeriodeDataStore";
 import { useCourseCategoryDataStore } from "@/app/hooks/useCourseCategoryDataStore";
 import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
 import { useMeetHourDataHook } from "@/app/hooks/useMeetHourDataHook";
+import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook"
 
 export const useProgramPagehooks = () => {
   const router = useRouter();
   const { formData, handleOptionTabClick, setCourseDataIsValid } = useFormDataStore();
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
+  const { getPickupLocation } = useAccomodationDataHook();
   const { updateField } = useFormDataStore();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const {
@@ -69,6 +71,7 @@ export const useProgramPagehooks = () => {
       setCourseDataIsValid(true);
       // Cek cabang untuk navigasi
       if (formData.cabang === "PARE") {
+        getPickupLocation();
         router.push("/pages/akomodasi");
       } else {
         router.push("/pages/konfirmasi");

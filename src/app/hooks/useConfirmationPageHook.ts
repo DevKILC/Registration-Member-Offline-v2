@@ -12,11 +12,13 @@ import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore
 import { getCookies } from "./useCookiesData";
 import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
 import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
+import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
 
 export const useConfirmationPageHooks = () => {
 
   const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
+  const { queryParams } = useQueryParamsDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const [accepted, setAccepted] = useState(false);
@@ -45,13 +47,11 @@ export const useConfirmationPageHooks = () => {
 
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
     const fbp = await getCookies("_fbp");
-    const fbc = await getCookies("_fbc");
     const data = {
       formData: formData,
       fbp: fbp ? fbp : null,
-      fbc: fbc ? fbc : null,
+      fbc: queryParams?.fbc,
     }
-    console.log(data);
     if (isValid) {
       await registrationService
         .register(formData)

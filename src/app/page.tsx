@@ -11,7 +11,6 @@ import { genderOptions } from "@/app/data/data"
 import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";
-import { useBranchBranch } from "./hooks/useBranchDataHook";
 import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
 import { useEffect } from "react";
 import Script from "next/script";
@@ -21,12 +20,11 @@ export default function Page() {
   const { formData, updateField, handleTabClick } = useFormDataStore();
   const { getEducations } = useEducationDataHook();
   const { educationData } = useEducationDataStore();
-  const { getBranchData } = useBranchBranch();
   const { saveQueryParams } = useQueryParamsDataHook();
   const { 
     errors,
     handleSubmit,
-    
+    educationChangeHandler
   } = useEffectHomePageHooks();
 
   useEffect(() => {
@@ -136,8 +134,7 @@ export default function Page() {
                   options={educationData}
                   value={formData.kesibukan}
                   onChange={(e) => {
-                    updateField("kesibukan", e.target.value);
-                    getBranchData(e.target.value);
+                    educationChangeHandler(e.target.value)
                   }}
                   className={` ${errors.kesibukan ? "border-red-500" : ""} `}
                 />

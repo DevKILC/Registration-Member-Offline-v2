@@ -15,6 +15,18 @@ declare global {
 
 export const addPaymentInfo = async (data: any) => {
   const trackMetaPixelEvent = () => {
+    const dataParams = {
+      content_name: "Registrasi Lc Offline",
+      content_category: "LC Offline",
+      currency: "IDR",
+      value: data.formData.pembayaran,
+      fn: data.formData.nama,
+      ph: data.formData.nomor,
+      em: data.formData.email,
+      fbp: data.fbp?.value,
+      fbc: data.fbc,
+    };
+    console.log(dataParams);
     if (typeof window !== "undefined" && window.fbq) {
       try {
         if (typeof window.fbq === "function") {
@@ -27,7 +39,7 @@ export const addPaymentInfo = async (data: any) => {
             ph: data.formData.nomor,
             em: data.formData.email,
             fbp: data.fbp?.value,
-            fbc: data.fbc?.value,
+            fbc: data.fbc,
           });
           console.log("Meta Pixel: AddPaymentInfo event tracked");
         } else {

@@ -4,17 +4,17 @@ import { validateFormData } from "@/app/_backend/_utils/validationAlert";
 import { dataDiriSchema } from "@/app/_backend/_utils/validationZod";
 import { toast } from "react-toastify";
 import { useFormDataStore } from "@/app/hooks/useFormDataStore";
+import { useBranchBranch } from "@/app/hooks/useBranchDataHook";
 
 export const useEffectHomePageHooks = () => {
 
   const router = useRouter();
-
+  const { getBranchData } = useBranchBranch();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // State untuk menyimpan data form
   // const [formData, setFormData] = useState(defaultFormData);
-  const { formData, setPersonalDataIsValid } = useFormDataStore();
-
+  const { formData, setPersonalDataIsValid, updateField } = useFormDataStore();
 
   // Handle submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,9 +49,16 @@ export const useEffectHomePageHooks = () => {
     }
   };
 
+  const educationChangeHandler = (educationCode: string) => {
+    updateField("kesibukan", educationCode);
+    updateField("cabang", "");
+    getBranchData(educationCode);
+  };
+
   return {
     errors,
-    handleSubmit
+    handleSubmit,
+    educationChangeHandler,
   };
 
 }

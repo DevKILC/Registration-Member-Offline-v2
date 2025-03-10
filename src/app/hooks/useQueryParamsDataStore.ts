@@ -11,6 +11,7 @@ const initialQueryParams: QueryParams = {
   utm_campaign: null,
   utm_content: null,
   utm_term: null,
+  fbc: null,
   aff: null,
 };
 

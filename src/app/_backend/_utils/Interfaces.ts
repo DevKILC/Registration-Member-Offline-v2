@@ -332,4 +332,5 @@ export interface QueryParams {
   utm_content: string | null;
   utm_term: string | null;
   aff: string | null;
+  fbc: string | null;
 }

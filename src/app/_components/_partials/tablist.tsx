@@ -32,7 +32,7 @@ export default function TabList({
             rounded-[10px]
             text-sm
             text-center
-            hover:text-black
+            hover:text-color
             hover:bg-main-color
             focus:outline-none
             focus:ring-2
@@ -41,7 +41,7 @@ export default function TabList({
             duration-300
             ${className}
             ${isActive
-                    ? ' bg-main-color text-black hover:bg-main-color border border-gray-400'
+                    ? ' bg-main-color text-color hover:bg-main-color border border-gray-400'
                     : 'border-black/40 text-gray-400'
                 }
             `}

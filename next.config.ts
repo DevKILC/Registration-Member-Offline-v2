@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    domains: ["files.kampunginggrislc.com", "idn-static-assets.s3-ap-southeast-1.amazonaws.com", "studio.uxpincdn.com"],
+    domains: ["files.kampunginggrislc.com", "idn-static-assets.s3-ap-southeast-1.amazonaws.com", "studio.uxpincdn.com" , "www.pngplay.com"],
   },
 };
 

@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Zoom } from "react-toastify";
 import useLayoutHook from "../hooks/useLayoutHook";
+import tag from "./_assets/logo.png";
+import jk from "./_assets/jk.png";
+import logo from "./_assets/logo.svg";
+
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -57,7 +61,7 @@ export default function CustomLayout({
           <div className="mx-10 my-5">
             {/* Logo */}
             <Image
-              src={logoImage}
+              src={logoImage || logo}
               alt="Logo"
               width={150}
               height={150}
@@ -80,10 +84,10 @@ export default function CustomLayout({
           <div className="w-full h-full">
             <div className="lg:flex items-center justify-center w-full h-full relative">
               {/* Background image */}
-              <Image src={jkImage} alt="Side Image" className="object-cover" layout="fill" priority/>
+              <Image src={jkImage || jk} alt="Side Image" className="object-cover" layout="fill" priority/>
               {/* Tag image */}
               <Image
-                src={tagImage}
+                src={tagImage || tag}
                 alt="Tag Image"
                 width={400}
                 height={100}

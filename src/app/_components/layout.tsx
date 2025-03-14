@@ -57,7 +57,7 @@ export default function CustomLayout({
         />
 
         {/* Container */}
-        <div className="lg:w-[60%] w-[100%] bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
+        <div className="lg:w-[60%]  w-[100%] bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
           <div className="mx-10 my-5">
             {/* Logo */}
             <Image
@@ -77,7 +77,7 @@ export default function CustomLayout({
             {/* Main Content */}
             <div className="mt-5 mb-5 flex-1">{children}</div>
           </div>
-        </div>
+        </div> 
 
         {/* Side Content */}
         <div className="lg:block hidden w-[40%] h-auto">

@@ -81,7 +81,7 @@ export default function ProgramPage() {
                 {courseCategoryData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Paket belum tersedia untuk saat ini 🙏🏻</p>}
                 {courseCategoryData.map((item) => (
                   <TabList
-                    key={item.course_id}
+                    key={item.value}
                     label={item.label}
                     value={item.value}
                     onClick={() => handleCourseChange(item)}

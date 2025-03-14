@@ -146,13 +146,14 @@ export const useProgramPagehooks = () => {
 
   const handleCourseChange = useCallback(
     (item: CourseCategoryStore) => {
+      console.log(item);
       updateField("kategoriPaket", item.value);
       resetSelectedCourse();
       resetSelectedDuration();
       resetSelectedGrade();
       resetJamPertemuan();
       setGrade([]);
-      getCourseData(item.value);
+      getCourseData(item.course_id);
       resetTotalPrice();
       resetJamPertemuan();
       setSelectedGrade(null);

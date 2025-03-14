@@ -62,12 +62,8 @@ export interface CourseSelect {
 }
 
 export interface CourseQuery {
-  branch_code: string;
-  education_code: string;
-  periode_id: string;
-  category_id: string;
-  gender: string;
-  course: string | null;
+  courseId: string | null;
+  education: string | null;
 }
 
 export interface Grade {

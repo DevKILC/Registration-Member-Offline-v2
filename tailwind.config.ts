@@ -1,4 +1,7 @@
-import type { Config } from "tailwindcss";
+import { Config } from "tailwindcss";
+
+// Use CSS variables
+const mainColorVar = "var(--main-color)"; // This is your dynamic main color
 
 export default {
   content: [
@@ -11,8 +14,13 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        'main-color': '#FACC14', // Warna utama yang ditambahkan
-        'bill': '#5CB338'
+        'main-color': mainColorVar,  // Use the main color CSS variable
+        'main-color-50': 'var(--main-color-50)',
+        'main-color-200': 'var(--main-color-200)',
+        'main-color-500': 'var(--main-color-500)',
+        'main-color-700': 'var(--main-color-700)',
+        'bill': 'var(--bill)',
+        'color': 'var(--text-color)',
       },
     },
   },

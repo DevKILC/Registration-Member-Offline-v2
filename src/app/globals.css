@@ -3,10 +3,18 @@
 
 @tailwind utilities;
 
+/* globals.css */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --main-color: var(--main-color);
+  --main-color-50: var(--main-color-50);
+  --main-color-200: var(--main-color-200);
+  --main-color-500: var(--main-color-500);
+  --main-color-700: var(--main-color-700);
+  --bill: var(--bill);
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {

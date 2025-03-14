@@ -153,7 +153,7 @@ export const useProgramPagehooks = () => {
       resetSelectedGrade();
       resetJamPertemuan();
       setGrade([]);
-      getCourseData(item.course_id);
+      getCourseData(item.course_id, item.value);
       resetTotalPrice();
       resetJamPertemuan();
       setSelectedGrade(null);

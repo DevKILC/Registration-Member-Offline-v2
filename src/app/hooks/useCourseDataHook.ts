@@ -9,10 +9,11 @@ export const useCourseDataHook = () => {
   const { setCourse } = useCourseDataStore();
   const { queryParams } = useQueryParamsDataStore();
 
-  const getCourseData = async (courseId: string) => {
+  const getCourseData = async (courseId: string, categoryId: string) => {
     const filter: CourseQuery = {
       courseId: queryParams?.course || courseId,
-      education: formData.kesibukan
+      education: formData.kesibukan,
+      categoryId: categoryId,
     };
 
     const response = await courseService

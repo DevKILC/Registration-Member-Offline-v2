@@ -64,6 +64,7 @@ export interface CourseSelect {
 export interface CourseQuery {
   courseId: string | null;
   education: string | null;
+  categoryId: string | null;
 }
 
 export interface Grade {

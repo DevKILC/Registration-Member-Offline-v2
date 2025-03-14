@@ -4,7 +4,7 @@ import CustomLayout from "@/app/_components/layout";
 import Select from "@/app/_components/_partials/select";
 import Button from "@/app/_components/_partials/button";
 import Label from "@/app/_components/_partials/label";
-import  TabList  from "@/app/_components/_partials/tablist";
+import TabList from "@/app/_components/_partials/tablist";
 import { useAccomodationPageHook } from "@/app/hooks/useAccomodationPageHook";
 import { useFormDataStore } from "@/app/hooks/useFormDataStore";
 import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
@@ -34,7 +34,7 @@ export default function ProgramPage() {
     updateField("penumpang", data.label);
     setSelectedPassenger(data.passenger);;
     updateField("pembayaranPenjemputan", data.passenger.price);
-    if(data.value === selectedPassenger?.price) return;
+    if (data.value === selectedPassenger?.price) return;
     const coursePrice = formData.pembayaranCourse;
     const gradePrice = formData.pembayaranGrade;
     const passengerPrice = data.passenger.price;
@@ -43,9 +43,9 @@ export default function ProgramPage() {
   };
 
   const handleSkipAccommodation = (e: React.MouseEvent) => {
-    e.preventDefault();  
-    updateField("lokasijemput", "");  
-    updateField("kendaraan", ""); 
+    e.preventDefault();
+    updateField("lokasijemput", "");
+    updateField("kendaraan", "");
     updateField("penumpang", "");
 
     router.push("konfirmasi")
@@ -54,20 +54,20 @@ export default function ProgramPage() {
   useEffect(() => {
     getPickupData(formData.lokasijemput);
   }
-  , [formData.lokasijemput]);
+    , [formData.lokasijemput]);
 
 
   return (
     <CustomLayout mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀" line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC">
 
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[6.85rem]">
-    
+
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
-        <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-        <p className="text-yellow-500 text-sm text-center">
-          Anda dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan. <button type="submit" onClick={handleSkipAccommodation} className="cursor-pointer underline">Klik disini untuk melewati</button>
-        </p>
-      </div>
+          <div className="p-4 bg-main-color-50 rounded-lg border border-main-color bg-opacity-60">
+            <p className="text-main-color-500 text-sm text-center">
+              Anda dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan. <button type="submit" onClick={handleSkipAccommodation} className="cursor-pointer font-bold underline">Klik disini untuk melewati</button>
+            </p>
+          </div>
           <div className="flex flex-col space-y-2">
             <Label htmlFor="lokasijemput">Pilih Lokasi Penjemputan :</Label>
             <Select
@@ -115,7 +115,7 @@ export default function ProgramPage() {
 
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="penumpang">Banyak Penumpang :</Label>
-                <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-5 gap-4 lg:gap-0">
+                <ul className="grid grid-cols-2 lg:grid-cols-auto-fit lg:grid-cols-5 gap-4 lg:gap-2 w-full">
                   {passengerData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Jumlah penumpang belum tersedia untuk saat ini 🙏🏻</p>}
                   {passengerData.map((item) => (
                     <TabList
@@ -148,12 +148,15 @@ export default function ProgramPage() {
           <div className="flex flex-col justify-center items-center">
             <p className="text-gray-500 text-sm text-center pb-4">Biaya akomodasi akan di tambahkan dengan biaya program sebelumnya!</p>
             <div className="flex flex-row w-full gap-4">
-              <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => router.push("/pages/program")}>
+              <Button type="button" className="w-full bg-white border-2 border-main-color text-black" onClick={() => router.push("/pages/program")}>
                 Kembali
               </Button>
-              <Button type="submit" className="w-full">
-                Yuk Lanjut!
-              </Button>
+              {(formData.lokasijemput === "") ? <Button type="button" onClick={handleSkipAccommodation} className="w-full text-color">
+                Lewati 
+              </Button> :
+                <Button type="submit" className="w-full text-color">
+                  Yuk Lanjut!
+                </Button>}
             </div>
           </div>
         </div>

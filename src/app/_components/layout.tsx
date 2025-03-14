@@ -80,8 +80,7 @@ export default function CustomLayout({
           <div className="w-full h-full">
             <div className="lg:flex items-center justify-center w-full h-full relative">
               {/* Background image */}
-              <Image src={jkImage} alt="Side Image" className="object-cover" priority />
-
+              <Image src={jkImage} alt="Side Image" className="object-cover" layout="fill" priority/>
               {/* Tag image */}
               <Image
                 src={tagImage}

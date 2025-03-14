@@ -23,7 +23,7 @@ export default function ThankYou() {
           Kamu luar biasa! Terima kasih sudah mempercayakan <span className="font-semibold">Language Center</span> untuk jadi partner suksesmu! 💪✨
         </p>
         <p className="text-center text-gray-600 text-sm md:text-base mt-1">
-          Tim kami akan segera menghubungi kamu. Stay tuned! 🚀
+          Silahkan check email atau WhatsApp anda untuk menerima informasi terbaru dari tim kami. Stay tuned! 🚀
         </p>
       </div>
 

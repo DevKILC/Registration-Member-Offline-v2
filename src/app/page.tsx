@@ -33,7 +33,7 @@ export default function Page() {
 
   return (
     <>
-      <CustomLayout mainline="Langkah pertama untuk sukses dimulai di sini! 🚀" line="Let's conquer English together! 💪 #KampungInggrisLC #RaihSuksesMuBersamaLC">
+      <CustomLayout mainline="Langkah Awal Menuju Kesuksesan Dimulai! 🚀" line="Lengkapi datamu & siapkan diri untuk pengalaman belajar bahasa Inggris yang menyenangkan! 🎉">
         <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-44">
           <div className="flex flex-col space-y-4 h-full">
             {/* Input Nama */}

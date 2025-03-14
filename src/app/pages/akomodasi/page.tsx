@@ -58,7 +58,8 @@ export default function ProgramPage() {
 
 
   return (
-    <CustomLayout mainline="Wah, dikit lagi nih! Langkah demi langkah menuju kesuksesan dimulai! 🚀" line="Ayo, kita taklukkan bahasa Inggris bareng-bareng! 💪 #DrivesYourSuccess #BoostYourEnglishWithLC">
+    <CustomLayout mainline="Selangkah Lagi ke Kampung Inggris LC! 🚀" 
+    line="Pilih layanan penjemputan & atur sesuai kebutuhanmu biar perjalanan makin mudah! 🚗">
 
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[6.85rem]">
 

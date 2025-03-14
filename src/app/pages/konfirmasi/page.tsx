@@ -44,7 +44,7 @@ export default function KonfirmasiPage() {
   const { selectedPickup, selectedLocation } = useAccomodationDataStore();
 
   return (
-    <CustomLayout mainline="Tinggal selangkah lagi menuju kesuksesan! 🚀" line="Konfirmasi dulu biar gak ada kekeliruan nanti {'<3'} ! 😍 #InggrisItuSeru #BelajarSeruDiLC">
+    <CustomLayout mainline="Final Check! Pastikan Semua Datamu Benar! 🚀" line="Cek kembali data dan total pembayaranmu jangan sampai ada yang terlewat! 🤗">
       <form onSubmit={handleSubmit} className={`w-full flex flex-col space-y-10 ${akomodasi ? "lg:space-y-3" : "lg:space-y-6"}`}>
         <div className={`mx-auto lg:h-[68vh] w-full overflow-x-auto scroll-hidden flex flex-col space-y-6`}>
           {/* Main Content */}
@@ -167,14 +167,14 @@ export default function KonfirmasiPage() {
                   className="mr-2"
                 />
                 <label htmlFor="privacy" className="text-sm">
-                  Dengan mencentang kotak ini, saya menyetujui{" "}
+                  Dengan mencentang kotak ini, kamu menyetujui{" "}
                   <a
                     onClick={() => setModalTosIsOpen(true)}
                     className="text-blue-600 hover:underline animate-pulse cursor-pointer"
                   >
                     Kebijakan Privasi dan Syarat & Ketentuan
                   </a>{" "}
-                  Language Center
+                  Pastikan sudah membaca sebelum lanjut ke proses pendaftaran!
                 </label>
               </div>
             </div>

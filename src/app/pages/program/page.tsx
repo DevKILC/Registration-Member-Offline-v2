@@ -39,7 +39,8 @@ export default function ProgramPage() {
   } = useProgramPagehooks();
 
   return (
-    <CustomLayout mainline="Pilih paket program yang relevan biar kamu makin jago! 🚀" line="Drives your success from here!✨ #KampungInggrisLC #BestEnvironmentForTheBestResult">
+    <CustomLayout mainline="Pilih Paket Belajar Sesuai Kebutuhanmu! 📚
+" line=" Pilih paket belajar yang pas, biar belajar jadi lebih fokus & efektif!✨">
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[3.75rem]">
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           {/* Select Cabang dan Periode */}

@@ -21,6 +21,7 @@
     "react-select": "^5.9.0",
     "react-toastify": "^11.0.2",
     "sweetalert2": "^11.6.13",
+    "tinycolor2": "^1.6.0",
     "use-debounce": "^10.0.4",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
@@ -31,9 +32,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/tinycolor2": "^1.4.6",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
-    "postcss": "^8",
+    "postcss": "^8.5.3",
+    "postcss-import": "^16.1.0",
+    "postcss-simple-vars": "^7.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

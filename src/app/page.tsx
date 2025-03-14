@@ -150,7 +150,7 @@ export default function Page() {
           <div className="">
             <div className="flex flex-col justify-center items-center ">
               <p className="text-gray-500 text-sm text-center pb-4">Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!</p>
-              <Button type="submit" className="w-full lg:w-full">
+              <Button type="submit" className="w-full lg:w-ful text-color">
                 Yuk Lanjut!
               </Button>
             </div>

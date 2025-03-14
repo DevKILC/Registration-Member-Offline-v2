@@ -16,27 +16,27 @@ import { metodePembayaran } from "@/app/data/data";
 
 export default function KonfirmasiPage() {
 
-  const { 
-    formData, 
-    updateField, 
-    modalTosIsOpen, 
-    setModalTosIsOpen, 
-    setSelectedPaymentMethod, 
+  const {
+    formData,
+    updateField,
+    modalTosIsOpen,
+    setModalTosIsOpen,
+    setSelectedPaymentMethod,
     selectedPaymentMethod,
     courseDataIsValid,
     personalDataIsValid
   } = useFormDataStore();
 
-  const { 
-    handleTosConfirmation, 
-    akomodasi, 
-    errors, 
-    isOpen, 
-    setIsOpen, 
-    router, 
-    handleSubmit, 
-    capitalizeFirstLetter, 
-    handleVoucherChange, 
+  const {
+    handleTosConfirmation,
+    akomodasi,
+    errors,
+    isOpen,
+    setIsOpen,
+    router,
+    handleSubmit,
+    capitalizeFirstLetter,
+    handleVoucherChange,
     isSubmitting
   } = useConfirmationPageHooks();
 
@@ -58,7 +58,11 @@ export default function KonfirmasiPage() {
                 <div className="space-y-2">
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Nama</span>
-                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.nama) || "Belum diisi"}</span>
+                    <span className="text-gray-700">
+                      : {formData.nama ?
+                        (formData.nama.length > 15 ? `${capitalizeFirstLetter(formData.nama.slice(0, 15))}...` : capitalizeFirstLetter(formData.nama))
+                        : "Belum diisi"}
+                    </span>
                   </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">WhatsApp</span>
@@ -66,7 +70,11 @@ export default function KonfirmasiPage() {
                   </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Email</span>
-                    <span className="text-gray-700">: {formData.email || "Belum diisi"}</span>
+                    <span className="text-gray-700">
+                    : {formData.email ?
+                        (formData.email.length > 15 ? `${(formData.email.slice(0, 15))}...` : (formData.email))
+                        : "Belum diisi"}
+                    </span>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -149,33 +157,50 @@ export default function KonfirmasiPage() {
 
           {/* Privacy Policy */}
           <div className="">
-            <div className="flex flex-col space-x-2 pb-4 gap-3">
-              <span className="text-center">
-                <a onClick={() => setModalTosIsOpen(true)} className="text-blue-600 hover:underline animate-pulse cursor-pointer underline">
-                  Kebijakan Privasi dan Syarat & Ketentuan
-                </a>
-              </span>{" "}
-              <div className="flex items-center justify-between gap-4 flex-row">
-                <input type="checkbox" id="privacy" checked={formData.tos} onChange={handleTosConfirmation} />
-                <label htmlFor="privacy" className="text-sm text-red-600 ">
-                  Anda wajib membaca dan menyetujui Kebijakan Privasi dan Syarat & Ketentuan di bawah ini sebelum menekan tombol proses pendaftaran!
+            <div className="flex flex-col gap-3 pb-4 items-center justify-center">
+              <div className="flex items-center justify-between gap-4">
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  checked={formData.tos}
+                  onChange={handleTosConfirmation}
+                  className="mr-2"
+                />
+                <label htmlFor="privacy" className="text-sm">
+                  Dengan mencentang kotak ini, saya menyetujui{" "}
+                  <a
+                    onClick={() => setModalTosIsOpen(true)}
+                    className="text-blue-600 hover:underline animate-pulse cursor-pointer"
+                  >
+                    Kebijakan Privasi dan Syarat & Ketentuan
+                  </a>{" "}
+                  Language Center
                 </label>
               </div>
             </div>
 
             {/* Submit Button */}
             <div className="flex flex-row w-full gap-4">
-              <Button type="button" className="w-full bg-white border-2 border-main-color" onClick={() => (formData.cabang !== "PARE" ? router.push("/pages/program") : router.push("/pages/akomodasi"))}>
+              <Button
+                type="button"
+                className={`w-full bg-white border-2 text-black border-main-color ${!formData.tos ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={!formData.tos}
+                onClick={() =>
+                  formData.cabang !== "PARE"
+                    ? router.push("/pages/program")
+                    : router.push("/pages/akomodasi")
+                }
+              >
                 Kembali
               </Button>
 
-              <Button disabled={isSubmitting || !formData.tos || !courseDataIsValid || !personalDataIsValid} type="submit" className="w-full transition-all duration-200 text-white  disabled:bg-gray-300 disabled:cursor-not-allowed" id="submit_form">
+              <Button disabled={isSubmitting || !formData.tos || !courseDataIsValid || !personalDataIsValid} type="submit" className="w-full transition-all duration-200 text-color disabled:bg-gray-300 disabled:cursor-not-allowed" id="submit_form">
                 Konfirmasi
               </Button>
             </div>
           </div>
         </div>
-      </form>
+      </form >
 
       <BottomSheet
         isOpen={isOpen}
@@ -236,7 +261,7 @@ export default function KonfirmasiPage() {
       <Modal isOpen={modalTosIsOpen} onClose={() => setModalTosIsOpen(false)} title="Kebijakan Privasi dan Syarat & Ketentuan">
         <PrivacyPolicy />
       </Modal>
-    </CustomLayout>
+    </CustomLayout >
   );
 }
 

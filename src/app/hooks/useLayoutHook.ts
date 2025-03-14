@@ -30,7 +30,7 @@ const useLayoutHook = () => {
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_URL})`,
+      backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_URL || ''})`,
     },
     tagImage: process.env.NEXT_PUBLIC_TAG_IMAGE_URL || tag,
     jkImage: process.env.NEXT_PUBLIC_JK_IMAGE_URL || jk,

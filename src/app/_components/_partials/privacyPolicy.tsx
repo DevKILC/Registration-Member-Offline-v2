@@ -90,7 +90,7 @@ export default function PrivacyPolicy() {
                 <li>Konfirmasi pembatalan program hanya diterima oleh CS di jam operasional mulai jam 08:00 - 16:00 WIB.</li>
                 <li>Jika peserta tidak ada konfirmasi kehadiran sampai 3 hari program dimulai, maka keikutsertaan Kamu akan dianggap batal dan tidak ada pengembalian biaya.</li>
                 <li>Kami hanya bisa mengubah periode kelas yang sudah Kamu pesan sebelumnya dengan ketentuan maksimal 3 kali periode program dan hanya satu kali kesempatan saja.</li>
-                {formData.cabang === "PARE" ? (
+                {formData.cabang === "BOGOR" ? (
                     <li>
                         Apabila Kamu melakukan konfirmasi penjadwalan ulang (reschedule), maka berlaku ketentuan sebagai berikut (khusus Kampung Inggris LC Bogor):
                         <ol className="list-[lower-alpha] pl-11">

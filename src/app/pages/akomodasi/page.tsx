@@ -66,7 +66,7 @@ export default function ProgramPage() {
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           <div className="p-4 bg-main-color-50 rounded-lg border border-main-color bg-opacity-60">
             <p className="text-main-color-500 text-sm text-center">
-              Anda dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan. <button type="submit" onClick={handleSkipAccommodation} className="cursor-pointer font-bold underline">Klik disini untuk melewati</button>
+              kamu dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan.
             </p>
           </div>
           <div className="flex flex-col space-y-2">

@@ -44,7 +44,7 @@ export default function Page() {
               <Input
                 type="text"
                 name="nama"
-                placeholder="Masukan nama lengkap anda"
+                placeholder="Masukan nama lengkap kamu"
                 value={formData.nama}
                 onChange={(e) => {
                   updateField("nama", e.target.value);
@@ -149,7 +149,7 @@ export default function Page() {
           {/* Submit Button */}
           <div className="">
             <div className="flex flex-col justify-center items-center ">
-              <p className="text-gray-500 text-sm text-center pb-4">Pastikan anda telah mengisi data diri dengan baik & benar sebelum lanjut!</p>
+              <p className="text-gray-500 text-sm text-center pb-4">Pastikan kamu telah mengisi data diri dengan baik & benar sebelum lanjut!</p>
               <Button type="submit" className="w-full lg:w-ful text-color">
                 Yuk Lanjut!
               </Button>

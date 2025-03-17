@@ -196,7 +196,7 @@ export default function ProgramPage() {
         {/* Submit Button */}
         <div className="">
           <div className="flex flex-col justify-center items-center">
-            <p className="text-gray-500 text-sm text-center pb-4">Pastikan anda telah memilih program anda dengan baik & benar sebelum lanjut!</p>
+            <p className="text-gray-500 text-sm text-center pb-4">Pastikan kamu telah memilih program kamu dengan baik & benar sebelum lanjut!</p>
             <div className="flex flex-row w-full gap-4">
               <Button type="button" className="w-full bg-white border-2 border-main-color text-black" onClick={() => router.push("/")}>
                 Kembali

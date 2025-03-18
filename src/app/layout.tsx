@@ -124,6 +124,7 @@ export default function RootLayout({
               })(window, document, "clarity", "script", "8nxr4oja1w")`,
           }}
         />
+        <script async defer src="https://api.kreasiads.com/melu.js" type="application/javascript"></script>
       </body>
     </html>
   );

@@ -1,9 +1,6 @@
 import React from 'react';
-import { useFormDataStore } from '@/app/hooks/useFormDataStore';
 
 export default function PrivacyPolicy() {
-
-    const { formData } = useFormDataStore();
 
     return (
         <div className='p-2'>
@@ -90,34 +87,32 @@ export default function PrivacyPolicy() {
                 <li>Konfirmasi pembatalan program hanya diterima oleh CS di jam operasional mulai jam 08:00 - 16:00 WIB.</li>
                 <li>Jika peserta tidak ada konfirmasi kehadiran sampai 3 hari program dimulai, maka keikutsertaan Kamu akan dianggap batal dan tidak ada pengembalian biaya.</li>
                 <li>Kami hanya bisa mengubah periode kelas yang sudah Kamu pesan sebelumnya dengan ketentuan maksimal 3 kali periode program dan hanya satu kali kesempatan saja.</li>
-                {formData.cabang === "BOGOR" ? (
-                    <li>
-                        Apabila Kamu melakukan konfirmasi penjadwalan ulang (reschedule), maka berlaku ketentuan sebagai berikut (khusus Kampung Inggris LC Bogor):
-                        <ol className="list-[lower-alpha] pl-11">
-                            <li>Reschedule H-7 Sebelum Program Dimulai :
-                                <ol className="list-disc pl-3">
-                                    <li>Jika konfirmasi reschedule dilakukan paling lambat 7 (tujuh) hari sebelum program dimulai, maka tidak akan dikenakan biaya administrasi pembatalan program.</li>
-                                    <li>Seluruh biaya yang telah dibayarkan akan dialihkan 100% (seratus persen) ke periode program berikutnya.</li>
-                                </ol>
-                            </li>
-                            <li>
-                                Reschedule H-6 hingga H-1 Sebelum Program Dimulai:
-                                <ol className="list-disc pl-3">
-                                    <li>Jika konfirmasi reschedule dilakukan antara 6 (enam) hari hingga 1 (satu) hari sebelum program dimulai, maka akan dikenakan biaya administrasi sebesar 10% (sepuluh persen) dari total biaya program.</li>
-                                </ol>
-                            </li>
-                            <li>
-                                Reschedule Pada Hari H atau Setelahnya:
-                                <ol className="list-disc pl-3">
-                                    <li>Jika konfirmasi reschedule dilakukan pada hari H atau setelah program dimulai, maka akan dikenakan biaya pembatalan sebesar 50% (lima puluh persen) dari harga program.</li>
-                                    <li>
-                                        Biaya yang dialihkan ke periode berikutnya hanya 50% (lima puluh persen).
-                                    </li>
-                                </ol>
-                            </li>
-                        </ol>
-                    </li>
-                ) : null }
+                <li>
+                    Apabila Kamu melakukan konfirmasi penjadwalan ulang (reschedule), maka berlaku ketentuan sebagai berikut:
+                    <ol className="list-[lower-alpha] pl-11">
+                        <li>Reschedule H-7 Sebelum Program Dimulai :
+                            <ol className="list-disc pl-3">
+                                <li>Jika konfirmasi reschedule dilakukan paling lambat 7 (tujuh) hari sebelum program dimulai, maka tidak akan dikenakan biaya administrasi pembatalan program.</li>
+                                <li>Seluruh biaya yang telah dibayarkan akan dialihkan 100% (seratus persen) ke periode program berikutnya.</li>
+                            </ol>
+                        </li>
+                        <li>
+                            Reschedule H-6 hingga H-1 Sebelum Program Dimulai:
+                            <ol className="list-disc pl-3">
+                                <li>Jika konfirmasi reschedule dilakukan antara 6 (enam) hari hingga 1 (satu) hari sebelum program dimulai, maka akan dikenakan biaya administrasi sebesar 10% (sepuluh persen) dari total biaya program.</li>
+                            </ol>
+                        </li>
+                        <li>
+                            Reschedule Pada Hari H atau Setelahnya:
+                            <ol className="list-disc pl-3">
+                                <li>Jika konfirmasi reschedule dilakukan pada hari H atau setelah program dimulai, maka akan dikenakan biaya pembatalan sebesar 50% (lima puluh persen) dari harga program.</li>
+                                <li>
+                                    Biaya yang dialihkan ke periode berikutnya hanya 50% (lima puluh persen).
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
             </ol>
             <h3 style={{ fontSize: "1.2rem" }}>2.4 Pesanan Keliru</h3>
             <p>Jika Kamu menyadari telah melakukan kesalahan ketika membuat Pesanan dan telah memasukkannya ke Situs, silahkan hubungi kami segera. Kami akan mencoba sebaik mungkin untuk memproses permintaan Kamu.</p>

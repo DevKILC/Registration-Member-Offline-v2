@@ -72,7 +72,7 @@ export default function Page() {
                   className={` ${errors.email ? "border-red-500" : ""} `}
                 />
 
-                {errors.email && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.email}</p>}
+                {errors.email && <p className=" text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.email}</p>}
               </div>
 
               <div className="flex flex-col space-y-2 w-full md:w-1/2">
@@ -142,6 +142,8 @@ export default function Page() {
                 {errors.kesibukan && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.kesibukan}</p>}
               </div>
             </div>
+{/* 
+a */}
 
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"></div>
           </div>

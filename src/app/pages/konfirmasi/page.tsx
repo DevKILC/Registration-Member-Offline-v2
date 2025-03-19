@@ -72,7 +72,7 @@ export default function KonfirmasiPage() {
                 <div className="space-y-2">
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Jenis Kelamin</span>
-                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender === "F" ? "laki-laki" : "perempuan") || "Belum diisi"}</span>
+                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender === "M" ? "Laki-laki" : "Perempuan") || "Belum diisi"}</span>
                   </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Kesibukan</span>

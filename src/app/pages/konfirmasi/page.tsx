@@ -75,6 +75,7 @@ export default function KonfirmasiPage() {
                   </div>
                   <div className="flex items-center text-[14px]">
                   <span className="w-24 text-gray-500">Email</span>
+
                   <span className="text-gray-700">: {formData.email ? (
                       <>
                       <span className=" md:hidden lg:hidden">

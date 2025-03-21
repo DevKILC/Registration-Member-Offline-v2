@@ -44,7 +44,7 @@ export const useConfirmationPageHooks = () => {
     } else {
       setErrors({});
     }
-
+    
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
     const fbp = await getCookies("_fbp");
     const data = {
@@ -52,9 +52,16 @@ export const useConfirmationPageHooks = () => {
       fbp: fbp ? fbp : null,
       fbc: queryParams?.fbc,
     }
+    // Combine form data with query params
+    const combainedData = {
+      ...formData,
+      ...Object.fromEntries(
+        Object.entries(queryParams || {}).map(([key, value]) => [key, value ?? ''])
+      ),
+    }
     if (isValid) {
       await registrationService
-        .register(formData)
+        .register(combainedData)
         .then((res) => {
           toast.dismiss();
           addPaymentInfoMetaPixel(data);
@@ -96,7 +103,7 @@ export const useConfirmationPageHooks = () => {
     }{
       setTos(false);
       setModalTosIsOpen(true);
-      toast.error("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
+      toast.warning("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
     }
   }
 

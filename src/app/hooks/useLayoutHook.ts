@@ -20,6 +20,8 @@ const useLayoutHook = () => {
       document.documentElement.style.setProperty("--text-color", process.env.NEXT_PUBLIC_TEXT_COLOR || "#000000");
     };
 
+    console.log("NEXT_PUBLIC_MAIN_COLOR:", process.env.NEXT_PUBLIC_MAIN_COLOR);
+    
     setCSSVariables();
   }, []); // Empty dependency array means it will only run on mount
 

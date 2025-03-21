@@ -1,15 +1,14 @@
 import type { NextConfig } from "next";
 import type { Header } from "next/dist/lib/load-custom-routes";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://registrasi-staging.kampunginggris.id/api/"; 
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   async rewrites() {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://registrasi-staging.kampunginggris.id/api/";
     return [
       {
         source: "/api/:path*",
-        destination: `${API_URL}/api/:path*`,
+        destination: `${API_URL}/:path*`, // Hapus `/api/` ganda
       },
     ];
   },
@@ -39,7 +38,12 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    domains: ["files.kampunginggrislc.com", "idn-static-assets.s3-ap-southeast-1.amazonaws.com", "studio.uxpincdn.com"],
+    domains: [
+      "files.kampunginggrislc.com",
+      "idn-static-assets.s3-ap-southeast-1.amazonaws.com",
+      "studio.uxpincdn.com",
+      "www.pngplay.com",
+    ],
   },
 };
 

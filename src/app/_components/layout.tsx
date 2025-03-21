@@ -28,8 +28,15 @@ export default function CustomLayout({
   const hasBackgroundImage = sectionStyle.backgroundImage !== undefined && sectionStyle.backgroundImage !== 'url()';
 
   useEffect(() => {
-    const savedData = sessionStorage.getItem("formData");
-    if (!savedData) {
+    let savedData = sessionStorage.getItem("formData");
+    const parsedData = savedData ? JSON.parse(savedData) : { tos: false };
+    savedData = parsedData;
+    console.log('savedData');
+    console.log(savedData);
+    if (parsedData['nama'] === '' ) {
+      router.push("/");
+    }
+    if (!savedData ) {
       router.push("/");
     }
   }, [router]);

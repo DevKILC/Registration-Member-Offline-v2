@@ -56,23 +56,41 @@ export default function KonfirmasiPage() {
               <h3 className="mb-3 text-[16px] font-semibold text-gray-700">Data Diri</h3>
               <div className="grid grid-cols-1 gap-y-4 lg:grid-cols-2 lg:gap-x-8">
                 <div className="space-y-2">
-                  <div className="flex items-center text-[14px]">
+                    <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Nama</span>
-                    <span className="text-gray-700">: {formData.nama ? (formData.nama.length > 15 ? `${capitalizeFirstLetter(formData.nama.slice(0, 15))}...` : capitalizeFirstLetter(formData.nama)) : "Belum diisi"}</span>
-                  </div>
+                    <span className="text-gray-700">: {formData.nama ? (
+                      <>
+                      <span className=" md:hidden lg:hidden">
+                        {formData.nama.length > 15 ? `${capitalizeFirstLetter(formData.nama.slice(0, 15))}...` : capitalizeFirstLetter(formData.nama)}
+                      </span>
+                      <span className="hidden md:inline lg:inline">
+                        {capitalizeFirstLetter(formData.nama)}
+                      </span>
+                      </>
+                    ) : "Belum diisi"}</span>
+                    </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">WhatsApp</span>
                     <span className="text-gray-700">: {formData.nomor || "Belum diisi"}</span>
                   </div>
                   <div className="flex items-center text-[14px]">
-                    <span className="w-24 text-gray-500">Email</span>
-                    <span className="text-gray-700">: {formData.email ? (formData.email.length > 15 ? `${formData.email.slice(0, 15)}...` : formData.email) : "Belum diisi"}</span>
+                  <span className="w-24 text-gray-500">Email</span>
+                  <span className="text-gray-700">: {formData.email ? (
+                      <>
+                      <span className=" md:hidden lg:hidden">
+                        {formData.email.length > 15 ? `${capitalizeFirstLetter(formData.email.slice(0, 15))}...` : capitalizeFirstLetter(formData.email)}
+                      </span>
+                      <span className="hidden md:inline lg:inline">
+                        {capitalizeFirstLetter(formData.email)}
+                      </span>
+                      </>
+                    ) : "Belum diisi"}</span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Jenis Kelamin</span>
-                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender === "F" ? "laki-laki" : "perempuan") || "Belum diisi"}</span>
+                    <span className="text-gray-700">: {capitalizeFirstLetter(formData.gender === "M" ? "Laki-laki" : "Perempuan") || "Belum diisi"}</span>
                   </div>
                   <div className="flex items-center text-[14px]">
                     <span className="w-24 text-gray-500">Kesibukan</span>

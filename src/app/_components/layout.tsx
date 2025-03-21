@@ -26,18 +26,29 @@ export default function CustomLayout({
   const router = useRouter();
   const { sectionStyle, tagImage, jkImage, logoImage } = useLayoutHook(); // Use hook for background and images
   const hasBackgroundImage = sectionStyle.backgroundImage !== undefined && sectionStyle.backgroundImage !== 'url()';
-
   useEffect(() => {
-    let savedData = sessionStorage.getItem("formData");
-    const parsedData = savedData ? JSON.parse(savedData) : { tos: false };
-    savedData = parsedData;
-    console.log('savedData');
-    console.log(savedData);
-    if (parsedData['nama'] === '' ) {
-      router.push("/");
+    // Get data from sessionStorage
+    const savedData = sessionStorage.getItem("formData");
+    
+    // Only attempt to parse if savedData exists
+    if (!savedData) {
+      // No data in session storage, redirect to home
+      router.replace("/");
+      return;
     }
-    if (!savedData ) {
-      router.push("/");
+    
+    try {
+      // Parse the JSON data
+      const parsedData = JSON.parse(savedData);
+      
+      // Check if name is empty or undefined
+      if (!parsedData.nama || parsedData.nama === '') {
+        router.replace("/");
+      }
+      
+    } catch (error) {
+      console.error("Error parsing formData from sessionStorage:", error);
+      router.replace("/");
     }
   }, [router]);
 

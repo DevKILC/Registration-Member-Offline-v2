@@ -58,7 +58,7 @@ export const useProgramPagehooks = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const result = programSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: { [key: string]: string } = {};
@@ -97,7 +97,7 @@ export const useProgramPagehooks = () => {
   const handleBranchChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       updateField("cabang", e.target.value);
-      
+
       resetPeriode();
       setPeriode([]);
       setCourseCategory([]);
@@ -147,19 +147,18 @@ export const useProgramPagehooks = () => {
   );
 
   const handleCourseChange = useCallback(
-    (item: CourseCategoryStore) => {
-      console.log(item);
-      updateField("kategoriPaket", item.value);
+    async (item: CourseCategoryStore) => {
       resetSelectedCourse();
       resetSelectedDuration();
       resetSelectedGrade();
       resetJamPertemuan();
       setGrade([]);
-      getCourseData(item.course_id, item.value);
       resetTotalPrice();
       resetJamPertemuan();
       resetPembayaranPaket();
       setSelectedGrade(null);
+      updateField("kategoriPaket", item.value);
+      getCourseData(item.course_id, item.value);
     },
     [getPeriodeData]
   );
@@ -173,14 +172,19 @@ export const useProgramPagehooks = () => {
       updateField("pembayaranGrade", "");
       updateField("duration", item.value);
       updateField("paket", item.value);
-      
+
+
+      setSelectedCourse(item.course);
+
+      calculateTotalPaymentCourse(item.course);
+
       // Ambil data grade berdasarkan course
       await getGradeData({
         branch_code: formData.cabang,
         periode_id: formData.periode,
         course_id: item.course.course_id,
       });
-  
+
       if (item.course.is_additional_meet_hour === 1) {
         updateField("is_additional_meet_hour", 1);
         const filter = {
@@ -189,23 +193,9 @@ export const useProgramPagehooks = () => {
         };
         getMeetHourData(filter);
       }
-  
-      setSelectedCourse(item.course);
-      calculateTotalPaymentCourse(item.course);
-      
-  
-      setTimeout(() => {
-        if (gradeData && gradeData.length > 0) {
-          const firstGrade = gradeData[0];
-          setSelectedGrade(firstGrade.grade);
-          updateField("grade", firstGrade.value);
-          calculateTotalPaymentGrade(firstGrade.grade);
-        }
-      }, 100);
     },
-    [gradeData, formData.cabang, formData.periode, getGradeData, getMeetHourData]
+    [formData.cabang, formData.periode, getGradeData, getMeetHourData]
   );
-  
 
   const handleGradeChange = useCallback(
     (item: GradeSelect) => {
@@ -219,8 +209,23 @@ export const useProgramPagehooks = () => {
         updateField("isGrade", 1);
       }
     },
-    [getPeriodeData]
+    [[handleOptionTabClick, calculateTotalPaymentGrade, updateField, setSelectedGrade]
+    ]
   );
+
+  useEffect(() => {
+    if (gradeData && gradeData.length > 0 && selectedGrade === null) {
+      const firstGrade = gradeData[0];
+
+      const defaultGradeSelect = {
+        value: firstGrade.value,
+        label: firstGrade.label,
+        grade: firstGrade.grade,
+      };
+
+      handleGradeChange(defaultGradeSelect);
+    }
+  }, [gradeData, selectedGrade, handleGradeChange]);
 
   const handleMeethourChange = useCallback(
     (data: MeetHour) => {
@@ -228,17 +233,6 @@ export const useProgramPagehooks = () => {
     },
     [getPeriodeData]
   );
-
-
-  useEffect(() => {
-    if (gradeData.length > 0 && formData.grade === "") {
-      const firstGrade = gradeData[0];
-      setSelectedGrade(firstGrade.grade);
-      updateField("grade", firstGrade.value);
-      updateField("pembayaranGrade", firstGrade.grade.price);
-      calculateTotalPaymentGrade(firstGrade.grade);
-    }
-  }, [gradeData, formData.grade, setSelectedGrade, updateField, calculateTotalPaymentGrade]);
 
   return {
     handleSubmit,

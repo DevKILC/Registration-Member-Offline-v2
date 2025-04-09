@@ -11,6 +11,7 @@ const useLayoutHook = () => {
   useEffect(() => {
     // Set the CSS variables dynamically
     const setCSSVariables = () => {
+      console.log("Setting CSS variables");
       document.documentElement.style.setProperty("--main-color", process.env.NEXT_PUBLIC_MAIN_COLOR || "#FACC14");
       document.documentElement.style.setProperty("--main-color-50", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#FACC14").lighten(45).toString());
       document.documentElement.style.setProperty("--main-color-200", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#FACC14").lighten(20).toString());

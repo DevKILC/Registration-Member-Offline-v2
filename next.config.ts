@@ -45,6 +45,15 @@ const nextConfig: NextConfig = {
       "www.pngplay.com",
     ],
   },
+  env: {
+    NEXT_PUBLIC_MAIN_COLOR: process.env.NEXT_PUBLIC_MAIN_COLOR,
+    NEXT_PUBLIC_BILL_COLOR: process.env.NEXT_PUBLIC_BILL_COLOR,
+    NEXT_PUBLIC_TEXT_COLOR: process.env.NEXT_PUBLIC_TEXT_COLOR,
+    NEXT_PUBLIC_TAG_IMAGE_URL: process.env.NEXT_PUBLIC_TAG_IMAGE_URL,
+    NEXT_PUBLIC_LOGO_IMAGE_URL: process.env.NEXT_PUBLIC_LOGO_IMAGE_URL,
+    NEXT_PUBLIC_JK_IMAGE_URL: process.env.NEXT_PUBLIC_JK_IMAGE_URL,
+    NEXT_PUBLIC_BACKGROUND_IMAGE_URL: process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_URL,
+  },
 };
 
 export default nextConfig;

@@ -36,7 +36,7 @@ export default function Modal({
             {/* Header */}
             <div className="px-6 py-4 border-b">
                 <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">{title}</h3>
+                <h3 className="text-lg font-semibold text-black">{title}</h3>
                 <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                     ✕
                 </button>

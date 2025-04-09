@@ -9,6 +9,8 @@ import jk from "../_components/_assets/jk.png";
 // Define the custom hook
 const useLayoutHook = () => {
   useEffect(() => {
+    
+    console.log("MAIN COLOR:", process.env.NEXT_PUBLIC_MAIN_COLOR);
     // Set the CSS variables dynamically
     const setCSSVariables = () => {
       console.log("Setting CSS variables");

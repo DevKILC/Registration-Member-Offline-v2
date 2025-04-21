@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react"
+import { useEffect } from "react";
 import { programSchema } from "@/app/_backend/_utils/validationZod";
 import { useRouter } from "next/navigation";
 import { useFormDataStore } from "@/app/hooks/useFormDataStore";
@@ -49,7 +50,7 @@ export const useProgramPagehooks = () => {
   const { getGradeData } = useGradeDataHook();
   const { getCourseCategories } = useCourseCategoryDataHook();
   const { getCourseData } = useCourseDataHook();
-  const { setSelectedGrade, selectedGrade, setGrade } = useGradeDataStore();
+  const { setSelectedGrade, selectedGrade, setGrade, gradeData } = useGradeDataStore();
   const { setPeriode } = usePeriodeDataStore();
   const { setCourseCategory } = useCourseCategoryDataStore();
   const { getMeetHourData } = useMeetHourDataHook();
@@ -57,7 +58,7 @@ export const useProgramPagehooks = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const result = programSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: { [key: string]: string } = {};
@@ -86,6 +87,7 @@ export const useProgramPagehooks = () => {
     updateField("pembayaran", selectedCourse.price + gradePrice + Number(adminFee));
   };
 
+
   const calculateTotalPaymentGrade = (data: Grade) => {
     if (formData.grade === data.id.toString()) return;
     const coursePrice = selectedCourse?.price || 0;
@@ -95,7 +97,7 @@ export const useProgramPagehooks = () => {
   const handleBranchChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       updateField("cabang", e.target.value);
-      
+
       resetPeriode();
       setPeriode([]);
       setCourseCategory([]);
@@ -145,43 +147,54 @@ export const useProgramPagehooks = () => {
   );
 
   const handleCourseChange = useCallback(
-    (item: CourseCategoryStore) => {
-      console.log(item);
-      updateField("kategoriPaket", item.value);
+    async (item: CourseCategoryStore) => {
       resetSelectedCourse();
       resetSelectedDuration();
       resetSelectedGrade();
       resetJamPertemuan();
       setGrade([]);
-      getCourseData(item.course_id, item.value);
       resetTotalPrice();
       resetJamPertemuan();
+      resetPembayaranPaket();
       setSelectedGrade(null);
+      updateField("kategoriPaket", item.value);
+      getCourseData(item.course_id, item.value);
     },
     [getPeriodeData]
   );
 
   const handleDurationCourse = useCallback(
-    (item: CourseSelect) => {
+    async (item: CourseSelect) => {
+      setGrade([]);
+      setSelectedGrade(null);
+      resetTotalPrice();
+      resetPembayaranPaket();
+      updateField("pembayaranGrade", "");
       updateField("duration", item.value);
       updateField("paket", item.value);
-      getGradeData({
+
+
+      setSelectedCourse(item.course);
+
+      calculateTotalPaymentCourse(item.course);
+
+      // Ambil data grade berdasarkan course
+      await getGradeData({
         branch_code: formData.cabang,
         periode_id: formData.periode,
         course_id: item.course.course_id,
       });
-      if(item.course.is_additional_meet_hour === 1){
+
+      if (item.course.is_additional_meet_hour === 1) {
         updateField("is_additional_meet_hour", 1);
         const filter = {
           course_id: item.course.course_id,
-          status: 1
-        }
+          status: 1,
+        };
         getMeetHourData(filter);
       }
-      setSelectedCourse(item.course);
-      calculateTotalPaymentCourse(item.course);
     },
-    [getPeriodeData]
+    [formData.cabang, formData.periode, getGradeData, getMeetHourData]
   );
 
   const handleGradeChange = useCallback(
@@ -196,8 +209,23 @@ export const useProgramPagehooks = () => {
         updateField("isGrade", 1);
       }
     },
-    [getPeriodeData]
+    [[handleOptionTabClick, calculateTotalPaymentGrade, updateField, setSelectedGrade]
+    ]
   );
+
+  useEffect(() => {
+    if (gradeData && gradeData.length > 0 && selectedGrade === null) {
+      const firstGrade = gradeData[0];
+
+      const defaultGradeSelect = {
+        value: firstGrade.value,
+        label: firstGrade.label,
+        grade: firstGrade.grade,
+      };
+
+      handleGradeChange(defaultGradeSelect);
+    }
+  }, [gradeData, selectedGrade, handleGradeChange]);
 
   const handleMeethourChange = useCallback(
     (data: MeetHour) => {

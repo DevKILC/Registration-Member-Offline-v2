@@ -31,7 +31,18 @@ export interface useForm {
   cs: string;
   cs_id: string;
   bank_code: string;
-  [key: string]: string | number | boolean | { value: string; label: string };
+  // add more fields for utm
+  // br_code: string | null;
+  // course: string | null;
+  // utm_medium: string | null;
+  // utm_source: string | null;
+  // utm_campaign: string | null;
+  // utm_content: string | null;
+  // utm_term: string | null;
+  // aff: string | null;
+  // fbc: string | null;
+  
+  [key: string]: string | number | boolean | null | undefined | { value: string; label: string };
 }
 
 export interface BranchQuery {

@@ -43,16 +43,8 @@ const nextConfig: NextConfig = {
       "idn-static-assets.s3-ap-southeast-1.amazonaws.com",
       "studio.uxpincdn.com",
       "www.pngplay.com",
+      "www.google.com",
     ],
-  },
-  env: {
-    NEXT_PUBLIC_MAIN_COLOR: process.env.NEXT_PUBLIC_MAIN_COLOR,
-    NEXT_PUBLIC_BILL_COLOR: process.env.NEXT_PUBLIC_BILL_COLOR,
-    NEXT_PUBLIC_TEXT_COLOR: process.env.NEXT_PUBLIC_TEXT_COLOR,
-    NEXT_PUBLIC_TAG_IMAGE_URL: process.env.NEXT_PUBLIC_TAG_IMAGE_URL,
-    NEXT_PUBLIC_LOGO_IMAGE_URL: process.env.NEXT_PUBLIC_LOGO_IMAGE_URL,
-    NEXT_PUBLIC_JK_IMAGE_URL: process.env.NEXT_PUBLIC_JK_IMAGE_URL,
-    NEXT_PUBLIC_BACKGROUND_IMAGE_URL: process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_URL,
   },
 };
 

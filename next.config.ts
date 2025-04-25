@@ -43,6 +43,7 @@ const nextConfig: NextConfig = {
       "idn-static-assets.s3-ap-southeast-1.amazonaws.com",
       "studio.uxpincdn.com",
       "www.pngplay.com",
+      "www.google.com",
     ],
   },
 };

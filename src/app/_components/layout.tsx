@@ -9,7 +9,7 @@ import { ToastContainer, Zoom } from "react-toastify";
 import useLayoutHook from "../hooks/useLayoutHook";
 import tag from "./_assets/logo.png";
 import jk from "./_assets/jk.png";
-import logo from "./_assets/logo.svg";
+import logo from "./_assets/logolc.png";
 
 
 interface CustomLayoutProps {

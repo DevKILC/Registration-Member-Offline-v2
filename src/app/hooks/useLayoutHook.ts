@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import tinycolor from "tinycolor2";
-import logo from "../_components/_assets/logo.svg";
+import logo from "../_components/_assets/logolc.png";
 import tag from "../_components/_assets/logo.png";
 import jk from "../_components/_assets/jk.png";
 

@@ -35,7 +35,7 @@ export default function Select({
       `}
       {...props}
     >
-      <option value="">
+      <option value="" disabled >
         {placeholder || "Pilih salah satu"}
       </option>
       {options.length > 0 && options.map((option) => (

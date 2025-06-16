@@ -1,11 +1,35 @@
 import { accomodationService } from "../services/accomodationService"
 import { useAccomodationDataStore } from "./useAccomodationDataStore"
+import { useResetFormHook } from "@/app/hooks/useResetFormHook";
 
 export const useAccomodationDataHook = () => {
 
-  const { setPickupData, setLocationData, setPassengerData, selectedLocation } = useAccomodationDataStore();
+  const { resetAccomodationPrice } = useResetFormHook()
+
+  const { 
+    setPickupData, 
+    setLocationData, 
+    setPassengerData, 
+    selectedLocation,
+    setSelectedPickup,
+    setSelectedPassenger
+  } = useAccomodationDataStore();
+
+  const reset = () => {
+    resetAccomodationPrice()
+    setPickupData([]);
+    setSelectedPickup(null);
+    setPassengerData([]);
+    setSelectedPassenger(null);
+  };
 
   const getPickupData = async (locationCode: string) => {
+    // If location is "no_pickup", reset and return early
+    if (locationCode === "no_pickup") {
+      reset();
+      return;
+    }
+
     const filter = { location_code: locationCode };
     const response = accomodationService
       .getPickup(filter)
@@ -49,5 +73,6 @@ export const useAccomodationDataHook = () => {
     getPickupData,
     getPickupLocation,
     getPassengerData,
+    reset,
   };
 }

@@ -19,7 +19,6 @@ interface passengerState {
 
 type AccomodationState = pickupState & locationState & passengerState;
 
-
 interface AccomodationActions {
   setPickupData: (data: Pickup[]) => void;
   setSelectedPickup: (data: Pickup | null) => void;
@@ -37,6 +36,16 @@ const createSelectOptions = (label: string, value: string, dataLabel: string, da
   }));
 }
 
+
+const defaultLocationOption = {
+  label: "Tidak Perlu Dijemput",
+  value: "no_pickup",
+  pickupLocation: {
+    location_name: "Tidak Perlu Dijemput",
+    location_code: "no_pickup",
+  } as PickupLocation
+};
+
 export const useAccomodationDataStore = create<AccomodationState & AccomodationActions>()(
   persist(
     (set) => ({
@@ -47,11 +56,14 @@ export const useAccomodationDataStore = create<AccomodationState & AccomodationA
           pickupData: createSelectOptions("pickup_name", "pickup_code", "pickup", data),
         }),
       setSelectedPickup: (data: Pickup | null) => set({ selectedPickup: data }),
-      locationData: [],
+      locationData: [defaultLocationOption], 
       selectedLocation: null,
       setLocationData: (data: PickupLocation[]) =>
         set({
-          locationData: createSelectOptions("location_name", "location_code", "pickupLocation", data),
+          locationData: [
+            defaultLocationOption, 
+            ...createSelectOptions("location_name", "location_code", "pickupLocation", data)
+          ],
         }),
       setSelectedLocation: (data: PickupLocation | null) => set({ selectedLocation: data }),
       passengerData: [],

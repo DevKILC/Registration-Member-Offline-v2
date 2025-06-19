@@ -3,7 +3,7 @@ import React from 'react';
 export default function PrivacyPolicy() {
 
     return (
-        <div className='p-2'>
+        <div className='p-2 text-black'>
         <h1 style={{ fontSize: "1.8rem", textAlign: "start" }}>Syarat dan Ketentuan Kampung Inggris LC</h1>
         <p>
             Kamu harus meluangkan waktu untuk membaca Syarat dan Ketentuan ini sebelum mendaftar di Situs kami. Melakukan pendaftaran dengan memilih salah satu program kami (memesan), berarti Kamu setuju untuk terikat pada Syarat dan Ketentuan ini. Kamu harus mengunjungi halaman secara berkala untuk mengetahui setiap perubahan yang kami buat dalam Syarat dan Ketentuan kami.

@@ -80,6 +80,7 @@ export const useProgramPagehooks = () => {
     updateField("pembayaran", selectedCourse.price + gradePrice + Number(adminFee));
   };
 
+
   const calculateTotalPaymentGrade = (data: Grade) => {
     if (formData.grade === data.id.toString()) return;
     const coursePrice = selectedCourse?.price || 0;

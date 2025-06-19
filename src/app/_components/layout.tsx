@@ -9,7 +9,7 @@ import { ToastContainer, Zoom } from "react-toastify";
 import useLayoutHook from "../hooks/useLayoutHook";
 import tag from "./_assets/logo.png";
 import jk from "./_assets/jk.png";
-import logo from "./_assets/logo.svg";
+import logo from "./_assets/logolc.png";
 
 
 interface CustomLayoutProps {
@@ -26,11 +26,29 @@ export default function CustomLayout({
   const router = useRouter();
   const { sectionStyle, tagImage, jkImage, logoImage } = useLayoutHook(); // Use hook for background and images
   const hasBackgroundImage = sectionStyle.backgroundImage !== undefined && sectionStyle.backgroundImage !== 'url()';
-
   useEffect(() => {
+    // Get data from sessionStorage
     const savedData = sessionStorage.getItem("formData");
+    
+    // Only attempt to parse if savedData exists
     if (!savedData) {
-      router.push("/");
+      // No data in session storage, redirect to home
+      router.replace("/");
+      return;
+    }
+    
+    try {
+      // Parse the JSON data
+      const parsedData = JSON.parse(savedData);
+      
+      // Check if name is empty or undefined
+      if (!parsedData.nama || parsedData.nama === '') {
+        router.replace("/");
+      }
+      
+    } catch (error) {
+      console.error("Error parsing formData from sessionStorage:", error);
+      router.replace("/");
     }
   }, [router]);
 

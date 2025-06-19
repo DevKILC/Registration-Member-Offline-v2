@@ -19,7 +19,7 @@ export default function ProgramPage() {
   const { formData, updateField } = useFormDataStore();
   const { locationData, pickupData, passengerData, setSelectedLocation, setSelectedPickup, setSelectedPassenger, selectedPassenger } = useAccomodationDataStore();
   const { errors, handleSubmit, router } = useAccomodationPageHook();
-  const { getPickupData, getPassengerData } = useAccomodationDataHook();
+  const { getPickupData, getPassengerData, getPickupLocation } = useAccomodationDataHook();
   const { resetAccomodationPrice, resetPassenger, resetPickup } = useResetFormHook();
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
@@ -47,14 +47,19 @@ export default function ProgramPage() {
     updateField("lokasijemput", "");
     updateField("kendaraan", "");
     updateField("penumpang", "");
+    resetAccomodationPrice()
 
     router.push("konfirmasi")
   };
+  
+
+  useEffect(() => {
+    getPickupLocation(); // Load location data when component mounts
+  }, []);
 
   useEffect(() => {
     getPickupData(formData.lokasijemput);
-  }
-    , [formData.lokasijemput]);
+  }, [formData.lokasijemput]);
 
 
   return (
@@ -66,7 +71,7 @@ export default function ProgramPage() {
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           <div className="p-4 bg-main-color-50 rounded-lg border border-main-color bg-opacity-60">
             <p className="text-main-color-500 text-sm text-center">
-              kamu dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan.
+              Kamu dapat melewati halaman ini apabila tidak membutuhkan layanan penjemputan. <a onClick={handleSkipAccommodation} className="cursor-pointer text-blue-500 animate-pulse text-md"> Lewati click disini </a>
             </p>
           </div>
           <div className="flex flex-col space-y-2">
@@ -85,7 +90,7 @@ export default function ProgramPage() {
             {locationData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Penjemputan belum tersedia untuk saat ini 🙏🏻</p>}
           </div>
 
-          <div className={formData.lokasijemput === "" || formData.lokasijemput === "" ? "hidden" : "block"}>
+          <div className={formData.lokasijemput === "" || formData.lokasijemput === "no_pickup" ? "hidden" : "block"}>
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="kendaraan">Pilih Tipe Kendaraan :</Label>
@@ -136,7 +141,7 @@ export default function ProgramPage() {
           </div>
 
           <div className="flex flex-col lg:flex-row justify-center w-full space-y-4 lg:space-y-0">
-            <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "" ? "hidden" : "block"}`}>
+            <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "" || formData.lokasijemput === "no_pickup" ? "hidden" : "block"}`}>
               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>
                 <h2 className="bg-bill text-center text-white py-2 px-6 rounded-[10px]">{changeTotalPaymentToIndonesianCurrency(formData.pembayaranPenjemputan)}</h2>

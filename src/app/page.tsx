@@ -12,9 +12,10 @@ import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";
 import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Script from "next/script";
-
+import ImagePopup from "./_components/_partials/popup";
+import popupimg from "./_components/_assets/popupimg.png"; 
 export default function Page() {
 
   const { formData, updateField, handleTabClick } = useFormDataStore();
@@ -27,9 +28,24 @@ export default function Page() {
     educationChangeHandler
   } = useEffectHomePageHooks();
 
+  // State untuk mengontrol popup
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+
   useEffect(() => {
     saveQueryParams();
+    
+    // Tampilkan popup ketika halaman dimuat pertama kali
+    // Tambahkan delay kecil untuk memastikan halaman sudah ter-render
+    const timer = setTimeout(() => {
+      setShowWelcomePopup(true);
+    }, 500); // Delay 500ms
+
+    return () => clearTimeout(timer);
   }, []);
+
+  const handleCloseWelcomePopup = () => {
+    setShowWelcomePopup(false);
+  };
 
   return (
     <>
@@ -142,8 +158,6 @@ export default function Page() {
                 {errors.kesibukan && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.kesibukan}</p>}
               </div>
             </div>
-{/* 
-a */}
 
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"></div>
           </div>
@@ -159,6 +173,18 @@ a */}
           </div>
         </form>
       </CustomLayout>
+
+      {/* Welcome Popup */}
+      <ImagePopup
+        isOpen={showWelcomePopup}
+        onClose={handleCloseWelcomePopup}
+        imageSrc={popupimg.src}
+        imageAlt="Welcome to English Learning"
+        title="Selamat Datang! 🎉"
+        description="Selamat datang di platform belajar bahasa Inggris terbaik! Mari mulai perjalanan belajar yang menyenangkan bersama kami."
+        maxWidth="600px"
+        maxHeight="500px"
+      />
 
       <Script
         id="pixel-meta-initialCheckout"

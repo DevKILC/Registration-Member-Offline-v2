@@ -37,8 +37,8 @@ const useLayoutHook = () => {
       backgroundRepeat: 'no-repeat',
       backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_URL || ''})`,
     },
-    tagImage: process.env.NEXT_PUBLIC_TAG_IMAGE_URL || tag,
-    jkImage: process.env.NEXT_PUBLIC_JK_IMAGE_URL || jk,
+    tagImage: process.env.NEXT_PUBLIC_TAG_IMAGE_URL || tag || '',
+    jkImage: process.env.NEXT_PUBLIC_JK_IMAGE_URL || jk || '',
     logoImage: process.env.NEXT_PUBLIC_LOGO_IMAGE_URL || logo,
   };
 };

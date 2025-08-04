@@ -11,17 +11,17 @@ import { genderOptions } from "@/app/data/data"
 import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";
-import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
-import { useEffect, useState } from "react";
+// import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
+// import { useEffect, useState } from "react";
 import Script from "next/script";
-import ImagePopup from "./_components/_partials/popup";
-import popupimg from "./_components/_assets/popupimg.png"; 
+// import ImagePopup from "./_components/_partials/popup";
+// import popupimg from "./_components/_assets/popupimg.png"; 
 export default function Page() {
 
   const { formData, updateField, handleTabClick } = useFormDataStore();
   const { getEducations } = useEducationDataHook();
   const { educationData } = useEducationDataStore();
-  const { saveQueryParams } = useQueryParamsDataHook();
+  // const { saveQueryParams } = useQueryParamsDataHook();
   const { 
     errors,
     handleSubmit,
@@ -29,23 +29,23 @@ export default function Page() {
   } = useEffectHomePageHooks();
 
   // State untuk mengontrol popup
-  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+  // const [showWelcomePopup, setShowWelcomePopup] = useState(false);
 
-  useEffect(() => {
-    saveQueryParams();
+  // useEffect(() => {
+  //   saveQueryParams();
     
-    // Tampilkan popup ketika halaman dimuat pertama kali
-    // Tambahkan delay kecil untuk memastikan halaman sudah ter-render
-    const timer = setTimeout(() => {
-      setShowWelcomePopup(true);
-    }, 500); // Delay 500ms
+  //   // Tampilkan popup ketika halaman dimuat pertama kali
+  //   // Tambahkan delay kecil untuk memastikan halaman sudah ter-render
+  //   const timer = setTimeout(() => {
+  //     setShowWelcomePopup(true);
+  //   }, 500); // Delay 500ms
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  const handleCloseWelcomePopup = () => {
-    setShowWelcomePopup(false);
-  };
+  // const handleCloseWelcomePopup = () => {
+  //   setShowWelcomePopup(false);
+  // };
 
   return (
     <>
@@ -175,7 +175,7 @@ export default function Page() {
       </CustomLayout>
 
       {/* Welcome Popup */}
-      <ImagePopup
+      {/* <ImagePopup
         isOpen={showWelcomePopup}
         onClose={handleCloseWelcomePopup}
         imageSrc={popupimg.src}
@@ -184,7 +184,7 @@ export default function Page() {
         description="Selamat datang di platform belajar bahasa Inggris terbaik! Mari mulai perjalanan belajar yang menyenangkan bersama kami."
         maxWidth="600px"
         maxHeight="500px"
-      />
+      /> */}
 
       <Script
         id="pixel-meta-initialCheckout"

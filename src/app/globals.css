@@ -38,12 +38,6 @@ body {
   display: none; /* Chrome, Safari, Opera */
 }
 
-.bg-img {
-  background-image: url('./_components/_assets/back.jpg');
-  background-size: cover; /* Ensures the image covers the container */
-  background-position: center; /* Centers the image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
-}
 
 textarea::placeholder {
   color: #9ca3af; /* Tailwind's gray-400 */

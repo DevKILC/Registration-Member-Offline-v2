@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Zoom } from "react-toastify";
 import useLayoutHook from "../hooks/useLayoutHook";
-import tag from "./_assets/logo.png";
-import jk from "./_assets/jk.png";
-import logo from "./_assets/logolc.png";
 
+// Remove manual imports - we'll use the dynamic ones from useLayoutHook
+// import tag from "./_assets/general/logo.png";
+// import jk from "./_assets/general/jk.png"; 
+// import logo from "./_assets/general/logolc.png";
 
 interface CustomLayoutProps {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export default function CustomLayout({
 }: CustomLayoutProps) {
   const router = useRouter();
   const { sectionStyle, tagImage, jkImage, logoImage } = useLayoutHook(); // Use hook for background and images
-  const hasBackgroundImage = sectionStyle.backgroundImage !== undefined && sectionStyle.backgroundImage !== 'url()';
+  
   useEffect(() => {
     // Get data from sessionStorage
     const savedData = sessionStorage.getItem("formData");
@@ -57,8 +58,8 @@ export default function CustomLayout({
   return (
     <>
      <div
-      className={`flex flex-row w-full min-h-screen overflow-y-auto ${!hasBackgroundImage ? "bg-img" : ""}`} 
-      style={hasBackgroundImage ? sectionStyle : {}}
+      className={`flex flex-row w-full min-h-screen overflow-y-auto`} 
+      style={sectionStyle}
     >
         <ToastContainer
           position="top-right"
@@ -77,9 +78,9 @@ export default function CustomLayout({
         {/* Container */}
         <div className="lg:w-[60%]  w-[100%] bg-white shadow-lg lg:rounded-tr-[40px] lg:rounded-br-[40px] items-center justify-center align-middle">
           <div className="mx-10 my-5">
-            {/* Logo */}
+            {/* Logo - Now using dynamic logoImage from hook */}
             <Image
-              src={logoImage || logo}
+              src={logoImage}
               alt="Logo"
               width={150}
               height={150}
@@ -101,11 +102,11 @@ export default function CustomLayout({
         <div className="lg:block hidden w-[40%] h-auto">
           <div className="w-full h-full">
             <div className="lg:flex items-center justify-center w-full h-full relative">
-              {/* Background image */}
-              <Image src={jkImage || jk} alt="Side Image" className="object-cover" layout="fill" priority/>
-              {/* Tag image */}
+              {/* Background image - Now using dynamic jkImage from hook */}
+              <Image src={jkImage} alt="Side Image" className="object-cover" layout="fill" priority/>
+              {/* Tag image - Now using dynamic tagImage from hook */}
               <Image
-                src={tagImage || tag}
+                src={tagImage}
                 alt="Tag Image"
                 width={400}
                 height={100}

@@ -11,8 +11,8 @@ import { genderOptions } from "@/app/data/data"
 import { useFormDataStore } from "./hooks/useFormDataStore";
 import { useEducationDataHook } from "./hooks/useEducationDataHook";
 import { useEducationDataStore } from "./hooks/useEducationDataStore";
-// import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
-// import { useEffect, useState } from "react";
+import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
+import { useEffect } from "react";
 import Script from "next/script";
 // import ImagePopup from "./_components/_partials/popup";
 // import popupimg from "./_components/_assets/popupimg.png"; 
@@ -21,18 +21,21 @@ export default function Page() {
   const { formData, updateField, handleTabClick } = useFormDataStore();
   const { getEducations } = useEducationDataHook();
   const { educationData } = useEducationDataStore();
-  // const { saveQueryParams } = useQueryParamsDataHook();
+  const { saveQueryParams } = useQueryParamsDataHook();
   const { 
     errors,
     handleSubmit,
     educationChangeHandler
   } = useEffectHomePageHooks();
 
+   useEffect(() => {
+    saveQueryParams();
+  }, []);
+
   // State untuk mengontrol popup
   // const [showWelcomePopup, setShowWelcomePopup] = useState(false);
 
   // useEffect(() => {
-  //   saveQueryParams();
     
   //   // Tampilkan popup ketika halaman dimuat pertama kali
   //   // Tambahkan delay kecil untuk memastikan halaman sudah ter-render

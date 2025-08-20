@@ -30,11 +30,11 @@ const useLayoutHook = () => {
     // Set the CSS variables dynamically
     const setCSSVariables = () => {
       console.log("Setting CSS variables");
-      document.documentElement.style.setProperty("--main-color", process.env.NEXT_PUBLIC_MAIN_COLOR || "#85090b");
-      document.documentElement.style.setProperty("--main-color-50", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#85090b").lighten(45).toString());
-      document.documentElement.style.setProperty("--main-color-200", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#85090b").lighten(20).toString());
-      document.documentElement.style.setProperty("--main-color-500", process.env.NEXT_PUBLIC_MAIN_COLOR || "#85090b");
-      document.documentElement.style.setProperty("--main-color-700", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#85090b").darken(20).toString());
+      document.documentElement.style.setProperty("--main-color", process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14");
+      document.documentElement.style.setProperty("--main-color-50", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14").lighten(45).toString());
+      document.documentElement.style.setProperty("--main-color-200", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14").lighten(20).toString());
+      document.documentElement.style.setProperty("--main-color-500", process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14");
+      document.documentElement.style.setProperty("--main-color-700", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14").darken(20).toString());
       document.documentElement.style.setProperty("--bill", process.env.NEXT_PUBLIC_BILL_COLOR || "#5CB338");
       document.documentElement.style.setProperty("--text-color", process.env.NEXT_PUBLIC_TEXT_COLOR || "#ffffff");
     };

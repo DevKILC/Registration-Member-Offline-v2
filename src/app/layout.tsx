@@ -125,6 +125,30 @@ export default function RootLayout({
           }}
         />
         <script async defer src="https://api.kreasiads.com/melu.js" type="application/javascript"></script>
+        <Script
+          id="facebook-sdk"
+          dangerouslySetInnerHTML={{
+            __html: `
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId: '{772421675712524}',
+          cookie: true,
+          xfbml: true,
+          version: '{v23.0}'
+        });
+        FB.AppEvents.logPageView();
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    `
+          }}
+        />
       </body>
     </html>
   );

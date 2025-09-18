@@ -31,7 +31,7 @@ export const useConfirmationPageHooks = () => {
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
   // Handle submit form
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     const result = konfirmasiSchema.safeParse(formData);
@@ -64,8 +64,16 @@ export const useConfirmationPageHooks = () => {
         .register(combainedData)
         .then((res) => {
           toast.dismiss();
+          
+          // Track payment info events
           addPaymentInfoMetaPixel(data);
-          addPaymentInfoTiktokPixel();
+          addPaymentInfoTiktokPixel({
+            value: Number(formData.pembayaran), // Total pembayaran dari form data
+            currency: 'IDR',
+            content_type: 'course_registration',
+            content_id: formData.paket?.toString(), // Course package ID
+          });
+          
           setIsSubmitting(false);
           if (res.status !== 500){
             setRegistrationResult(res.data.result);
@@ -177,4 +185,4 @@ export const useConfirmationPageHooks = () => {
     handleVoucherChange,
     isSubmitting
   };
-}
+};

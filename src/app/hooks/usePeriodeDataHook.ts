@@ -11,7 +11,7 @@ export const usePeriodeDataHook = () => {
   const { queryParams } = useQueryParamsDataStore();
 
   const getPeriodeData = async (branch: string) => {
-    const data = { education: formData.kesibukan, branch: branch, course: queryParams?.course || null };
+    const data = { branch: branch, education: formData.kesibukan, course: queryParams?.course || null };
     const response = periodeService
       .getPeriode(data)
       .then((response) => {

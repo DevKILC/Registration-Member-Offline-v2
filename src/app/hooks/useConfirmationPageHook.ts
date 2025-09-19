@@ -14,7 +14,7 @@ import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
 import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
 import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
 import { useCourseDataStore } from "./useCourseDataStore";
-import { useGetParamsDataStore } from "./useGetParamsDataStore";
+
 
 export const useConfirmationPageHooks = () => {
 
@@ -32,7 +32,6 @@ export const useConfirmationPageHooks = () => {
   const [debouncedValue] = useDebounce(voucher, 200);
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
   const { selectedCourse } = useCourseDataStore();
-  const { getParamValue } = useGetParamsDataStore();
 
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,7 +69,7 @@ export const useConfirmationPageHooks = () => {
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
         content_type: selectedCourse?.name || 'Unknown',
-        content_id: getParamValue("utm_content") || 'Unknown', 
+        content_id: queryParams?.utm_content || 'Unknown',
       });
 
       return;

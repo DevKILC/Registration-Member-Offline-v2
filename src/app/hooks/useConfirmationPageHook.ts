@@ -44,7 +44,7 @@ export const useConfirmationPageHooks = () => {
     } else {
       setErrors({});
     }
-    
+
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
     const fbp = await getCookies("_fbp");
     const data = {
@@ -60,11 +60,22 @@ export const useConfirmationPageHooks = () => {
       ),
     }
     if (isValid) {
+
+      addPaymentInfoMetaPixel(data);
+      addPaymentInfoTiktokPixel({
+        value: Number(formData.pembayaran), // Total pembayaran dari form data
+        currency: 'IDR',
+        content_type: 'course_registration',
+        content_id: formData.paket?.toString(), // Course package ID
+      });
+
+      return;
+
       await registrationService
         .register(combainedData)
         .then((res) => {
           toast.dismiss();
-          
+
           // Track payment info events
           addPaymentInfoMetaPixel(data);
           addPaymentInfoTiktokPixel({
@@ -73,9 +84,9 @@ export const useConfirmationPageHooks = () => {
             content_type: 'course_registration',
             content_id: formData.paket?.toString(), // Course package ID
           });
-          
+
           setIsSubmitting(false);
-          if (res.status !== 500){
+          if (res.status !== 500) {
             setRegistrationResult(res.data.result);
             resetForm();
             setPersonalDataIsValid(false);
@@ -89,6 +100,7 @@ export const useConfirmationPageHooks = () => {
           toast.error("Terjadi kesalahan di server, silahkan coba lagi");
           setIsSubmitting(false);
         });
+
     } else {
       const missingLabels = missingFields.map((item) => item.label);
       setIsSubmitting(false);
@@ -97,18 +109,18 @@ export const useConfirmationPageHooks = () => {
       );
     }
   };
-  
-  const capitalizeFirstLetter = (val: | string | number | undefined)=> {
+
+  const capitalizeFirstLetter = (val: | string | number | undefined) => {
     if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
     const result = String(val).charAt(0).toUpperCase() + String(val).slice(1);
-    
+
     return result;
   }
 
   const handleTosConfirmation = () => {
     if (formData.tos) {
       setTos(true);
-    }{
+    } {
       setTos(false);
       setModalTosIsOpen(true);
       toast.warning("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
@@ -140,27 +152,27 @@ export const useConfirmationPageHooks = () => {
       course_id: Number(formData.paket),
     };
     await voucherService.getVoucher(filter)
-    .then((res) => {
-      toast.dismiss();
-      if (res.data === null) {
-        toast.error("Kode voucher tidak valid");
-        calculateVoucher(0);
-      } else {
-        if(res.data.percent === 0){
-          calculateVoucher(res.data.nominal);
-          updateField("diskonPersen", res.data.percent);
-          toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(res.data.nominal));
+      .then((res) => {
+        toast.dismiss();
+        if (res.data === null) {
+          toast.error("Kode voucher tidak valid");
+          calculateVoucher(0);
+        } else {
+          if (res.data.percent === 0) {
+            calculateVoucher(res.data.nominal);
+            updateField("diskonPersen", res.data.percent);
+            toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(res.data.nominal));
+          }
+          if (res.data.nominal === 0) {
+            const discount = (formData.pembayaranCourse * res.data.percent) / 100;
+            calculateVoucher(discount);
+            toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(discount));
+          }
         }
-        if(res.data.nominal === 0){
-          const discount = (formData.pembayaranCourse * res.data.percent) / 100;
-          calculateVoucher(discount);
-          toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(discount));
-        }
-      }
-    })
-    .catch(() => {
-      // toast.error("Kode voucher tidak valid");
-    });
+      })
+      .catch(() => {
+        // toast.error("Kode voucher tidak valid");
+      });
 
   }
 

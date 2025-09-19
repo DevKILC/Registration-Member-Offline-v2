@@ -13,6 +13,7 @@ import { getCookies } from "./useCookiesData";
 import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
 import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
 import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
+import { useCourseDataStore } from "./useCourseDataStore";
 
 export const useConfirmationPageHooks = () => {
 
@@ -29,6 +30,7 @@ export const useConfirmationPageHooks = () => {
   const [voucher, setVoucher] = useState("");
   const [debouncedValue] = useDebounce(voucher, 200);
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
+  const { selectedCourse } = useCourseDataStore();
 
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,7 +67,7 @@ export const useConfirmationPageHooks = () => {
       addPaymentInfoTiktokPixel({
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
-        content_type: 'course_registration',
+        content_type: selectedCourse?.name || 'Unknown',
         content_id: formData.paket?.toString(), // Course package ID
       });
 

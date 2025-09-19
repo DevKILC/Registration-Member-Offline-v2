@@ -3,7 +3,7 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Registrasi language Center",
+  title: "Registrasi Language Center",
   description: "Registrasi Language Center",
 };
 
@@ -15,152 +15,164 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Ads - Critical, load early */}
         <Script
-          id="google-ads"
+          strategy="beforeInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-10992316400"
+        />
+        <Script
+          id="google-ads-config"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
+            __html: `
+              window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-
-              gtag('config', 'AW-10992316400');`,
-          }}
-        />
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-10992316400"></Script>
-        <Script
-          id="microsoft-clarity"
-          dangerouslySetInnerHTML={{
-            __html: `(function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "qmbw8lb6h7");`,
-          }}
-        />
-        <Script
-          id="tiktok-pixel"
-          dangerouslySetInnerHTML={{
-            __html: `!(function (w, d, t) {
-            w.TiktokAnalyticsObject = t;
-            var ttq = (w[t] = w[t] || []);
-            (ttq.methods = [
-              "page",
-              "track",
-              "identify",
-              "instances",
-              "debug",
-              "on",
-              "off",
-              "once",
-              "ready",
-              "alias",
-              "group",
-              "enableCookie",
-              "disableCookie",
-            ]),
-              (ttq.setAndDefer = function (t, e) {
-                t[e] = function () {
-                  t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
-                };
-              });
-            for (var i = 0; i < ttq.methods.length; i++)
-              ttq.setAndDefer(ttq, ttq.methods[i]);
-            (ttq.instance = function (t) {
-              for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)
-                ttq.setAndDefer(e, ttq.methods[n]);
-              return e;
-            }),
-              (ttq.load = function (e, n) {
-                var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
-                (ttq._i = ttq._i || {}),
-                  (ttq._i[e] = []),
-                  (ttq._i[e]._u = i),
-                  (ttq._t = ttq._t || {}),
-                  (ttq._t[e] = +new Date()),
-                  (ttq._o = ttq._o || {}),
-                  (ttq._o[e] = n || {});
-                n = document.createElement("script");
-                (n.type = "text/javascript"),
-                  (n.async = !0),
-                  (n.src = i + "?sdkid=" + e + "&lib=" + t);
-                e = document.getElementsByTagName("script")[0];
-                e.parentNode.insertBefore(n, e);
-              });
-
-            ttq.load("C36MVV3521OGTSUK8B5G");
-            ttq.page();
-          })(window, document, "ttq");`,
+              gtag('config', 'AW-10992316400');
+            `,
           }}
         />
       </head>
+      
       <body>
+        {/* Google Tag Manager - noscript fallback */}
         <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PL8Q9N7" height="0" width="0" style={{ display: "none", visibility: "hidden" }}></iframe>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PL8Q9N7" 
+            height="0" 
+            width="0" 
+            style={{ display: "none", visibility: "hidden" }}
+          />
         </noscript>
+
         {children}
+
+        {/* Google Tag Manager - Load after interactive */}
         <Script
           id="google-tag-manager"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-PL8Q9N7');`,
-          }}
-        />
-        <Script
-          id="google-tag-manager"
-          dangerouslySetInnerHTML={{
-            __html: `(function (c, l, a, r, i, t, y) {
-                c[a] =
-                  c[a] ||
-                  function () {
-                    (c[a].q = c[a].q || []).push(arguments);
-                  };
-                t = l.createElement(r);
-                t.async = 1;
-                t.src = "https://www.clarity.ms/tag/" + i;
-                y = l.getElementsByTagName(r)[0];
-                y.parentNode.insertBefore(t, y);
-              })(window, document, "clarity", "script", "8nxr4oja1w")`,
-          }}
-        />
-        <script async defer src="https://api.kreasiads.com/melu.js" type="application/javascript"></script>
-        <Script
-          id="facebook-sdk"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId: '{772421675712524}',
-          cookie: true,
-          xfbml: true,
-          version: '{v23.0}'
-        });
-        FB.AppEvents.logPageView();
-      };
-
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    `
+              (function(w,d,s,l,i){
+                w[l]=w[l]||[];
+                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+                j.async=true;
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-PL8Q9N7');
+            `,
           }}
         />
 
+        {/* Microsoft Clarity - Instance 1 */}
+        <Script
+          id="microsoft-clarity-1"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "qmbw8lb6h7");
+            `,
+          }}
+        />
+
+        {/* Microsoft Clarity - Instance 2 */}
+        <Script
+          id="microsoft-clarity-2"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "8nxr4oja1w");
+            `,
+          }}
+        />
+
+        {/* TikTok Pixel - Instance 1 */}
+        {/* <Script
+          id="tiktok-pixel-1"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function (w, d, t) {
+                w.TiktokAnalyticsObject=t;
+                var ttq=w[t]=w[t]||[];
+                ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
+                ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+                for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+                ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
+                ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+                
+                ttq.load('C36MVV3521OGTSUK8B5G');
+                ttq.page();
+              }(window, document, 'ttq');
+            `,
+          }}
+        /> */}
+
+        {/* TikTok Pixel - Instance 2 */}
         <Script
           id="tiktok-pixel-2"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `!function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-      ttq.load('D355IDJC77U33PAVSKQ0');
-      ttq.page();
-    }(window, document, 'ttq');`
+            __html: `
+              !function (w, d, t) {
+                w.TiktokAnalyticsObject=t;
+                var ttq=w[t]=w[t]||[];
+                ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
+                ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+                for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+                ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
+                ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+                
+                ttq.load('D355IDJC77U33PAVSKQ0');
+                ttq.page();
+              }(window, document, 'ttq');
+            `,
           }}
         />
 
+        {/* Facebook SDK */}
+        <Script
+          id="facebook-sdk"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.fbAsyncInit = function() {
+                FB.init({
+                  appId: '772421675712524',
+                  cookie: true,
+                  xfbml: true,
+                  version: 'v23.0'
+                });
+                FB.AppEvents.logPageView();
+              };
+
+              (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }(document, 'script', 'facebook-jssdk'));
+            `,
+          }}
+        />
+
+        {/* KreasiAds - Load lazily */}
+        <Script
+          strategy="lazyOnload"
+          src="https://api.kreasiads.com/melu.js"
+          type="application/javascript"
+        />
       </body>
     </html>
   );

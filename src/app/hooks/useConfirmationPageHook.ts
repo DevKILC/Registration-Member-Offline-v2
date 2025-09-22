@@ -12,6 +12,7 @@ import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore
 import { getCookies } from "./useCookiesData";
 import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
 import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
+import { trackInitiateCheckout as addInitiateCheckoutTiktokPixel } from "./useTiktokEvent";
 import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
 import { useCourseDataStore } from "./useCourseDataStore";
 
@@ -66,10 +67,23 @@ export const useConfirmationPageHooks = () => {
 
       addPaymentInfoMetaPixel(data);
       addPaymentInfoTiktokPixel({
+        event_id: '088897', // Noreg or what??...
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
-        content_type: selectedCourse?.name || 'Unknown',
+        content_type: 'course_registration_payment_info',
         content_id: queryParams?.utm_content || 'Unknown',
+        content_name: '088897', // Noreg or what??...
+        content_category: 'payment_info',
+      });
+      addInitiateCheckoutTiktokPixel({
+        event_id: '088897', // Noreg or what??...
+        value: Number(formData.pembayaran), // Total pembayaran dari form data
+        currency: 'IDR',
+        content_type: 'course_registration_initiate_checkout',
+        content_id: queryParams?.utm_content || 'Unknown',
+        content_name: selectedCourse?.name || 'Unknown',
+        quantity: 1,
+        content_category: 'initiate_checkout',
       });
 
       return;

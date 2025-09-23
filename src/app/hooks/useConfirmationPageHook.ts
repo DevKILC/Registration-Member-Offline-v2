@@ -65,7 +65,7 @@ export const useConfirmationPageHooks = () => {
     }
     if (isValid) {
 
-      addPaymentInfoMetaPixel(data);
+      // addPaymentInfoMetaPixel(data);
       addPaymentInfoTiktokPixel({
         event_id: '088897', // Noreg or what??...
         value: Number(formData.pembayaran), // Total pembayaran dari form data

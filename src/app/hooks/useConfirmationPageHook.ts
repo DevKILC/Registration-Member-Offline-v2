@@ -79,7 +79,7 @@ export const useConfirmationPageHooks = () => {
         event_id: '088897', // Noreg or what??...
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
-        content_type: 'course_registration_initiate_checkout',
+        content_type: 'course_initiate_checkout',
         content_id: queryParams?.utm_content || 'Unknown',
         content_name: selectedCourse?.name || 'Unknown',
         quantity: 1,

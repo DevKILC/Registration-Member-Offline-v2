@@ -10,7 +10,9 @@ import { registrationService } from "@/app/services/registrationService";
 import { useDebounce } from "use-debounce";
 import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore";
 import { getCookies } from "./useCookiesData";
-import { addPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
+import { addPaymentInfo as addPaymentInfoFacebook } from "./useMetaFacebookSDK";
+import { trackAddPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
+import { trackInitiateCheckout as addInitiateCheckoutMetaPixel } from "./useMetaPixelEvent";
 import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
 import { trackInitiateCheckout as addInitiateCheckoutTiktokPixel } from "./useTiktokEvent";
 import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
@@ -79,12 +81,39 @@ export const useConfirmationPageHooks = () => {
         event_id: '088897', // Noreg or what??...
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
-        content_type: 'course_initiate_checkout',
+        content_type: 'product',
         content_id: queryParams?.utm_content || 'Unknown',
         content_name: selectedCourse?.name || 'Unknown',
         quantity: 1,
         content_category: 'initiate_checkout',
       });
+      addPaymentInfoMetaPixel({
+        value: Number(formData.pembayaran), // Total pembayaran dari form data
+        currency: 'IDR',
+        content_type: 'course_registration_payment_info',
+        content_ids: [queryParams?.utm_content || 'Unknown'],
+        contents: [{
+          id: queryParams?.utm_content || 'Unknown',
+          quantity: 1,
+          item_price: Number(formData.pembayaran)
+        }],
+        content_name: selectedCourse?.name || 'Unknown',
+        content_category: 'payment_info',
+      })
+      addInitiateCheckoutMetaPixel({
+        value: Number(formData.pembayaran), // Total pembayaran dari form data
+        currency: 'IDR',
+        num_items: 1,
+        content_type: 'product',
+        content_ids: [queryParams?.utm_content || 'Unknown'],
+        contents: [{
+          id: queryParams?.utm_content || 'Unknown',
+          quantity: 1,
+          item_price: Number(formData.pembayaran)
+        }],
+        content_name: selectedCourse?.name || 'Unknown',
+        content_category: 'initiate_checkout',
+      })
 
       return;
 
@@ -94,7 +123,7 @@ export const useConfirmationPageHooks = () => {
           toast.dismiss();
 
           // Track payment info events
-          addPaymentInfoMetaPixel(data);
+          addPaymentInfoFacebook(data);
           addPaymentInfoTiktokPixel({
             value: Number(formData.pembayaran), // Total pembayaran dari form data
             currency: 'IDR',

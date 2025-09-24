@@ -33,14 +33,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      
+
       <body>
         {/* Google Tag Manager - noscript fallback */}
         <noscript>
-          <iframe 
-            src="https://www.googletagmanager.com/ns.html?id=GTM-PL8Q9N7" 
-            height="0" 
-            width="0" 
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PL8Q9N7"
+            height="0"
+            width="0"
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
@@ -166,6 +166,36 @@ export default function RootLayout({
             `,
           }}
         />
+
+        {/* Facebook Pixel - Meta Pixel Code */}
+        <Script
+          id="facebook-pixel-2"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1526640968355350');
+      fbq('track', 'PageView');
+    `,
+          }}
+        />
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1526640968355350&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
 
         {/* KreasiAds - Load lazily */}
         <Script

@@ -9,6 +9,7 @@ export const useBranchBranch = () => {
   const getBranchData = async (educationCode: string) => {
     const filter = {
       education: educationCode,
+      province: queryParams?.pr_code || "",
       branch: queryParams?.br_code || "",
     };
     await branchService

@@ -45,9 +45,9 @@ export default function ProgramPage() {
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           {/* Select Cabang dan Periode */}
           <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+            <div className="w-full lg:w-1/3 flex flex-col space-y-2">
               <Label htmlFor="cabang" required>
-                Pilih Cabang :
+                Pilih Provinsi :
               </Label>
               <Select name="cabang" options={branchData} value={formData.cabang} onChange={(e) => handleBranchChange(e)} className={` ${errors.cabang ? "border-red-500" : ""} `} />
               {branchData.length === 0 && (
@@ -58,7 +58,20 @@ export default function ProgramPage() {
               {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
             </div>
 
-            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+            <div className="w-full lg:w-1/3 flex flex-col space-y-2">
+              <Label htmlFor="cabang" required>
+                Pilih Lokasi Cabang :
+              </Label>
+              <Select name="cabang" options={branchData} value={formData.cabang} onChange={(e) => handleBranchChange(e)} className={` ${errors.cabang ? "border-red-500" : ""} `} />
+              {branchData.length === 0 && (
+                <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">
+                  Maaf, belum ada cabang tersedia untuk jenjang <span className="font-bold uppercase">{formData.kesibukan}</span> saat ini 🙏🏻.
+                </p>
+              )}
+              {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
+            </div>
+
+            <div className="w-full lg:w-1/3 flex flex-col space-y-2">
               <Label htmlFor="periode" required>
                 Periode :
               </Label>

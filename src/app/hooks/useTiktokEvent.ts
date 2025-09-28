@@ -62,14 +62,14 @@ export const trackInitiateCheckout = (checkoutData?: {
   content_category?: string;
 }) => {
   const params = checkoutData ? {
-    event_id: checkoutData.event_id,
+    event_id: checkoutData.event_id, // no wa hash
     value: checkoutData.value,
     currency: checkoutData.currency || 'IDR',
     content_type: checkoutData.content_type || 'course_registration',
     content_id: checkoutData.content_id,
-    content_name: checkoutData.content_name,
+    content_name: checkoutData.content_name, // course name
     quantity: checkoutData.quantity || 1,
-    content_category: checkoutData.content_category,
+    content_category: checkoutData.content_category, // 
   } : {};
 
   // Remove undefined values

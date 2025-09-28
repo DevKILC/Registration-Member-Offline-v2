@@ -14,6 +14,9 @@ export const useQueryParamsDataHook = () => {
       if (urlParams.has("br_code")) {
         updateField("br_code", urlParams.get("br_code") as string);
       }
+      if (urlParams.has("pr_code")) {
+        updateField("pr_code", urlParams.get("pr_code") as string);
+      }
       if (urlParams.has("course")) {
         updateField("course", urlParams.get("course") as string);
       }

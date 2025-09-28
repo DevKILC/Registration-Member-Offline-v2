@@ -82,7 +82,7 @@ export const useConfirmationPageHooks = () => {
         value: Number(formData.pembayaran), // Total pembayaran dari form data
         currency: 'IDR',
         content_type: 'product',
-        content_id: queryParams?.utm_content || 'Unknown',
+        content_id: queryParams?.utm_content || 'Unknown', // course name dllnya
         content_name: selectedCourse?.name || 'Unknown',
         quantity: 1,
         content_category: 'initiate_checkout',

@@ -48,6 +48,7 @@ export interface useForm {
 
 export interface ProvinceQuery {
   education: string | null;
+  province: string | null;
 }
 export interface BranchQuery {
   province: string | null;

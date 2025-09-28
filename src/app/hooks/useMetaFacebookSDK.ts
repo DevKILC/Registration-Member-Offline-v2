@@ -18,8 +18,8 @@ export const addPaymentInfo = async (data: any) => {
       try {
         if (typeof window.fbq === "function") {
           window.fbq("trackCustom", "AddPaymentInfo", {
-            content_name: "Registrasi Lc Offline",
-            content_category: "LC Offline",
+            content_name: "Registrasi Lc Offline", // course name
+            content_category: "LC Offline", // branch name
             currency: "IDR",
             value: data.formData.pembayaran,
             fn: data.formData.nama,

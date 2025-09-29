@@ -6,10 +6,10 @@ import { useQueryParamsDataStore } from './useQueryParamsDataStore';
 export const useBranchBranch = () => {
   const { queryParams } = useQueryParamsDataStore();
   const { setBranch } = useBranchDataStore();
-  const getBranchData = async (educationCode: string) => {
+  const getBranchData = async (province: string) => {
     const filter = {
-      education: educationCode,
       branch: queryParams?.br_code || "",
+      province: province || queryParams?.pr_code || ""
     };
     await branchService
       .getBranches(filter)

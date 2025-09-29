@@ -15,12 +15,14 @@ import { useCourseDataStore } from "@/app/hooks/useCourseDataStore";
 import { useGradeDataStore } from "@/app/hooks/useGradeDataStore";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useMeetHourDataStore } from "@/app/hooks/useMeetHourDataStore";
+import { useProvincesDataStore } from "@/app/hooks/useProvincesDataStore";
 
 export default function ProgramPage() {
   const router = useRouter();
 
   const { formData } = useFormDataStore();
   const { branchData } = useBranchDataStore();
+  const { provinceData } = useProvincesDataStore();
   const { periodeData } = usePeriodeDataStore();
   const { courseCategoryData } = useCourseCategoryDataStore();
   const { courseData } = useCourseDataStore();
@@ -35,8 +37,10 @@ export default function ProgramPage() {
     handleDurationCourse,
     handleGradeChange,
     handleMeethourChange,
+    handleProvinceChange,
     errors
   } = useProgramPagehooks();
+  
 
   return (
     <CustomLayout mainline="Pilih Paket Belajar Sesuai Kebutuhanmu! 📚
@@ -45,6 +49,20 @@ export default function ProgramPage() {
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           {/* Select Cabang dan Periode */}
           <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+
+             <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+              <Label htmlFor="cabang" required>
+                Pilih Provinsi :
+              </Label>
+              <Select name="cabang" options={provinceData} value={formData.provinsi} onChange={(e) => handleProvinceChange(e)} className={` ${errors.provinsi ? "border-red-500" : ""} `} />
+              {provinceData.length === 0 && (
+                <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">
+                  Maaf, belum ada provinsi tersedia untuk jenjang <span className="font-bold uppercase">{formData.kesibukan}</span> saat ini 🙏🏻.
+                </p>
+              )}
+              {errors.provinsi && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.provinsi}</p>}
+            </div>
+
             <div className="w-full lg:w-1/2 flex flex-col space-y-2">
               <Label htmlFor="cabang" required>
                 Pilih Cabang :
@@ -52,7 +70,7 @@ export default function ProgramPage() {
               <Select name="cabang" options={branchData} value={formData.cabang} onChange={(e) => handleBranchChange(e)} className={` ${errors.cabang ? "border-red-500" : ""} `} />
               {branchData.length === 0 && (
                 <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">
-                  Maaf, belum ada cabang tersedia untuk jenjang <span className="font-bold uppercase">{formData.kesibukan}</span> saat ini 🙏🏻.
+                  Maaf, belum ada cabang tersedia untuk provinsi <span className="font-bold uppercase">{formData.provinsi}</span> saat ini 🙏🏻.
                 </p>
               )}
               {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}

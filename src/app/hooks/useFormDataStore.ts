@@ -13,6 +13,7 @@ const initialFormData: useForm = {
   duration: "",
   grade: "",
   isGrade: 0,
+  provinsi: "",
   cabang: "",
   periode: "",
   lokasijemput: "",

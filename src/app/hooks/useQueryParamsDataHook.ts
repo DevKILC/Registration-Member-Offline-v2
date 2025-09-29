@@ -8,6 +8,9 @@ export const useQueryParamsDataHook = () => {
     if (typeof window !== "undefined" && typeof document !== "undefined") {
       const urlParams = new URLSearchParams(document.location.search);
 
+      if(urlParams.has("pr_code")){
+        updateField("pr_code", urlParams.get("pr_code") as string);
+      }
       if (urlParams.has("br_code")) {
         updateField("br_code", urlParams.get("br_code") as string);
       }

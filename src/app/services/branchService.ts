@@ -6,7 +6,7 @@ export const branchService = {
   async getBranches(data: BranchQuery) {
     toast.loading('Loading...');
     try {
-      const response = await api.get("/branch", { params: data });
+      const response = await api.get("/branch-by-province", { params: data });
       toast.dismiss();
       return response.data;
     } catch (error) {

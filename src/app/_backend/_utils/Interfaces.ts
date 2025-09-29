@@ -8,6 +8,7 @@ export interface useForm {
   kategoriPaket: string;
   duration: string;
   grade: string;
+  provinsi: string;
   cabang: string;
   isGrade: number;
   periode: string;
@@ -45,8 +46,11 @@ export interface useForm {
   [key: string]: string | number | boolean | null | undefined | { value: string; label: string };
 }
 
-export interface BranchQuery {
+export interface ProvinceQuery {
   education: string | null;
+}
+export interface BranchQuery {
+  province: string | null;
 }
 
 export interface PeriodeQuery {
@@ -131,6 +135,12 @@ export interface Branch{
   address: string;
   phone: string;
   email: string;
+}
+
+export interface Province{
+  id: number;
+  code: string;
+  name: string;
 }
 
 export interface BranchSelectProps{
@@ -331,6 +341,7 @@ export interface PaymentMethod {
 }
 
 export interface QueryParams {
+  pr_code: string | null;
   br_code: string | null;
   course: string | null;
   cs_id: string | null;

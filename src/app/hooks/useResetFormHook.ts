@@ -4,6 +4,14 @@ export const useResetFormHook = () => {
 
   const { updateField } = useFormDataStore();
 
+  const resetProvince = () => {
+    updateField('provinsi', '');
+  }
+
+  const resetBranch = () => {
+    updateField('cabang', '');
+  };
+
   const resetCategoryCourse = () => {
     updateField('kategoriPaket', '');
   };
@@ -81,5 +89,7 @@ export const useResetFormHook = () => {
     resetPembayaranPenjemputan,
     resetPembayaranPaket,
     resetJamPertemuan,
+    resetBranch,
+    resetProvince,
   };
 };

@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 const initialQueryParams: QueryParams = {
+  pr_code: null,
   br_code: null,
   course: null,
   cs_id: null,

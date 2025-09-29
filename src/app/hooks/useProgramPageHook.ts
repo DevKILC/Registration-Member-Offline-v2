@@ -16,6 +16,8 @@ import { useCourseCategoryDataStore } from "@/app/hooks/useCourseCategoryDataSto
 import { useAccomodationDataStore } from "@/app/hooks/useAccomodationDataStore";
 import { useMeetHourDataHook } from "@/app/hooks/useMeetHourDataHook";
 import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook";
+import { useBranchBranch } from "./useBranchDataHook";
+import { useBranchDataStore } from "./useBranchDataStore";
 
 export const useProgramPagehooks = () => {
   const router = useRouter();
@@ -37,6 +39,7 @@ export const useProgramPagehooks = () => {
     resetPembayaranPenjemputan,
     resetPembayaranPaket,
     resetJamPertemuan,
+    resetBranch,
   } = useResetFormHook();
   const { setPickupData, setLocationData, setPassengerData, setSelectedPickup, setSelectedLocation, setSelectedPassenger } = useAccomodationDataStore();
   const { getPeriodeData } = usePeriodeDataHook();
@@ -47,6 +50,10 @@ export const useProgramPagehooks = () => {
   const { setPeriode } = usePeriodeDataStore();
   const { setCourseCategory } = useCourseCategoryDataStore();
   const { getMeetHourData } = useMeetHourDataHook();
+  const { getBranchData} = useBranchBranch();
+  const { setBranch } = useBranchDataStore ();
+
+  // Biaya admin
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,6 +93,39 @@ export const useProgramPagehooks = () => {
     const coursePrice = selectedCourse?.price || 0;
     updateField("pembayaran", coursePrice + data.price + Number(adminFee));
   };
+
+  const handleProvinceChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      updateField("provinsi", e.target.value);
+      resetBranch();
+      setBranch([]);
+      resetPeriode();
+      setPeriode([]);
+      setCourseCategory([]);
+      setCourse([]);
+      setGrade([]);
+      setPickupData([]);
+      setLocationData([]);
+      setPassengerData([]);
+      setSelectedCourse(null);
+      setSelectedPickup(null);
+      setSelectedLocation(null);
+      setSelectedPassenger(null);
+      resetCategoryCourse();
+      resetSelectedCourse();
+      resetSelectedDuration();
+      resetSelectedGrade();
+      resetLokasiPenjemputan();
+      resetKendaraanPenjemputan();
+      resetPenumpangPenjemputan();
+      resetPembayaranPenjemputan();
+      resetPembayaranPaket();
+      resetTotalPrice();
+      resetJamPertemuan();
+      getBranchData(e.target.value);
+    },
+    [getBranchData]
+  );
 
   const handleBranchChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -234,12 +274,14 @@ export const useProgramPagehooks = () => {
     formData,
     calculateTotalPaymentCourse,
     calculateTotalPaymentGrade,
+    handleProvinceChange,
     handleBranchChange,
     handlePeriodeChange,
     handleCourseChange,
     handleDurationCourse,
     handleGradeChange,
     handleMeethourChange,
+
     errors,
   };
 };

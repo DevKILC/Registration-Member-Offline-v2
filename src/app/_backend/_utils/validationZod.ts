@@ -9,6 +9,7 @@ export const dataDiriSchema = z.object({
 });
 
 export const programSchema = z.object({
+  provinsi : z.string().min(1, "Provinsi harus dipilih"),
   cabang : z.string().min(1, "Cabang harus dipilih"),
   periode : z.string().min(1, "Periode harus dipilih"),
   kategoriPaket : z.string().min(1, "Paket harus dipilih"),

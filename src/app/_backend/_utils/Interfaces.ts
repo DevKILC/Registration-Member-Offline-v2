@@ -46,8 +46,11 @@ export interface useForm {
   [key: string]: string | number | boolean | null | undefined | { value: string; label: string };
 }
 
-export interface BranchQuery {
+export interface ProvinceQuery {
   education: string | null;
+  province: string | null;
+}
+export interface BranchQuery {
   province: string | null;
 }
 
@@ -133,6 +136,12 @@ export interface Branch{
   address: string;
   phone: string;
   email: string;
+}
+
+export interface Province{
+  id: number;
+  code: string;
+  name: string;
 }
 
 export interface BranchSelectProps{

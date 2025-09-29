@@ -28,6 +28,7 @@ const Navbar = () => {
     const programCompleted = Boolean(
       formData.paket &&
       formData.cabang &&
+      formData.provinsi &&
       formData.periode &&
       formData.kategoriPaket &&
       formData.grade

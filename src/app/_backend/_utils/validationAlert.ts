@@ -59,6 +59,7 @@ export const validateFormData = (formData: useForm) => {
 export const validateFormDataProgram = () => {
   const savedData = JSON.parse(localStorage.getItem("form-data-storage") || "{}");
   const requiredFields = [
+    { field: "provinsi", label: "Provinsi" },
     { field: "cabang", label: "Cabang" },
     { field: "periode", label: "Periode" },
     { field: "kategoriPaket", label: "Paket" },

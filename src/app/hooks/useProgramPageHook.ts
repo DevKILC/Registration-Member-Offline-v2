@@ -21,7 +21,6 @@ import { useBranchDataStore } from "./useBranchDataStore";
 
 export const useProgramPagehooks = () => {
   const router = useRouter();
-  const [branchCategory, setBranchCategory] = useState<string>("");
   const { formData, handleOptionTabClick, setCourseDataIsValid } = useFormDataStore();
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
   const { getPickupLocation } = useAccomodationDataHook();
@@ -94,52 +93,6 @@ export const useProgramPagehooks = () => {
     const coursePrice = selectedCourse?.price || 0;
     updateField("pembayaran", coursePrice + data.price + Number(adminFee));
   };
-
-   const handleBranchCategoryChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedValue = e.target.value;
-      setBranchCategory(selectedValue);
-
-      // Reset semua data
-      resetPeriode();
-      setPeriode([]);
-      setCourseCategory([]);
-      setCourse([]);
-      setGrade([]);
-      setPickupData([]);
-      setLocationData([]);
-      setPassengerData([]);
-      setSelectedCourse(null);
-      setSelectedPickup(null);
-      setSelectedLocation(null);
-      setSelectedPassenger(null);
-      resetCategoryCourse();
-      resetSelectedCourse();
-      resetSelectedDuration();
-      resetSelectedGrade();
-      resetLokasiPenjemputan();
-      resetKendaraanPenjemputan();
-      resetPenumpangPenjemputan();
-      resetPembayaranPenjemputan();
-      resetPembayaranPaket();
-      resetTotalPrice();
-      resetJamPertemuan();
-
-      // Logic untuk pare
-      if (selectedValue === 'PARE') {
-        updateField("provinsi", "JATIM");
-        updateField("cabang", "PARE");
-        // Langsung get periode untuk pare
-        getPeriodeData("pare");
-      } else {
-        // Untuk cabang lain, reset provinsi dan cabang tapi JANGAN get periode
-        updateField("provinsi", "");
-        updateField("cabang", "");
-        // TIDAK memanggil getPeriodeData di sini
-      }
-    },
-    [getPeriodeData, updateField, resetPeriode, setPeriode, setCourseCategory, setCourse, setGrade]
-  );
 
   const handleProvinceChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -328,9 +281,6 @@ export const useProgramPagehooks = () => {
     handleDurationCourse,
     handleGradeChange,
     handleMeethourChange,
-    branchCategory,
-    handleBranchCategoryChange,
-    setBranchCategory,
 
     errors,
   };

@@ -53,6 +53,9 @@ export interface ProvinceQuery {
 export interface BranchQuery {
   province: string | null;
 }
+export interface BranchQuery {
+  province: string | null;
+}
 
 export interface PeriodeQuery {
   education: string | null;

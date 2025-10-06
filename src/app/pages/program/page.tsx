@@ -63,18 +63,6 @@ export default function ProgramPage() {
               {errors.provinsi && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.provinsi}</p>}
             </div>
 
-            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
-              <Label htmlFor="cabang" required>
-                Pilih Provinsi :
-              </Label>
-              <Select name="cabang" options={branchData} value={formData.cabang} onChange={(e) => handleBranchChange(e)} className={` ${errors.cabang ? "border-red-500" : ""} `} />
-              {branchData.length === 0 && (
-                <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">
-                  Maaf, belum ada cabang tersedia untuk provinsi <span className="font-bold uppercase">{formData.provinsi}</span> saat ini 🙏🏻.
-                </p>
-              )}
-              {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
-            </div>
 
             <div className="w-full lg:w-1/3 flex flex-col space-y-2">
               <Label htmlFor="cabang" required>

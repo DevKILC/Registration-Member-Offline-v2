@@ -52,7 +52,7 @@ export default function ProgramPage() {
 
              <div className="w-full lg:w-1/2 flex flex-col space-y-2">
               <Label htmlFor="cabang" required>
-                Pilih Provinsi :
+                ⁠Pilih Provinsi Cabang Terdekat :
               </Label>
               <Select name="cabang" options={provinceData} value={formData.provinsi} onChange={(e) => handleProvinceChange(e)} className={` ${errors.provinsi ? "border-red-500" : ""} `} />
               {provinceData.length === 0 && (
@@ -65,21 +65,7 @@ export default function ProgramPage() {
 
             <div className="w-full lg:w-1/2 flex flex-col space-y-2">
               <Label htmlFor="cabang" required>
-                Pilih Provinsi :
-              </Label>
-              <Select name="cabang" options={provinceData} value={formData.provinsi} onChange={(e) => handleProvinceChange(e)} className={` ${errors.provinsi ? "border-red-500" : ""} `} />
-              {provinceData.length === 0 && (
-                <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">
-                  Maaf, belum ada provinsi tersedia untuk jenjang <span className="font-bold uppercase">{formData.kesibukan}</span> saat ini 🙏🏻.
-                </p>
-              )}
-              {errors.provinsi && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.provinsi}</p>}
-            </div>
-
-
-            <div className="w-full lg:w-1/3 flex flex-col space-y-2">
-              <Label htmlFor="cabang" required>
-                Pilih Lokasi Cabang :
+                Pilih Cabang Terdekat :
               </Label>
               <Select name="cabang" options={branchData} value={formData.cabang} onChange={(e) => handleBranchChange(e)} className={` ${errors.cabang ? "border-red-500" : ""} `} />
               {branchData.length === 0 && (

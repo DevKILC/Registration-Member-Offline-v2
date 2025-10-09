@@ -18,8 +18,13 @@ import { useMeetHourDataHook } from "@/app/hooks/useMeetHourDataHook";
 import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook";
 import { useBranchBranch } from "./useBranchDataHook";
 import { useBranchDataStore } from "./useBranchDataStore";
+import { useTiktokTracking } from "./useTiktokPixelEvent";
+import { useMetaTracking } from "./useMetaPixelEvent";
+import { getCookies } from "./useCookiesData";
+import { useQueryParamsDataStore } from "./useQueryParamsDataStore";
 
 export const useProgramPagehooks = () => {
+
   const router = useRouter();
   const { formData, handleOptionTabClick, setCourseDataIsValid } = useFormDataStore();
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
@@ -50,13 +55,17 @@ export const useProgramPagehooks = () => {
   const { setPeriode } = usePeriodeDataStore();
   const { setCourseCategory } = useCourseCategoryDataStore();
   const { getMeetHourData } = useMeetHourDataHook();
-  const { getBranchData} = useBranchBranch();
-  const { setBranch } = useBranchDataStore ();
+  const { getBranchData } = useBranchBranch();
+  const { setBranch } = useBranchDataStore();
+  const { sendEvent: sendEventMetaPixel } = useMetaTracking();
+  const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
+  const { queryParams } = useQueryParamsDataStore();
+
 
   // Biaya admin
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = programSchema.safeParse(formData);
@@ -70,13 +79,65 @@ export const useProgramPagehooks = () => {
     } else {
       setErrors({});
       setCourseDataIsValid(true);
-      // Cek cabang untuk navigasi
       if (formData.cabang === "PARE") {
         getPickupLocation();
         router.push("/pages/akomodasi");
       } else {
         router.push("/pages/konfirmasi");
       }
+      
+      const fbp = await getCookies("_fbp");
+      const ttp = await getCookies("_ttp");
+      const data = {
+        formData: formData,
+        fbp: fbp ? fbp.value : null,
+        fbc: queryParams?.fbc,
+        ttclid: queryParams?.ttclid,
+        ttp: ttp ? ttp.value : null,
+      }
+
+      await sendEventMetaPixel(
+        'InitiateCheckout',
+        {
+          em: data.formData.email,
+          ph: data.formData.nomor,
+          fn: data.formData.nama,
+          fbp: data.fbp,
+          fbc: data.fbc,
+          client_ip_address: null,
+          client_user_agent: null,
+        },
+        {
+          value: Number(formData.pembayaran),
+          currency: 'IDR',
+          content_type: 'course_registration',
+          content_ids: [queryParams?.utm_content || 'Unknown'],
+          content_name: selectedCourse?.name || 'Unknown',
+          content_category: 'payment_info',
+        }
+      );
+      sendEventTiktokPixel(
+         'InitiateCheckout',
+        {
+          email: data.formData.email,
+          phone_number: data.formData.nomor,
+          external_id: data.formData.nomor,
+          ttp: data.ttp,
+          ttclid: data.ttclid,
+          ip: null,
+          user_agent: null,
+        },
+        {
+          value: Number(formData.pembayaran),
+          currency: 'IDR',
+          content_type: 'course_registration',
+          content_id: queryParams?.utm_content || 'Unknown',
+          content_name: selectedCourse?.name || 'Unknown',
+          content_category: 'payment_info',
+          quantity: 1,
+        }
+      );
+
     }
   };
 

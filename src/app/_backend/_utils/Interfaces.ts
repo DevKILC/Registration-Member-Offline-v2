@@ -1,3 +1,5 @@
+import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
+
 export interface useForm {
   nama: string;
   email: string;
@@ -48,7 +50,6 @@ export interface useForm {
 
 export interface ProvinceQuery {
   education: string | null;
-  province: string | null;
 }
 export interface BranchQuery {
   province: string | null;
@@ -356,4 +357,27 @@ export interface QueryParams {
   utm_term: string | null;
   aff: string | null;
   fbc: string | null;
+  ttclid: string | null;
 }
+
+
+export interface MetaUserData {
+  em?: string | null;
+  ph?: string | null | number;
+  fn?: string | null;
+  fbp?: string | null | undefined | RequestCookies;
+  fbc?: string | null | undefined | RequestCookies;
+  client_ip_address: string | null | undefined;
+  client_user_agent: string | null | undefined;
+}
+
+export interface TiktokUserData {
+  email?: string | null;
+  phone_number?: string | null | number;
+  external_id?: string | null | number;
+  ttp?: string | null | undefined | RequestCookies;
+  ttclid?: string | null | undefined | RequestCookies;
+  ip?: string | null;
+  user_agent?: string | null;
+}
+

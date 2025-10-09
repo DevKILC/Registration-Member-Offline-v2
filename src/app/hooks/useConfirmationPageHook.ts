@@ -10,13 +10,11 @@ import { registrationService } from "@/app/services/registrationService";
 import { useDebounce } from "use-debounce";
 import { useRegistrationResultDataStore } from "./useRegistrationResultDataStore";
 import { getCookies } from "./useCookiesData";
-import { addPaymentInfo as addPaymentInfoFacebook } from "./useMetaFacebookSDK";
-import { trackAddPaymentInfo as addPaymentInfoMetaPixel } from "./useMetaPixelEvent";
-import { trackInitiateCheckout as addInitiateCheckoutMetaPixel } from "./useMetaPixelEvent";
-import { trackAddPaymentInfo as addPaymentInfoTiktokPixel } from "./useTiktokEvent";
-import { trackInitiateCheckout as addInitiateCheckoutTiktokPixel } from "./useTiktokEvent";
+
 import { useQueryParamsDataStore } from "@/app/hooks/useQueryParamsDataStore";
 import { useCourseDataStore } from "./useCourseDataStore";
+import { useMetaTracking } from "./useMetaPixelEvent";
+import useTiktokTracking from "./useTiktokPixelEvent";
 
 
 export const useConfirmationPageHooks = () => {
@@ -35,6 +33,8 @@ export const useConfirmationPageHooks = () => {
   const [debouncedValue] = useDebounce(voucher, 200);
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
   const { selectedCourse } = useCourseDataStore();
+  const { sendEvent: sendEventMetaPixel } = useMetaTracking();
+  const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
 
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,11 +52,15 @@ export const useConfirmationPageHooks = () => {
     }
 
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
+   
     const fbp = await getCookies("_fbp");
+    const ttp = await getCookies("_ttp");
     const data = {
       formData: formData,
-      fbp: fbp ? fbp : null,
+      fbp: fbp ? fbp.value : null,
       fbc: queryParams?.fbc,
+      ttclid: queryParams?.ttclid,
+      ttp: ttp ? ttp.value : null,
     }
     // Combine form data with query params
     const combainedData = {
@@ -66,54 +70,47 @@ export const useConfirmationPageHooks = () => {
       ),
     }
     if (isValid) {
-
-      // addPaymentInfoMetaPixel(data);
-      addPaymentInfoTiktokPixel({
-        event_id: '088897', // Noreg or what??...
-        value: Number(formData.pembayaran), // Total pembayaran dari form data
-        currency: 'IDR',
-        content_type: 'course_registration_payment_info',
-        content_id: queryParams?.utm_content || 'Unknown',
-        content_name: '088897', // Noreg or what??...
-        content_category: 'payment_info',
-      });
-      addInitiateCheckoutTiktokPixel({
-        event_id: '088897', // Noreg or what??...
-        value: Number(formData.pembayaran), // Total pembayaran dari form data
-        currency: 'IDR',
-        content_type: 'product',
-        content_id: queryParams?.utm_content || 'Unknown', // course name dllnya
-        content_name: selectedCourse?.name || 'Unknown',
-        quantity: 1,
-        content_category: 'initiate_checkout',
-      });
-      addPaymentInfoMetaPixel({
-        value: Number(formData.pembayaran), // Total pembayaran dari form data
-        currency: 'IDR',
-        content_type: 'course_registration_payment_info',
-        content_ids: [queryParams?.utm_content || 'Unknown'],
-        contents: [{
-          id: queryParams?.utm_content || 'Unknown',
+      await sendEventMetaPixel(
+        'AddPaymentInfo',
+        {
+          em: data.formData.email,
+          ph: data.formData.nomor,
+          fn: data.formData.nama,
+          fbp: data.fbp,
+          fbc: data.fbc,
+          client_ip_address: null,
+          client_user_agent: null,
+        },
+        {
+          value: Number(formData.pembayaran),
+          currency: 'IDR',
+          content_type: 'course_registration',
+          content_ids: [queryParams?.utm_content || 'Unknown'],
+          content_name: selectedCourse?.name || 'Unknown',
+          content_category: 'payment_info',
+        }
+      );
+      sendEventTiktokPixel(
+         'AddPaymentInfo',
+        {
+          email: data.formData.email,
+          phone_number: data.formData.nomor,
+          external_id: data.formData.nomor,
+          ttp: data.ttp,
+          ttclid: data.ttclid,
+          ip: null,
+          user_agent: null,
+        },
+        {
+          value: Number(formData.pembayaran),
+          currency: 'IDR',
+          content_type: 'course_registration',
+          content_id: queryParams?.utm_content || 'Unknown',
+          content_name: selectedCourse?.name || 'Unknown',
+          content_category: 'payment_info',
           quantity: 1,
-          item_price: Number(formData.pembayaran)
-        }],
-        content_name: selectedCourse?.name || 'Unknown',
-        content_category: 'payment_info',
-      })
-      addInitiateCheckoutMetaPixel({
-        value: Number(formData.pembayaran), // Total pembayaran dari form data
-        currency: 'IDR',
-        num_items: 1,
-        content_type: 'product',
-        content_ids: [queryParams?.utm_content || 'Unknown'],
-        contents: [{
-          id: queryParams?.utm_content || 'Unknown',
-          quantity: 1,
-          item_price: Number(formData.pembayaran)
-        }],
-        content_name: selectedCourse?.name || 'Unknown',
-        content_category: 'initiate_checkout',
-      })
+        }
+      );
 
       return;
 
@@ -123,13 +120,6 @@ export const useConfirmationPageHooks = () => {
           toast.dismiss();
 
           // Track payment info events
-          addPaymentInfoFacebook(data);
-          addPaymentInfoTiktokPixel({
-            value: Number(formData.pembayaran), // Total pembayaran dari form data
-            currency: 'IDR',
-            content_type: 'course_registration',
-            content_id: formData.paket?.toString(), // Course package ID
-          });
 
           setIsSubmitting(false);
           if (res.status !== 500) {

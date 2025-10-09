@@ -14,6 +14,7 @@ const initialQueryParams: QueryParams = {
   utm_term: null,
   fbc: null,
   aff: null,
+  ttclid: null,
 };
 
 interface QueryParamsDataState {

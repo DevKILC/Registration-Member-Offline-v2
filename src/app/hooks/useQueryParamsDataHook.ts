@@ -44,6 +44,9 @@ export const useQueryParamsDataHook = () => {
       if (urlParams.has("fbc")) {
         updateField("fbc", urlParams.get("fbc") as string);
       }
+      if (urlParams.has("ttclid")) {
+        updateField("ttclid", urlParams.get("ttclid") as string);
+      }
     }
   };
 

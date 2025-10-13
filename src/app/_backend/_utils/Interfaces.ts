@@ -367,6 +367,7 @@ export interface MetaUserData {
   fn?: string | null;
   fbp?: string | null | undefined | RequestCookies;
   fbc?: string | null | undefined | RequestCookies;
+  external_id?: string | null | number;
   client_ip_address: string | null | undefined;
   client_user_agent: string | null | undefined;
 }

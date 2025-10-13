@@ -24,8 +24,7 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 # Hanya NEXT_PUBLIC_* yang benar-benar perlu di build time
 RUN npm run build
 
-# Remove devDependencies
-RUN npm prune --production
+# DON'T prune devDependencies yet - TypeScript needed for next.config.ts at runtime
 
 # -------------------------
 # Stage 2: Production
@@ -37,6 +36,9 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 
+# Create npm cache directory with proper permissions BEFORE switching to node user
+RUN mkdir -p /home/node/.npm && chown -R node:node /home/node/.npm
+
 # Copy necessary files from builder
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
@@ -47,12 +49,13 @@ COPY --from=builder /app/public ./public
 # Copy next.config if exists
 COPY --from=builder /app/next.config.* ./
 
-# Set proper permissions
+# Set proper permissions for app directory
 RUN chown -R node:node /app
 
-EXPOSE 3000
-
+# Switch to node user
 USER node
+
+EXPOSE 3000
 
 # Start aplikasi
 CMD ["npm", "start"]

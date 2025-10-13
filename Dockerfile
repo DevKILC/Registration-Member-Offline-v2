@@ -20,8 +20,19 @@ ENV NODE_ENV=production
 # Add memory optimization for build
 ENV NODE_OPTIONS=--max_old_space_size=4096
 
-# Build aplikasi - env vars akan diambil dari runtime di CapRover
-# Hanya NEXT_PUBLIC_* yang benar-benar perlu di build time
+
+# Build dengan ARG untuk build-time variables
+ARG NODE_ENV=production
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXT_PUBLIC_API_URL
+
+# Set as ENV untuk build process
+ENV NODE_ENV=$NODE_ENV
+ENV DATABASE_URL=$DATABASE_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN npm run build
 
 # DON'T prune devDependencies yet - TypeScript needed for next.config.ts at runtime

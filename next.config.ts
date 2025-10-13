@@ -4,11 +4,15 @@ import type { Header } from "next/dist/lib/load-custom-routes";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   async rewrites() {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://registrasi-staging.kampunginggris.id/api/";
+    // Remove trailing slash and /api/ from the URL
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://registration-backend.kampunginggris.id")
+      .replace(/\/api\/?$/, '') // Remove /api/ or /api from the end
+      .replace(/\/$/, ''); // Remove any trailing slash
+    
     return [
       {
         source: "/api/:path*",
-        destination: `${API_URL}/:path*`, // Hapus `/api/` ganda
+        destination: `${API_URL}/:path*`,
       },
     ];
   },

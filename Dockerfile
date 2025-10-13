@@ -14,19 +14,14 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build dengan ARG untuk build-time variables
-ARG NODE_ENV=production
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXT_PUBLIC_API_URL
+# Set build environment
+ENV NODE_ENV=production
 
-# Set as ENV untuk build process
-ENV NODE_ENV=$NODE_ENV
-ENV DATABASE_URL=$DATABASE_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# Add memory optimization for build
+ENV NODE_OPTIONS=--max_old_space_size=4096
 
-# Build aplikasi
+# Build aplikasi - env vars akan diambil dari runtime di CapRover
+# Hanya NEXT_PUBLIC_* yang benar-benar perlu di build time
 RUN npm run build
 
 # Remove devDependencies
@@ -42,12 +37,15 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 
-# Copy built application
+# Copy necessary files from builder
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
+
+# Copy next.config if exists
+COPY --from=builder /app/next.config.* ./
 
 # Set proper permissions
 RUN chown -R node:node /app
@@ -56,5 +54,5 @@ EXPOSE 3000
 
 USER node
 
-# Start dengan explicit config
+# Start aplikasi
 CMD ["npm", "start"]

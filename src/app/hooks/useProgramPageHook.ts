@@ -85,7 +85,7 @@ export const useProgramPagehooks = () => {
       } else {
         router.push("/pages/konfirmasi");
       }
-      
+
       const fbp = await getCookies("_fbp");
       const ttp = await getCookies("_ttp");
       const data = {
@@ -110,7 +110,7 @@ export const useProgramPagehooks = () => {
         {
           value: Number(formData.pembayaran),
           currency: 'IDR',
-          content_type: 'course_registration',
+          content_type: 'product',
           content_ids: [queryParams?.utm_content || 'Unknown'],
           content_name: selectedCourse?.name || 'Unknown',
           content_category: 'payment_info',

@@ -102,6 +102,7 @@ export const useProgramPagehooks = () => {
           em: data.formData.email,
           ph: data.formData.nomor,
           fn: data.formData.nama,
+          external_id: data.formData.nomor,
           fbp: data.fbp,
           fbc: data.fbc,
           client_ip_address: null,

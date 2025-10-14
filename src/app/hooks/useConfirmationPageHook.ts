@@ -78,6 +78,7 @@ export const useConfirmationPageHooks = () => {
           fn: data.formData.nama,
           fbp: data.fbp,
           fbc: data.fbc,
+          external_id: data.formData.nomor,
           client_ip_address: null,
           client_user_agent: null,
         },

@@ -85,7 +85,7 @@ export const useConfirmationPageHooks = () => {
         {
           value: Number(formData.pembayaran),
           currency: 'IDR',
-          content_type: 'course_registration',
+          content_type: 'product',
           content_ids: [queryParams?.utm_content || 'Unknown'],
           content_name: selectedCourse?.name || 'Unknown',
           content_category: 'payment_info',
@@ -105,7 +105,7 @@ export const useConfirmationPageHooks = () => {
         {
           value: Number(formData.pembayaran),
           currency: 'IDR',
-          content_type: 'course_registration',
+          content_type: 'product',
           content_id: queryParams?.utm_content || 'Unknown',
           content_name: selectedCourse?.name || 'Unknown',
           content_category: 'payment_info',

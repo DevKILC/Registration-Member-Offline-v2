@@ -12,7 +12,7 @@ export const useTiktokTracking = () => {
   /**
    * Send TikTok event ke Pixel (client) dan Events API (server) secara bersamaan
    * @param eventName - Nama event TikTok (e.g., 'AddPaymentInfo', 'InitiateCheckout', 'ViewContent', 'CompletePayment')
-   * @param userData - Data user yang akan di-hash untuk server-side
+   * @param userData - Data user untuk advanced matching
    * @param customData - Data custom sesuai jenis event
    * @param options - Opsi tambahan untuk kontrol tracking
    */
@@ -34,15 +34,32 @@ export const useTiktokTracking = () => {
     };
 
     try {
-      // 1. CLIENT-SIDE: TikTok Pixel tracking
+      // Prepare hashed user data (dipakai untuk pixel DAN server)
+      const hashedUserData: Record<string, any> = {};
+      if (userData.email) hashedUserData.email = Hasher.sha256(userData.email);
+      if (userData.phone_number) hashedUserData.phone_number = Hasher.sha256(userData.phone_number);
+      if (userData.external_id) hashedUserData.external_id = Hasher.sha256(userData.external_id);
+
+      // 1. CLIENT-SIDE: TikTok Pixel tracking with HASHED user data
       if (!options?.skipPixel && typeof window !== 'undefined' && window.ttq) {
         try {
-          window.ttq.track(eventName, {
-            ...userData,
-            ...customData
-          });
+          // Prepare complete user data untuk pixel (hashed + tracking data)
+          const pixelUserData = {
+            ...hashedUserData,
+            ttp: userData.ttp,
+            ttclid: userData.ttclid,
+          };
+
+          // Identify user with complete data
+          if (Object.keys(pixelUserData).length > 0) {
+            window.ttq.identify(pixelUserData);
+          }
+
+          // Track event with custom data
+          window.ttq.track(eventName, customData || {});
+          
           results.pixel = { success: true, timestamp: Date.now() };
-          console.log(`[TikTok Pixel] ${eventName} tracked on client`);
+          console.log(`[TikTok Pixel] ${eventName} tracked on client with user data`);
         } catch (error) {
           const errorMsg = `[TikTok Pixel] Error: ${error}`;
           console.error(errorMsg);
@@ -50,7 +67,7 @@ export const useTiktokTracking = () => {
         }
       }
 
-      // 2. SERVER-SIDE: TikTok Events API tracking
+      // 2. SERVER-SIDE: TikTok Events API tracking with HASHED user data
       if (!options?.skipServer) {
         try {
           const payload = {
@@ -60,13 +77,9 @@ export const useTiktokTracking = () => {
               {
                 event: eventName,
                 event_time: Math.floor(Date.now() / 1000),
-                event_id: userData.phone_number 
-                  ? Hasher.sha256(userData.phone_number) 
-                  : `${Date.now()}-${Math.random().toString(36)}`,
+                event_id: hashedUserData.phone_number || `${Date.now()}-${Math.random().toString(36)}`,
                 user: {
-                  email: userData.email ? Hasher.sha256(userData.email) : undefined,
-                  phone_number: userData.phone_number ? Hasher.sha256(userData.phone_number) : undefined,
-                  external_id: userData.external_id ? Hasher.sha256(userData.external_id) : undefined,
+                  ...hashedUserData,
                   ttp: userData.ttp,
                   ttclid: userData.ttclid,
                   ip: userData.ip,
@@ -114,7 +127,7 @@ declare global {
     ttq?: {
       track: (eventName: string, data?: Record<string, any>) => void;
       page: () => void;
-      identify: (data: Record<string, any>) => void;
+      identify: (userData: Record<string, any>) => void;
     };
   }
 }

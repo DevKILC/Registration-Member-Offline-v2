@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export default function PrivacyPolicy() {
@@ -12,16 +13,16 @@ export default function PrivacyPolicy() {
         <p>Definisi dalam Syarat dan Ketentuan ini:</p>
         <ol className="list-decimal pl-11">
             <li>
-                “<strong>Pendaftar</strong>” dalam syarat dan ketentuan ini adalah setiap orang yang menempatkan Pemesanan di Situs;
+                <strong>Pendaftar</strong> dalam syarat dan ketentuan ini adalah setiap orang yang menempatkan Pemesanan di Situs;
             </li>
             <li>
-                “<strong>Pemesanan</strong>” dalam syarat dan ketentuan ini berarti Pemesanan yang diajukan oleh Kamu ke Situs untuk memesan Program dari kami;
+                <strong>Pemesanan</strong> dalam syarat dan ketentuan ini berarti Pemesanan yang diajukan oleh Kamu ke Situs untuk memesan Program dari kami;
             </li>
             <li>
-                “<strong>Kamu</strong>” dalam syarat dan ketentuan ini berarti Pendaftar yang menempatkan Pemesanan dan telah menyelesaikan Pembayaran;
+                <strong>Kamu</strong> dalam syarat dan ketentuan ini berarti Pendaftar yang menempatkan Pemesanan dan telah menyelesaikan Pembayaran;
             </li>
             <li>
-                “<strong>Pembayaran</strong>” dalam syarat dan ketentuan ini berarti Kamu yang telah menyelesaikan pembayaran DP sesuai dengan ketentuan.
+                <strong>Pembayaran</strong> dalam syarat dan ketentuan ini berarti Kamu yang telah menyelesaikan pembayaran DP sesuai dengan ketentuan.
             </li>
         </ol>
         <h2 style={{ fontSize: "1.5rem" }}>2. Persyaratan Penjualan</h2>
@@ -35,7 +36,7 @@ export default function PrivacyPolicy() {
             <li>Kamu harus menyimpan informasi terbaru dengan memberitahukan kepada kami jika ada perubahan apapun, dengan menggunakan bagian yang relevan dari Situs.</li>
             <li>Kamu tidak diijinkan menyalahgunakan Situs untuk melakukan pendaftaran palsu atau pun memberikan data diri palsu.</li>
             <li>
-                Untuk mempermudah proses pembelajaran selama di Kampung Inggris LC, Kampung harus dalam <strong>keadaan sehat jasmani dan rohani</strong>, dan tidak memiliki hambatan dalam:
+                Untuk mempermudah proses pembelajaran selama di Kampung Inggris LC, Kamu harus dalam <strong>keadaan sehat jasmani dan rohani</strong>, dan tidak memiliki hambatan dalam:
                 <ol className="list-decimal pl-11">
                 <li>penglihatan;</li>
                 <li>pendengaran;</li>
@@ -68,11 +69,11 @@ export default function PrivacyPolicy() {
             <p>Terkait Pembayaran berikut Syarat dan Ketentuannya</p>
             <ol className="list-decimal pl-11">
                 <li>
-                    <strong>Pembayaran (Uang Muka (DP)</strong> yang dibayarkan setelah Kamu melakukan Pemesanan) tidak bisa dikembalikan, kami hanya bisa mengubah periode kelas yang sudah Kamu pesan sebelumnya dengan ketentuan maksimal 3 kali
+                    <strong>Pembayaran Uang Muka (DP)</strong> yang dibayarkan setelah Kamu melakukan Pemesanan tidak bisa dikembalikan, kami hanya bisa mengubah periode kelas yang sudah Kamu pesan sebelumnya dengan ketentuan maksimal 3 kali
                     periode program
                 </li>
                 <li>
-                    <strong>Pelunasan</strong> program setelah pembayaran DP maksimal H-3 (${"Jum'at"}) sebelum program dimulai (Transfer Bank atau Jaringan IDN)
+                    <strong>Pelunasan</strong> program setelah pembayaran DP maksimal H-3 sebelum program dimulai (Transfer Bank atau Jaringan IDN)
                 </li>
                 <li>
                     Jika Kamu melakukan <strong>pembatalan Pemesanan</strong> setelah program dimulai maka Kamu tidak akan mendapatkan pengembalian biaya
@@ -118,8 +119,7 @@ export default function PrivacyPolicy() {
             <p>Jika Kamu menyadari telah melakukan kesalahan ketika membuat Pesanan dan telah memasukkannya ke Situs, silahkan hubungi kami segera. Kami akan mencoba sebaik mungkin untuk memproses permintaan Kamu.</p>
             <h3 style={{ fontSize: "1.2rem" }}>2.5 Penolakan Pesanan</h3>
             <p>
-            Penolakan Pesanan bisa kami lakukan dalam keadaan dan kondisi tertentu. Salah satunya adalah ketika
-            <strong>KUOTA pendaftar PENUH</strong> dan informasi tersebut belum sampai ke Kamu.
+            Penolakan Pesanan bisa kami lakukan dalam keadaan dan kondisi tertentu. Salah satunya adalah ketika <strong>KUOTA pendaftar PENUH</strong> dan informasi tersebut belum sampai ke Kamu.
             </p>
             <p>Kami akan menginformasikan tentang hal ini langsung setelah Pesanan yang Kamu lakukan masuk ke kami.</p>
             <h2 style={{ fontSize: "1.5rem" }}>3. Larangan</h2>
@@ -132,10 +132,35 @@ export default function PrivacyPolicy() {
                     Setiap pelanggaran ketentuan di atas merupakan tindak pidana di bawah Undang-Undang Nomor 11 Tahun 2008 tentang Internet dan Transaksi Elektronik (ITE). Jika hal tersebut terjadi, Kampung Inggris LC akan melaporkan pelanggaran
                     kepada pihak penegak hukum yang berwenang dan akan diambil tindakan hukum yang tepat.
                 </li>
-                <li>Kamu dilarang mengambil kursus di lembaga lain selama menjadi siswa LC.</li>
-                <li>Kamu dilarang tinggal di camp LC jika sudah tidak menjadi siswa LC / jika program yang ditempuh sudah berakhir.</li>
+                <li>Kamu dilarang mengambil kursus di lembaga lain selama menjadi siswa Kampung Inggris LC.</li>
+                <li>Kamu dilarang tinggal di camp Kampung Inggris LC jika sudah tidak menjadi siswa Kampung Inggris LC / jika program yang ditempuh sudah berakhir.</li>
             </ol>
-            <h2 style={{ fontSize: "1.5rem" }}>4. Keadaan Kahar (Force Majeure)</h2>
+            <h2 style={{ fontSize: "1.5rem" }}>4. Himbauan Keamanan Barang Pribadi</h2>
+            <p>
+                Peserta wajib menjaga keamanan dan keselamatan seluruh barang pribadi selama mengikuti program di Kampung Inggris LC, termasuk namun tidak terbatas pada telepon genggam, laptop, tablet, perhiasan, uang tunai, kendaraan, dan barang berharga lainnya.
+            </p>
+            <p>Peserta dianjurkan untuk:</p>
+            <ol className="list-[lower-alpha] pl-11">
+                <li>Mengunci kamar/lemari setiap saat;</li>
+                <li>Tidak menyimpan barang berharga dalam jumlah berlebihan;</li>
+                <li>Tidak meminjamkan kunci/kartu akses kepada pihak lain;</li>
+                <li>Melaporkan tamu tidak dikenal kepada petugas;</li>
+                <li>Menambahkan keamanan ganda pada kendaraan pribadi.</li>
+            </ol>
+            <p>
+                Apabila terjadi kehilangan, kerusakan, atau pencurian atas barang pribadi, Kampung Inggris LC dan/atau pengelola asrama tidak bertanggung jawab atas kerugian tersebut, sepanjang kejadian tersebut bukan disebabkan oleh kelalaian, kesalahan, atau pelanggaran kewajiban pengamanan yang wajar oleh Kampung Inggris LC/pengelola asrama.
+            </p>
+            <p>Kampung Inggris LC dan/atau pengelola asrama akan membantu penanganan berupa:</p>
+            <ol className="list-[lower-alpha] pl-11">
+                <li>Pencatatan dan pembuatan Berita Acara Kejadian;</li>
+                <li>Pengecekan awal (misal akses CCTV/riwayat tamu jika tersedia);</li>
+                <li>Pendampingan pelaporan ke pihak berwajib.</li>
+            </ol>
+            <p>Bantuan ini bukan merupakan pengakuan tanggung jawab ataupun kewajiban ganti rugi.</p>
+            <p>
+                Kampung Inggris LC dan/atau pengelola asrama tidak berkewajiban memberikan ganti rugi dalam bentuk apapun atas kehilangan/kerusakan barang pribadi yang bukan diakibatkan oleh kelalaian atau kesalahan Kampung Inggris LC/pengelola asrama.
+            </p>
+            <h2 style={{ fontSize: "1.5rem" }}>5. Keadaan Kahar (Force Majeure)</h2>
             <p>Kami tidak bertanggung jawab atas setiap pelanggaran, hambatan atau keterlambatan yang Kamu lakukan dalam pelaksanaan Kontrak disebabkan oleh apapun di luar kehendak kami, kecuali:</p>
             <ol className="list-decimal pl-11">
                 <li>
@@ -148,7 +173,7 @@ export default function PrivacyPolicy() {
                 <li>Adanya peraturan atau pembatasan dari pemerintah.</li>
             </ol>
             <p>Kami memiliki keputusan mutlak pada solusi yang kami ambil dalam memenuhi kewajiban kami.</p>
-            <h2 style={{ fontSize: "1.5rem" }}>5. Hak Kekayaan Intelektual</h2>
+            <h2 style={{ fontSize: "1.5rem" }}>6. Hak Kekayaan Intelektual</h2>
             <ol className="list-decimal pl-11">
                 <li>
                     Semua konten yang ada di Situs kami, mulai dari teks, grafik, logo, tombol ikon, video, gambar, klip audio, digital download, judul artikel dan data milik Kampung Inggris LC atau dari pengisi content pihak ke 3 dilindungi oleh

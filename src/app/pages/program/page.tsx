@@ -29,7 +29,7 @@ export default function ProgramPage() {
   const { gradeData, selectedGrade } = useGradeDataStore();
   const { meetHourData } = useMeetHourDataStore();
 
-  const { 
+  const {
     handleSubmit,
     handleBranchChange,
     handlePeriodeChange,
@@ -38,19 +38,37 @@ export default function ProgramPage() {
     handleGradeChange,
     handleMeethourChange,
     handleProvinceChange,
-    errors
+    handleBranchCategoryChange,
+    errors,
+    branchCategory,
   } = useProgramPagehooks();
-  
+
+  const branchCategoryOptions = () => [
+    { label: 'Pare ( PUSAT )', value: 'pare' },
+    { label: 'Cabang Lain', value: '' }
+  ];
+
 
   return (
     <CustomLayout mainline="Pilih Paket Belajar Sesuai Kebutuhanmu! 📚
 " line=" Pilih paket belajar yang pas, biar belajar jadi lebih fokus & efektif!✨">
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[3.75rem]">
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
+          <ul className="grid grid-cols-2 lg:gap-5 gap-3 py-5">
+            {branchCategoryOptions().map((item) => (
+              <TabList
+                key={item.value}
+                label={item.label}
+                value={item.value}
+                onClick={() => handleBranchCategoryChange({ target: { value: item.value } } as any)}
+                isActive={branchCategory === item.value}
+                className={branchCategory === item.value ? '' : 'border-gray-950 border-1.5 text-black'}
+              />
+            ))}
+          </ul>
           {/* Select Cabang dan Periode */}
-          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-
-             <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+         <div className={`flex flex-col lg:flex-row space-y-4 lg:space-y-0 ${branchCategory === 'pare' ? '' : 'lg:space-x-4'}`}>
+            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'pare' ? 'hidden' : ''}`}>
               <Label htmlFor="cabang" required>
                 ⁠Pilih Provinsi Cabang Terdekat :
               </Label>
@@ -63,7 +81,7 @@ export default function ProgramPage() {
               {errors.provinsi && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.provinsi}</p>}
             </div>
 
-            <div className="w-full lg:w-1/2 flex flex-col space-y-2">
+            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'pare' ? 'hidden' : ''}`}>
               <Label htmlFor="cabang" required>
                 Pilih Lokasi Kursus :
               </Label>
@@ -76,7 +94,7 @@ export default function ProgramPage() {
               {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
             </div>
 
-            <div className="w-full lg:w-1/3 flex flex-col space-y-2">
+            <div className={`w-full flex flex-col space-y-2 ${branchCategory === 'pare' ? 'lg:w-full' : 'lg:w-1/3'}`}>
               <Label htmlFor="periode" required>
                 Periode :
               </Label>

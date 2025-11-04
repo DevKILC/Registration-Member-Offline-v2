@@ -42,7 +42,7 @@ export default function TabList({
             ${className}
             ${isActive
                     ? ' bg-main-color text-color hover:bg-main-color border border-gray-400'
-                    : 'border-black/40 text-gray-400'
+                    : 'border-black/40 text-black'
                 }
             `}
         >

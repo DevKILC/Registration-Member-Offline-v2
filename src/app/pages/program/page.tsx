@@ -16,6 +16,7 @@ import { useGradeDataStore } from "@/app/hooks/useGradeDataStore";
 import { changeTotalPaymentToIndonesianCurrency } from "@/app/_backend/_helper/changeTotalPaymentToIndonesianCurrency";
 import { useMeetHourDataStore } from "@/app/hooks/useMeetHourDataStore";
 import { useProvincesDataStore } from "@/app/hooks/useProvincesDataStore";
+import { useEffect } from "react";
 
 export default function ProgramPage() {
   const router = useRouter();
@@ -43,8 +44,15 @@ export default function ProgramPage() {
     branchCategory,
   } = useProgramPagehooks();
 
+  useEffect(() => {
+  handleBranchCategoryChange({ 
+    target: { value: 'PARE' } 
+  } as React.ChangeEvent<HTMLSelectElement>);
+}, []); 
+
+
   const branchCategoryOptions = () => [
-    { label: 'Pare ( PUSAT )', value: 'pare' },
+    { label: 'PARE ( PUSAT )', value: 'PARE' },
     { label: 'Cabang Lain', value: '' }
   ];
 
@@ -54,7 +62,7 @@ export default function ProgramPage() {
 " line=" Pilih paket belajar yang pas, biar belajar jadi lebih fokus & efektif!✨">
       <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[3.75rem]">
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
-          <ul className="grid grid-cols-2 lg:gap-5 gap-3 py-5">
+          <ul className="grid grid-cols-2 lg:gap-5 gap-3 lg:py-2">
             {branchCategoryOptions().map((item) => (
               <TabList
                 key={item.value}
@@ -67,8 +75,8 @@ export default function ProgramPage() {
             ))}
           </ul>
           {/* Select Cabang dan Periode */}
-         <div className={`flex flex-col lg:flex-row space-y-4 lg:space-y-0 ${branchCategory === 'pare' ? '' : 'lg:space-x-4'}`}>
-            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'pare' ? 'hidden' : ''}`}>
+         <div className={`flex flex-col lg:flex-row space-y-4 lg:space-y-0 ${branchCategory === 'PARE' ? '' : 'lg:space-x-4'}`}>
+            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'PARE' ? 'hidden' : ''}`}>
               <Label htmlFor="cabang" required>
                 ⁠Pilih Provinsi Cabang Terdekat :
               </Label>
@@ -81,7 +89,7 @@ export default function ProgramPage() {
               {errors.provinsi && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.provinsi}</p>}
             </div>
 
-            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'pare' ? 'hidden' : ''}`}>
+            <div className={`w-full lg:w-1/3 flex flex-col space-y-2 ${branchCategory === 'PARE' ? 'hidden' : ''}`}>
               <Label htmlFor="cabang" required>
                 Pilih Lokasi Kursus :
               </Label>
@@ -94,7 +102,7 @@ export default function ProgramPage() {
               {errors.cabang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.cabang}</p>}
             </div>
 
-            <div className={`w-full flex flex-col space-y-2 ${branchCategory === 'pare' ? 'lg:w-full' : 'lg:w-1/3'}`}>
+            <div className={`w-full flex flex-col space-y-2 ${branchCategory === 'PARE' ? 'lg:w-full' : 'lg:w-1/3'}`}>
               <Label htmlFor="periode" required>
                 Periode :
               </Label>

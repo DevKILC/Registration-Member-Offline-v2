@@ -21,7 +21,7 @@ import { useBranchDataStore } from "./useBranchDataStore";
 
 export const useProgramPagehooks = () => {
   const router = useRouter();
-  const [branchCategory, setBranchCategory] = useState<string>("pare");
+  const [branchCategory, setBranchCategory] = useState<string>("");
   const { formData, handleOptionTabClick, setCourseDataIsValid } = useFormDataStore();
   const { selectedCourse, setSelectedCourse, setCourse } = useCourseDataStore();
   const { getPickupLocation } = useAccomodationDataHook();
@@ -126,9 +126,9 @@ export const useProgramPagehooks = () => {
       resetJamPertemuan();
 
       // Logic untuk pare
-      if (selectedValue === 'pare') {
+      if (selectedValue === 'PARE') {
         updateField("provinsi", "JATIM");
-        updateField("cabang", "pare");
+        updateField("cabang", "PARE");
         // Langsung get periode untuk pare
         getPeriodeData("pare");
       } else {
@@ -330,6 +330,7 @@ export const useProgramPagehooks = () => {
     handleMeethourChange,
     branchCategory,
     handleBranchCategoryChange,
+    setBranchCategory,
 
     errors,
   };

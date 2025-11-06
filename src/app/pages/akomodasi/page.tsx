@@ -66,7 +66,7 @@ export default function ProgramPage() {
     <CustomLayout mainline="Selangkah Lagi ke Kampung Inggris LC! 🚀" 
     line="Pilih layanan penjemputan & atur sesuai kebutuhanmu biar perjalanan makin mudah! 🚗">
 
-      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[6.85rem]">
+      <form onSubmit={handleSubmit} className="mx-auto flex flex-col space-y-10 lg:space-y-[9.25rem]">
 
         <div className="flex flex-col space-y-4 min-h-[320px] h-full">
           <div className="p-4 bg-main-color-50 rounded-lg border border-main-color bg-opacity-60">
@@ -95,7 +95,7 @@ export default function ProgramPage() {
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="kendaraan">Pilih Tipe Kendaraan :</Label>
                 <div className="lg:overflow-y-auto scroll-hidden ">
-                  <ul className="lg:flex lg:flex-row lg:space-x-4 grid :grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
+                  <ul className="lg:flex lg:flex-row lg:space-x-4 grid lg:grid-cols-auto-fit grid-cols-2 gap-4 lg:gap-0">
                     {pickupData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Kendaraan belum tersedia untuk saat ini 🙏🏻</p>}
                     {pickupData.map((item) => (
                       <TabList
@@ -115,14 +115,14 @@ export default function ProgramPage() {
                     ))}
                   </ul>
 
-                  {errors.kendaraan && <p className="text-red-500 text-[10px] pl-2 lg:absolute ">{errors.kendaraan}</p>}
+                  {errors.kendaraan && <p className="text-red-500 text-[10px] pl-2 lg:absolute w-full ">{errors.kendaraan}</p>}
                 </div>
               </div>
 
               <div className="w-full md:w-1/2 flex flex-col space-y-2">
                 <Label htmlFor="penumpang">Banyak Penumpang :</Label>
                 <ul className="grid grid-cols-2 lg:grid-cols-auto-fit lg:grid-cols-5 gap-4 lg:gap-2 w-full">
-                  {passengerData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">Jumlah penumpang belum tersedia untuk saat ini 🙏🏻</p>}
+                  {passengerData.length === 0 && <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg col-span-full">Jumlah penumpang belum tersedia untuk saat ini 🙏🏻</p>}
                   {passengerData.map((item) => (
                     <TabList
                       key={item.value}
@@ -135,12 +135,12 @@ export default function ProgramPage() {
                   ))}
                 </ul>
 
-                {errors.penumpang && <p className="text-red-500 text-[10px] pl-2 lg:absolute lg:translate-y-[3.8rem]">{errors.penumpang}</p>}
+                {errors.penumpang && <p className="text-red-500 text-[10px] pl-2 w-full">{errors.penumpang}</p>}
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row justify-center w-full space-y-4 lg:space-y-0">
+          <div className="flex flex-col lg:flex-row justify-center w-full space-y-4 lg:space-y-0 lg:pt-[5.25rem]">
             <div className={`w-full lg:pt-5 lg:w-1/4 ${formData.lokasijemput === "" || formData.lokasijemput === "no_pickup" ? "hidden" : "block"}`}>
               <div className="flex flex-col justify-center items-center ">
                 <h2 className="text-center text-black font-semibold text-sm pb-2">Biaya Akomodasi :</h2>

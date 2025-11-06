@@ -21,7 +21,8 @@ const Navbar = () => {
       formData.email &&
       formData.nomor &&
       formData.gender &&
-      formData.kesibukan
+      formData.kesibukan &&
+      formData.nationality === "WNI"
     );
 
     // Check for program completion

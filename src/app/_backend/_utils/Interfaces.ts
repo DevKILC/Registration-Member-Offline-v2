@@ -34,6 +34,7 @@ export interface useForm {
   cs: string;
   cs_id: string;
   bank_code: string;
+  nationality: string;
   // add more fields for utm
   // br_code: string | null;
   // course: string | null;

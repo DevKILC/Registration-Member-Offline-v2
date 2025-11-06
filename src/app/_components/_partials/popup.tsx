@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 interface PopupProps {
     title?: string;
     description?: string;
+    description2?: string;
     isOpen: boolean;
     onClose: () => void;
     maxWidth?: string;
@@ -16,6 +17,7 @@ interface PopupProps {
 export default function Popup({
     title,
     description,
+    description2,
     isOpen,
     onClose,
     maxWidth = "95vw",
@@ -70,6 +72,12 @@ export default function Popup({
                         {description && (
                             <div className="text-gray-600 leading-relaxed text-sm sm:text-base mb-4 text-center max-w-2xl mx-auto">
                                 <p>{description}</p>
+                            </div>
+                        )}
+
+                        {description2 && (
+                            <div className="text-gray-600 leading-relaxed text-sm sm:text-base mb-4 text-center max-w-2xl mx-auto italic">
+                                <p>{description2}</p>
                             </div>
                         )}
 

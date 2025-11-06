@@ -244,8 +244,8 @@ export default function Page() {
         isOpen={showNationalityPopup}
         onClose={() => setShowNationalityPopup(false)}
         title="Pemberitahuan Penting! 🚨"
-        description="Mohon maaf, Kampung Iggris LC saat ini belum menyediakan layanan untuk WNA ( Foreign Citizen ) saat ini 🙏🏻. 
-        We’re sorry, but Kampung Inggris LC is not currently available for students from Foreign Citizen at the moment. 🙏🏻"
+        description="Mohon maaf, Kampung Iggris LC belum menyediakan layanan untuk WNA ( Foreign Citizen ) saat ini 🙏🏻."
+        description2=" We’re sorry, but Kampung Inggris LC is not currently available for students from Foreign Citizen at the moment. 🙏🏻"
         maxWidth="600px"
       />
 

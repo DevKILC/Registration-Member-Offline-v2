@@ -36,6 +36,7 @@ const initialFormData: useForm = {
   cs: "",
   cs_id: "",
   bank_code: "",
+  nationality: "",
 };
 
 const initialPaymentMethod: PaymentMethod = {

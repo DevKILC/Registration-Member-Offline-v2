@@ -1,28 +1,35 @@
 'use client';
 
 import { X } from 'lucide-react';
+import Image from 'next/image';
 
-interface PopupProps {
+interface ImagePopupProps {
+    imageSrc: string;
+    imageAlt?: string;
     title?: string;
     description?: string;
     isOpen: boolean;
     onClose: () => void;
     maxWidth?: string;
+    maxHeight?: string;
     buttonText?: string;
     onButtonClick?: () => void;
     showButton?: boolean;
 }
 
-export default function Popup({
+export default function ImagePopup({
+    imageSrc,
+    imageAlt = "Popup Image",
     title,
     description,
     isOpen,
     onClose,
     maxWidth = "95vw",
+    maxHeight = "95vh",
     buttonText = "OK",
     onButtonClick,
     showButton = true
-}: PopupProps) {
+}: ImagePopupProps) {
 
     if (!isOpen) return null;
 
@@ -36,13 +43,14 @@ export default function Popup({
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 px-4"
+            className="fixed inset-0 z-50 flex items-center md:pb-[20rem] justify-center bg-black bg-opacity-75 px-4"
             onClick={onClose}
         >
             <div
                 className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto flex flex-col"
                 style={{ 
                     maxWidth: maxWidth,
+                    maxHeight: maxHeight,
                     minHeight: 'auto'
                 }}
                 onClick={(e) => e.stopPropagation()}
@@ -56,9 +64,25 @@ export default function Popup({
                     <X size={20} className="text-gray-600" />
                 </button>
 
+                {/* Image Section */}
+                <div className="p-4 sm:p-6 bg-gray-50 rounded-t-lg">
+                    <div className="w-full flex items-center justify-center">
+                        <Image
+                            src={imageSrc}
+                            alt={imageAlt}
+                            width={800}
+                            height={600}
+                            className="max-w-full h-auto object-contain rounded-lg shadow-md"
+                            style={{
+                                maxHeight: '60vh'
+                            }}
+                        />
+                    </div>
+                </div>
+
                 {/* Text Content Section */}
                 {(title || description || showButton) && (
-                    <div className="flex-shrink-0 p-6 sm:p-8 bg-white rounded-lg">
+                    <div className="flex-shrink-0 p-4 sm:p-6 bg-white rounded-b-lg border-t border-gray-100">
                         {/* Title */}
                         {title && (
                             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-3 pr-8 leading-tight text-center">

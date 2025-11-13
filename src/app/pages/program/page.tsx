@@ -70,7 +70,7 @@ export default function ProgramPage() {
                 value={item.value}
                 onClick={() => handleBranchCategoryChange({ target: { value: item.value } } as any)}
                 isActive={branchCategory === item.value}
-                className={`shadow-lg py-2.5 ${branchCategory === item.value ? 'border-main-color border-2' : 'border-main-color border-2 text-black'}`}
+                className={`shadow-lg py-2.5 ${branchCategory === item.value ? 'border-main-color border-2 font-semibold' : 'border-main-color border-2 text-black'}`}
               />
             ))}
           </ul>

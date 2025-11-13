@@ -1,28 +1,26 @@
-// services/tiktok.service.ts
-import { tiktokPixelConfig } from '@/app/config/pixelConfig';
-
+// services/tiktokPixelService.ts
 export const tiktokPixelService = {
   async sendEvent(payload: any) {
     try {
-      const url = `${tiktokPixelConfig.baseUrl}/v1.3/pixel/track/`;
-      
-      const res = await fetch(url, {
+      const res = await fetch('/api/tiktok/track', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Access-Token': tiktokPixelConfig.accessToken,
         },
-        body: JSON.stringify({
-          pixel_code: tiktokPixelConfig.pixelId,
-          ...payload,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const result = await res.json();
-      console.log('[TikTok Events API] Event sent ->', result);
+      
+      if (!res.ok) {
+        console.error('[TikTok Events API] Error response:', result);
+        return null;
+      }
+
+      console.log('[TikTok Events API] Success:', result);
       return result;
     } catch (error) {
-      console.error('[TikTok Events API] Error sending event:', error);
+      console.error('[TikTok Events API] Network error:', error);
       return null;
     }
   }

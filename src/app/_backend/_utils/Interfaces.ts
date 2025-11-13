@@ -383,3 +383,7 @@ export interface TiktokUserData {
   user_agent?: string | null;
 }
 
+export interface ClidQuery {
+  phone_number?: string | null;
+}
+

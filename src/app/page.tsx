@@ -14,9 +14,9 @@ import { useEducationDataStore } from "./hooks/useEducationDataStore";
 import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
 import { useEffect, useState } from "react";
 import Script from "next/script";
-// import ImagePopup from "./_components/_partials/ImagePopup";
-// import popupimg from "./_components/_assets/popupimg.png"; 
 import Popup from "./_components/_partials/popup";
+import { useDebounce } from "use-debounce";
+
 export default function Page() {
 
   const { formData, updateField, handleTabClick } = useFormDataStore();
@@ -26,44 +26,42 @@ export default function Page() {
   const {
     errors,
     handleSubmit,
-    educationChangeHandler
+    educationChangeHandler,
+    sendEventMetaPixelOrTiktokPixel,
+    getClidData,
+    testSendCustomPixelEvent
   } = useEffectHomePageHooks();
 
   useEffect(() => {
     saveQueryParams();
+
+    setTimeout(() => {
+      sendEventMetaPixelOrTiktokPixel();
+    }, 3000);
   }, []);
 
   const [showNationalityPopup, setShowNationalityPopup] = useState(false);
 
-
   useEffect(() => {
     if (formData.nationality === "WNA") {
       setShowNationalityPopup(true);
+      testSendCustomPixelEvent();
     }
   }, [formData.nationality]);
 
-  // State untuk mengontrol popup
-  // const [showWelcomePopup, setShowWelcomePopup] = useState(false);
-
-  // useEffect(() => {
-
-  // Tampilkan popup ketika halaman dimuat pertama kali
-  // Tambahkan delay kecil untuk memastikan halaman sudah ter-render
-  // const timer = setTimeout(() => {
-  //     setShowWelcomePopup(true);
-  //   }, 500); // Delay 500ms
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // const handleCloseWelcomePopup = () => {
-  //   setShowWelcomePopup(false);
-  // };
+  // Debounce nomor dengan delay 1 detik
+  const [debouncedNomor] = useDebounce(formData.nomor, 1000);
 
   const nationalityOptions = [
     { label: "WNI ( Indonesian Citizen )", value: "WNI" },
     { label: "WNA ( Foreign Citizen)", value: "WNA" },
   ];
+
+  const handleOnBlur = () => {
+    if (debouncedNomor) {
+      getClidData(String(debouncedNomor));
+    }
+  }
 
   return (
     <>
@@ -122,10 +120,10 @@ export default function Page() {
                   onChange={(e) => {
                     const value = e.target.value;
                     if (/^\d*$/.test(value) && value.length <= 15) {
-                      // Hanya angka, maksimal 15 karakter
-                      updateField("nomor", value); // Lanjutkan hanya jika input valid
+                      updateField("nomor", value);
                     }
                   }}
+                  onBlur={handleOnBlur}
                   className={` ${errors.nomor ? "border-red-500" : ""} `}
                 />
 
@@ -203,24 +201,12 @@ export default function Page() {
 
             </div>
 
-            {/* {formData.nationality === "WNA" && (
-                <div className="flex flex-col mt-4 space-y-2">
-               <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">
-                  Mohon maaf, Kampung Iggris LC saat ini belum menyediakan layanan untuk  <span className="font-bold uppercase">{formData.nationality}</span> saat ini 🙏🏻.
-                </p>
-                
-                <p className="text-red-500 text-sm pl-2 border border-red-500 p-3 rounded-lg">
-                 We’re sorry, but Kampung Inggris LC is not currently available for students from <span className="font-bold uppercase">{formData.nationality}</span> at the moment. 🙏🏻
-                </p>
-                </div>
-              )} */}
-
           </div>
           {/* Submit Button */}
           <div className="mt-10">
             <div className="flex flex-col justify-center items-center ">
               <p className="text-gray-500 text-sm text-center pb-4">Pastikan kamu telah mengisi data diri dengan baik & benar sebelum lanjut!</p>
-              <Button type="submit" className="w-full lg:w-full text-color" disabled={formData.nationality || formData.nationality === "WNA" ? true : false}>
+              <Button type="submit" className="w-full lg:w-full text-color" disabled={!formData.nationality || formData.nationality === "WNA" ? true : false}>
                 Yuk Lanjut!
               </Button>
             </div>
@@ -228,24 +214,12 @@ export default function Page() {
         </form>
       </CustomLayout>
 
-      {/* Welcome Popup */}
-      {/* <ImagePopup
-        isOpen={showWelcomePopup}
-        onClose={handleCloseWelcomePopup}
-        imageSrc={popupimg.src}
-        imageAlt="Welcome to English Learning"
-        title="Selamat Datang! 🎉"
-        description="Selamat datang di platform belajar bahasa Inggris terbaik! Mari mulai perjalanan belajar yang menyenangkan bersama kami."
-        maxWidth="600px"
-        maxHeight="500px"
-      /> */}
-
       <Popup
         isOpen={showNationalityPopup}
         onClose={() => setShowNationalityPopup(false)}
         title="Pemberitahuan Penting! 🚨"
         description="Mohon maaf, Kampung Iggris LC belum menyediakan layanan untuk WNA ( Foreign Citizen ) saat ini 🙏🏻."
-        description2=" We’re sorry, but Kampung Inggris LC is not currently available for students from Foreign Citizen at the moment. 🙏🏻"
+        description2=" We're sorry, but Kampung Inggris LC is not currently available for students from Foreign Citizen at the moment. 🙏🏻"
         maxWidth="600px"
       />
 

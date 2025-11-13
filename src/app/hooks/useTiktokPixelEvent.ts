@@ -21,8 +21,8 @@ export const useTiktokTracking = () => {
     userData: TiktokUserData,
     customData?: Record<string, any>,
     options?: {
-      skipPixel?: boolean; // Skip client-side pixel tracking
-      skipServer?: boolean; // Skip server-side API tracking
+      skipPixel?: boolean;
+      skipServer?: boolean;
     }
   ) => {
     setIsLoading(true);
@@ -34,32 +34,29 @@ export const useTiktokTracking = () => {
     };
 
     try {
-      // Prepare hashed user data (dipakai untuk pixel DAN server)
+      // Prepare hashed user data
       const hashedUserData: Record<string, any> = {};
       if (userData.email) hashedUserData.email = Hasher.sha256(userData.email);
       if (userData.phone_number) hashedUserData.phone_number = Hasher.sha256(userData.phone_number);
       if (userData.external_id) hashedUserData.external_id = Hasher.sha256(userData.external_id);
 
-      // 1. CLIENT-SIDE: TikTok Pixel tracking with HASHED user data
+      // 1. CLIENT-SIDE: TikTok Pixel tracking
       if (!options?.skipPixel && typeof window !== 'undefined' && window.ttq) {
         try {
-          // Prepare complete user data untuk pixel (hashed + tracking data)
           const pixelUserData = {
             ...hashedUserData,
             ttp: userData.ttp,
             ttclid: userData.ttclid,
           };
 
-          // Identify user with complete data
           if (Object.keys(pixelUserData).length > 0) {
             window.ttq.identify(pixelUserData);
           }
 
-          // Track event with custom data
           window.ttq.track(eventName, customData || {});
           
           results.pixel = { success: true, timestamp: Date.now() };
-          console.log(`[TikTok Pixel] ${eventName} tracked on client with user data`);
+          console.log(`[TikTok Pixel] ${eventName} tracked on client`);
         } catch (error) {
           const errorMsg = `[TikTok Pixel] Error: ${error}`;
           console.error(errorMsg);
@@ -67,31 +64,28 @@ export const useTiktokTracking = () => {
         }
       }
 
-      // 2. SERVER-SIDE: TikTok Events API tracking with HASHED user data
+      // 2. SERVER-SIDE: TikTok Events API tracking
       if (!options?.skipServer) {
         try {
+          // Format payload yang BENAR sesuai TikTok Events API
           const payload = {
-            event_source: 'web',
-            event_source_id: process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
-            data: [
-              {
-                event: eventName,
-                event_time: Math.floor(Date.now() / 1000),
-                event_id: hashedUserData.phone_number || `${Date.now()}-${Math.random().toString(36)}`,
-                user: {
-                  ...hashedUserData,
-                  ttp: userData.ttp,
-                  ttclid: userData.ttclid,
-                  ip: userData.ip,
-                  user_agent: userData.user_agent,
-                },
-                page: {
-                  url: typeof window !== 'undefined' ? window.location.href : undefined,
-                  referrer: typeof document !== 'undefined' ? document.referrer : undefined,
-                },
-                properties: customData || {},
+            event: eventName, // WAJIB: nama event
+            event_id: hashedUserData.phone_number || `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            timestamp: new Date().toISOString(),
+            context: {
+              user_agent: userData.user_agent || (typeof window !== 'undefined' ? window.navigator.userAgent : ''),
+              ip: userData.ip,
+              page: {
+                url: typeof window !== 'undefined' ? window.location.href : undefined,
+                referrer: typeof document !== 'undefined' ? document.referrer : undefined,
               },
-            ],
+              user: {
+                ...hashedUserData,
+                ttp: userData.ttp,
+                ttclid: userData.ttclid,
+              },
+            },
+            properties: customData || {},
           };
 
           results.server = await tiktokPixelService.sendEvent(payload);
@@ -121,7 +115,6 @@ export const useTiktokTracking = () => {
 
 export default useTiktokTracking;
 
-// Type definition untuk window.ttq (tambahkan ke global.d.ts atau types.d.ts)
 declare global {
   interface Window {
     ttq?: {
@@ -129,5 +122,5 @@ declare global {
       page: () => void;
       identify: (userData: Record<string, any>) => void;
     };
-  }
+  } 
 }

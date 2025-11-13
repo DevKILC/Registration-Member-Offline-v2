@@ -20,8 +20,8 @@ import { useBranchBranch } from "./useBranchDataHook";
 import { useBranchDataStore } from "./useBranchDataStore";
 import { useTiktokTracking } from "./useTiktokPixelEvent";
 import { useMetaTracking } from "./useMetaPixelEvent";
-import { getCookies } from "./useCookiesData";
-import { useQueryParamsDataStore } from "./useQueryParamsDataStore";
+import { useEventParamsData } from './useEventParamsDataHook';
+
 
 export const useProgramPagehooks = () => {
 
@@ -60,7 +60,7 @@ export const useProgramPagehooks = () => {
   const { setBranch } = useBranchDataStore();
   const { sendEvent: sendEventMetaPixel } = useMetaTracking();
   const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
-  const { queryParams } = useQueryParamsDataStore();
+  const eventParams = useEventParamsData();
 
 
   // Biaya admin
@@ -87,58 +87,63 @@ export const useProgramPagehooks = () => {
         router.push("/pages/konfirmasi");
       }
 
-      const fbp = await getCookies("_fbp");
-      const ttp = await getCookies("_ttp");
       const data = {
         formData: formData,
-        fbp: fbp ? fbp.value : null,
-        fbc: queryParams?.fbc,
-        ttclid: queryParams?.ttclid,
-        ttp: ttp ? ttp.value : null,
+        fbp: eventParams?.fbp,
+        fbc: eventParams?.fbc,
+        ttclid: eventParams?.ttclid,
+        ttp: eventParams?.ttp,
       }
 
-      await sendEventMetaPixel(
-        'InitiateCheckout',
-        {
-          em: data.formData.email,
-          ph: data.formData.nomor,
-          fn: data.formData.nama,
-          external_id: data.formData.nomor,
-          fbp: data.fbp,
-          fbc: data.fbc,
-          client_ip_address: null,
-          client_user_agent: null,
-        },
-        {
-          value: Number(formData.pembayaran),
-          currency: 'IDR',
-          content_type: 'product',
-          content_ids: [queryParams?.utm_content || 'Unknown'],
-          content_name: selectedCourse?.name || 'Unknown',
-          content_category: 'payment_info',
+      if (eventParams?.utm_source === 'FB') {
+        try {
+          await sendEventMetaPixel(
+            'InitiateCheckout',
+            {
+              em: data.formData.email,
+              ph: data.formData.nomor,
+              fn: data.formData.nama,
+              external_id: data.formData.nomor,
+              fbp: data.fbp,
+              fbc: data.fbc,
+              client_ip_address: null,
+              client_user_agent: null,
+            },
+            {
+              value: Number(formData.pembayaran),
+              currency: 'IDR',
+              content_type: 'product',
+              content_ids: [eventParams?.utm_content || 'Unknown'],
+              content_name: selectedCourse?.name || 'Unknown',
+              content_category: 'payment_info',
+            }
+          );
+        } catch (err) {
+          console.error("Error sending Meta Pixel event:", err);
         }
-      );
-      sendEventTiktokPixel(
-        'InitiateCheckout',
-        {
-          email: data.formData.email,
-          phone_number: data.formData.nomor,
-          external_id: data.formData.nomor,
-          ttp: data.ttp,
-          ttclid: data.ttclid,
-          ip: null,
-          user_agent: null,
-        },
-        {
-          value: Number(formData.pembayaran),
-          currency: 'IDR',
-          content_type: 'product',
-          content_id: queryParams?.utm_content || 'Unknown',
-          content_name: selectedCourse?.name || 'Unknown',
-          content_category: 'payment_info',
-          quantity: 1,
-        }
-      );
+      } else if (eventParams?.utm_source === 'TTADS') {
+        sendEventTiktokPixel(
+          'InitiateCheckout',
+          {
+            email: data.formData.email,
+            phone_number: data.formData.nomor,
+            external_id: data.formData.nomor,
+            ttp: data.ttp,
+            ttclid: data.ttclid,
+            ip: null,
+            user_agent: null,
+          },
+          {
+            value: Number(formData.pembayaran),
+            currency: 'IDR',
+            content_type: 'product',
+            content_id: eventParams?.utm_content || 'Unknown',
+            content_name: selectedCourse?.name || 'Unknown',
+            content_category: 'payment_info',
+            quantity: 1,
+          }
+        );
+      }
 
     }
   };
@@ -157,7 +162,7 @@ export const useProgramPagehooks = () => {
     updateField("pembayaran", coursePrice + data.price + Number(adminFee));
   };
 
- const handleBranchCategoryChange = useCallback(
+  const handleBranchCategoryChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedValue = e.target.value;
       setBranchCategory(selectedValue);

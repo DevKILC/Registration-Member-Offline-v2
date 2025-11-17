@@ -45,9 +45,25 @@ export interface useForm {
   // utm_term: string | null;
   // aff: string | null;
   // fbc: string | null;
+  clid: { id: string; source: string; };
   
-  [key: string]: string | number | boolean | null | undefined | { value: string; label: string };
+  [key: string]: string | number | boolean | null | undefined | { value: string; label: string } | { id: string; source: string };
 }
+export interface EventParamsData {
+    fbp: string | null;
+    fbc: string | null;
+    ttclid: string | null;
+    ttp: string | null;
+    utm_content: string | null;
+    utm_medium: string | null;
+    utm_source: string | null;
+    utm_campaign: string | null;
+    utm_term: string | null;
+    ip_adress: string | null;
+    user_agent: string | null;
+    source: string | null;
+}
+
 
 export interface ProvinceQuery {
   education: string | null;

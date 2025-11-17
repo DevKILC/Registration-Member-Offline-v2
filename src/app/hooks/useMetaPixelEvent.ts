@@ -4,10 +4,13 @@
 import { useState } from 'react';
 import metaPixelService from '@/app/services/metaPixelService';
 import { Hasher } from '@/app/_backend/_helper/hasher';
-import { MetaUserData } from '@/app/_backend/_utils/Interfaces';
+import { useFormDataStore } from "@/app/hooks/useFormDataStore";
+import { useEventParamsData } from "./useEventParamsDataHook";
 
 export const useMetaTracking = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { formData } = useFormDataStore();
+  const { eventParamsData } = useEventParamsData();
 
   /**
    * Send Meta event ke Pixel (client) dan CAPI (server) secara bersamaan
@@ -16,9 +19,10 @@ export const useMetaTracking = () => {
    * @param customData - Data custom sesuai jenis event
    * @param options - Opsi tambahan untuk kontrol tracking
    */
+
+
   const sendEvent = async (
     eventName: string,
-    userData: MetaUserData,
     customData?: Record<string, any>,
     options?: {
       skipPixel?: boolean; // Skip client-side pixel tracking
@@ -33,22 +37,23 @@ export const useMetaTracking = () => {
       errors: [] as string[],
     };
 
-    try {
-      const eventId = userData.ph 
-        ? Hasher.sha256(userData.ph) 
-        : `${Date.now()}-${Math.random().toString(36)}`;
+    if (eventParamsData?.utm_source === "FB") {
+      try {
+        const eventId = formData.nomor
+          ? Hasher.sha256(String(formData.nomor))
+          : `${Date.now()}-${Math.random().toString(36)}`;
 
       // 1. CLIENT-SIDE: Meta Pixel tracking (UNHASHED - Meta akan hash otomatis)
       if (!options?.skipPixel && typeof window !== 'undefined' && window.fbq) {
         try {
           // Prepare complete user data untuk pixel (UNHASHED + tracking cookies)
           const pixelUserData: Record<string, any> = {};
-          if (userData.em) pixelUserData.em = userData.em;
-          if (userData.ph) pixelUserData.ph = userData.ph;
-          if (userData.fn) pixelUserData.fn = userData.fn;
-          if (userData.external_id) pixelUserData.external_id = userData.external_id;
-          if (userData.fbp) pixelUserData.fbp = userData.fbp;
-          if (userData.fbc) pixelUserData.fbc = userData.fbc;
+          if (formData.email) pixelUserData.em = formData.email;
+          if (formData.nomor) pixelUserData.ph = formData.nomor;
+          if (formData.nama) pixelUserData.fn = formData.nama;
+          if (formData.number) pixelUserData.number = formData.number;
+          if (eventParamsData?.fbp) pixelUserData.fbp = eventParamsData?.fbp;
+          if (eventParamsData?.fbc) pixelUserData.fbc = eventParamsData?.fbc;
 
           // Track with user data and custom data
           window.fbq('track', eventName, customData || {}, { eventID: eventId });
@@ -72,10 +77,10 @@ export const useMetaTracking = () => {
         try {
           // Prepare hashed user data untuk server
           const hashedUserData: Record<string, any> = {};
-          if (userData.em) hashedUserData.em = Hasher.sha256(userData.em);
-          if (userData.ph) hashedUserData.ph = Hasher.sha256(userData.ph);
-          if (userData.fn) hashedUserData.fn = Hasher.sha256(userData.fn);
-          if (userData.external_id) hashedUserData.external_id = Hasher.sha256(userData.external_id);
+          if (formData.email) hashedUserData.em = Hasher.sha256(String(formData.email));
+          if (formData.nomor) hashedUserData.ph = Hasher.sha256(String(formData.nomor));
+          if (formData.nama) hashedUserData.fn = Hasher.sha256(String(formData.nama));
+          if (formData.number) hashedUserData.number = Hasher.sha256(String(formData.number));
 
           const payload = {
             data: [
@@ -87,10 +92,10 @@ export const useMetaTracking = () => {
                 event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
                 user_data: {
                   ...hashedUserData,
-                  fbp: userData.fbp,
-                  fbc: userData.fbc,
-                  client_ip_address: userData.client_ip_address,
-                  client_user_agent: userData.client_user_agent,
+                  fbp: eventParamsData?.fbp,
+                  fbc: eventParamsData?.fbc,
+                  client_ip_address: eventParamsData?.ip_adress,
+                  client_user_agent: eventParamsData?.user_agent,
                 },
                 custom_data: customData || {},
               },
@@ -114,6 +119,11 @@ export const useMetaTracking = () => {
     } finally {
       setIsLoading(false);
     }
+  }else{
+      setIsLoading(false);
+      return results;
+  }
+
   };
 
   return {

@@ -6,9 +6,13 @@ export const clidService = {
   async getClid(data: ClidQuery) {
     toast.loading('Loading...');
     try {
-      const response = await axios.get(`https://lead-service.kampunginggrislc.com/api/retrieve-lead/clid?whatsapp=${data.phone_number}`);
+      const response = await axios.get(
+        `https://lead-service.kampunginggrislc.com/api/retrieve-lead/clid?whatsapp=${data.phone_number}`
+      );
+      
       toast.dismiss();
-      return response.data.clid;
+      return response.data;
+      
     } catch (error) {
       toast.dismiss();
       toast.error("Error getting clid");

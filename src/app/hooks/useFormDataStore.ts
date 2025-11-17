@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useForm, PaymentMethod } from "@/app/_backend/_utils/Interfaces";
+import { useForm, PaymentMethod, EventParamsData } from "@/app/_backend/_utils/Interfaces";
+
 
 const initialFormData: useForm = {
   nama: "",
@@ -37,6 +38,8 @@ const initialFormData: useForm = {
   cs_id: "",
   bank_code: "",
   nationality: "",
+  // Initialize clid to empty strings; populate later by calling setEventParams from a component.
+  clid: { id: "", source: "" },
 };
 
 const initialPaymentMethod: PaymentMethod = {
@@ -67,6 +70,8 @@ interface FormActions {
   setSelectedPaymentMethod: (value: PaymentMethod) => void;
   setPersonalDataIsValid: (value: boolean) => void;
   setCourseDataIsValid: (value: boolean) => void;
+  // New action: populate clid from event params returned by a hook in a component
+  setEventParams: (params: EventParamsData) => void;
 }
 
 export const useFormDataStore = create<formDataState & FormActions>()(
@@ -92,6 +97,21 @@ export const useFormDataStore = create<formDataState & FormActions>()(
       setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
       courseDataIsValid: false,
       setPersonalDataIsValid: (value: boolean) => set({ personalDataIsValid: value }),
+      // Implementation of setEventParams: merge event params into clid
+      setEventParams: (params: EventParamsData) =>
+        set((state) => {
+          const clid = {
+            id: params?.ttclid || params?.fbc || "",
+            source: params?.source || "",
+          };
+          console.log("Set clid in formData:", clid);
+          return {
+            formData: {
+              ...state.formData,
+              clid,
+            },
+          };
+        }),
     }),
     {
       name: "form-data-storage", // nama key di localStorage
@@ -100,7 +120,7 @@ export const useFormDataStore = create<formDataState & FormActions>()(
       // Optional: Pilih state mana yang ingin disimpan
       partialize: (state) => ({
         formData: state.formData,
-        selectedPatmentMethod: state.selectedPaymentMethod,
+        selectedPaymentMethod: state.selectedPaymentMethod,
         isPopupOpen: state.isPopupOpen,
         personalDataIsValid: state.personalDataIsValid,
         courseDataIsValid: state.courseDataIsValid,

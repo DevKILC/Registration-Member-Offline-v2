@@ -18,9 +18,8 @@ import { useMeetHourDataHook } from "@/app/hooks/useMeetHourDataHook";
 import { useAccomodationDataHook } from "@/app/hooks/useAccomodationDataHook";
 import { useBranchBranch } from "./useBranchDataHook";
 import { useBranchDataStore } from "./useBranchDataStore";
-import { useTiktokTracking } from "./useTiktokPixelEvent";
-import { useMetaTracking } from "./useMetaPixelEvent";
-import { useEventParamsData } from './useEventParamsDataHook';
+
+
 
 
 export const useProgramPagehooks = () => {
@@ -58,9 +57,6 @@ export const useProgramPagehooks = () => {
   const { getMeetHourData } = useMeetHourDataHook();
   const { getBranchData } = useBranchBranch();
   const { setBranch } = useBranchDataStore();
-  const { sendEvent: sendEventMetaPixel } = useMetaTracking();
-  const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
-  const eventParams = useEventParamsData();
 
 
   // Biaya admin
@@ -87,67 +83,8 @@ export const useProgramPagehooks = () => {
         router.push("/pages/konfirmasi");
       }
 
-      const data = {
-        formData: formData,
-        fbp: eventParams?.fbp,
-        fbc: eventParams?.fbc,
-        ttclid: eventParams?.ttclid,
-        ttp: eventParams?.ttp,
-      }
-
-      if (eventParams?.utm_source === 'FB') {
-        try {
-          await sendEventMetaPixel(
-            'InitiateCheckout',
-            {
-              em: data.formData.email,
-              ph: data.formData.nomor,
-              fn: data.formData.nama,
-              external_id: data.formData.nomor,
-              fbp: data.fbp,
-              fbc: data.fbc,
-              client_ip_address: null,
-              client_user_agent: null,
-            },
-            {
-              value: Number(formData.pembayaran),
-              currency: 'IDR',
-              content_type: 'product',
-              content_ids: [eventParams?.utm_content || 'Unknown'],
-              content_name: selectedCourse?.name || 'Unknown',
-              content_category: 'payment_info',
-            }
-          );
-        } catch (err) {
-          console.error("Error sending Meta Pixel event:", err);
-        }
-      } else if (eventParams?.utm_source === 'TTADS') {
-        sendEventTiktokPixel(
-          'InitiateCheckout',
-          {
-            email: data.formData.email,
-            phone_number: data.formData.nomor,
-            external_id: data.formData.nomor,
-            ttp: data.ttp,
-            ttclid: data.ttclid,
-            ip: null,
-            user_agent: null,
-          },
-          {
-            value: Number(formData.pembayaran),
-            currency: 'IDR',
-            content_type: 'product',
-            content_id: eventParams?.utm_content || 'Unknown',
-            content_name: selectedCourse?.name || 'Unknown',
-            content_category: 'payment_info',
-            quantity: 1,
-          }
-        );
-      }
-
     }
   };
-
   const calculateTotalPaymentCourse = (selectedCourse: Course) => {
     updateField("pembayaranCourse", selectedCourse.price);
     if (formData.paket === selectedCourse.course_id.toString()) return;

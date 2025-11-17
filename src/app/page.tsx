@@ -15,7 +15,6 @@ import { useQueryParamsDataHook } from "./hooks/useQueryParamsDataHook";
 import { useEffect, useState } from "react";
 import Script from "next/script";
 import Popup from "./_components/_partials/popup";
-import { useDebounce } from "use-debounce";
 
 export default function Page() {
 
@@ -27,17 +26,12 @@ export default function Page() {
     errors,
     handleSubmit,
     educationChangeHandler,
-    sendEventMetaPixelOrTiktokPixel,
-    getClidData,
-    testSendCustomPixelEvent
+
   } = useEffectHomePageHooks();
 
   useEffect(() => {
     saveQueryParams();
 
-    setTimeout(() => {
-      sendEventMetaPixelOrTiktokPixel();
-    }, 3000);
   }, []);
 
   const [showNationalityPopup, setShowNationalityPopup] = useState(false);
@@ -45,23 +39,15 @@ export default function Page() {
   useEffect(() => {
     if (formData.nationality === "WNA") {
       setShowNationalityPopup(true);
-      testSendCustomPixelEvent();
     }
   }, [formData.nationality]);
-
-  // Debounce nomor dengan delay 1 detik
-  const [debouncedNomor] = useDebounce(formData.nomor, 1000);
 
   const nationalityOptions = [
     { label: "WNI ( Indonesian Citizen )", value: "WNI" },
     { label: "WNA ( Foreign Citizen)", value: "WNA" },
   ];
 
-  const handleOnBlur = () => {
-    if (debouncedNomor) {
-      getClidData(String(debouncedNomor));
-    }
-  }
+
 
   return (
     <>
@@ -123,7 +109,6 @@ export default function Page() {
                       updateField("nomor", value);
                     }
                   }}
-                  onBlur={handleOnBlur}
                   className={` ${errors.nomor ? "border-red-500" : ""} `}
                 />
 
@@ -249,7 +234,7 @@ export default function Page() {
                 "script",
                 "https://connect.facebook.net/en_US/fbevents.js"
               );
-              fbq("init", "1881998885434766");
+              fbq("init", "1411456537168268");
               fbq("trackCustom", "initiateCheckout");`,
         }}
       />

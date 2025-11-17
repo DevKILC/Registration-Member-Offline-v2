@@ -16,11 +16,9 @@ import useTiktokTracking from "./useTiktokPixelEvent";
 import { useEventParamsData } from "./useEventParamsDataHook";
 
 
-
-
 export const useConfirmationPageHooks = () => {
 
-  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
+  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, setEventParams } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const { queryParams } = useQueryParamsDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -36,8 +34,48 @@ export const useConfirmationPageHooks = () => {
   const { selectedCourse } = useCourseDataStore();
   const { sendEvent: sendEventMetaPixel } = useMetaTracking();
   const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
-  const eventParams = useEventParamsData();
+  const { eventParamsData: eventParams } = useEventParamsData();
+  // Track initiate checkout event when konfirmasi page loads
+  const initiateCheckoutEvent = () => {
+    if (eventParams?.utm_source === 'FB') {
+      try {
+        sendEventMetaPixel(
+          'InitiateCheckout',
+          {
+            value: Number(formData.pembayaran),
+            currency: 'IDR',
+            content_type: 'product',
+            content_ids: [eventParams?.utm_content || 'Unknown'],
+            content_name: selectedCourse?.name || 'Unknown',
+            content_category: 'payment_info',
+          }
+        );
+      } catch (err) {
+        console.error("Error sending Meta Pixel event:", err);
+      }
+    } else if (eventParams?.utm_source === 'TTADS') {
+      sendEventTiktokPixel(
+        'InitiateCheckout',
+        {
+          value: Number(formData.pembayaran),
+          currency: 'IDR',
+          content_type: 'product',
+          content_id: eventParams?.utm_content || 'Unknown',
+          content_name: selectedCourse?.name || 'Unknown',
+          content_category: 'payment_info',
+          quantity: 1,
+        }
+      );
+    }
 
+  };
+
+    useEffect(() => {
+    if (eventParams) {
+      setEventParams(eventParams);
+      initiateCheckoutEvent();
+    }
+  }, [eventParams, setEventParams]);
 
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,13 +94,6 @@ export const useConfirmationPageHooks = () => {
 
     const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
 
-    const data = {
-      formData: formData,
-      fbp: eventParams?.fbp,
-      fbc: eventParams?.fbc,
-      ttclid: eventParams?.ttclid,
-      ttp: eventParams?.ttp,
-    }
     // Combine form data with query params
     const combainedData = {
       ...formData,
@@ -72,20 +103,10 @@ export const useConfirmationPageHooks = () => {
     }
     if (isValid) {
 
-        if (eventParams?.utm_source === 'FB') {
+      if (eventParams?.utm_source === 'FB') {
         try {
           await sendEventMetaPixel(
             'AddPaymentInfo',
-            {
-              em: data.formData.email,
-              ph: data.formData.nomor,
-              fn: data.formData.nama,
-              external_id: data.formData.nomor,
-              fbp: data.fbp,
-              fbc: data.fbc,
-              client_ip_address: null,
-              client_user_agent: null,
-            },
             {
               value: Number(formData.pembayaran),
               currency: 'IDR',
@@ -101,15 +122,6 @@ export const useConfirmationPageHooks = () => {
       } else if (eventParams?.utm_source === 'TTADS') {
         sendEventTiktokPixel(
           'AddPaymentInfo',
-          {
-            email: data.formData.email,
-            phone_number: data.formData.nomor,
-            external_id: data.formData.nomor,
-            ttp: data.ttp,
-            ttclid: data.ttclid,
-            ip: null,
-            user_agent: null,
-          },
           {
             value: Number(formData.pembayaran),
             currency: 'IDR',
@@ -241,6 +253,7 @@ export const useConfirmationPageHooks = () => {
     checkVoucher,
     calculateVoucher,
     handleVoucherChange,
-    isSubmitting
+    isSubmitting,
+    initiateCheckoutEvent,
   };
 };

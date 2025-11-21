@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
 import { validateFormDataKonfirmasi } from "@/app/_backend/_utils/validationAlert";
@@ -15,9 +15,7 @@ import { useMetaTracking } from "./useMetaPixelEvent";
 import useTiktokTracking from "./useTiktokPixelEvent";
 import { useEventParamsData } from "./useEventParamsDataHook";
 
-
 export const useConfirmationPageHooks = () => {
-
   const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, setEventParams } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const { queryParams } = useQueryParamsDataStore();
@@ -30,209 +28,235 @@ export const useConfirmationPageHooks = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [voucher, setVoucher] = useState("");
   const [debouncedValue] = useDebounce(voucher, 200);
-  const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
+  
+  // FIX: Parse admin fee as number
+  const adminFee = Number(process.env.NEXT_PUBLIC_ADMIN_FEE) || 0;
+  
   const { selectedCourse } = useCourseDataStore();
   const { sendEvent: sendEventMetaPixel } = useMetaTracking();
   const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
   const { eventParamsData: eventParams } = useEventParamsData();
-  // Track initiate checkout event when konfirmasi page loads
-  const initiateCheckoutEvent = () => {
-    if (eventParams?.utm_source === 'FB') {
+
+  // FIX: Use useCallback to stabilize function reference
+  const initiateCheckoutEvent = useCallback(() => {
+    if (!eventParams) return;
+
+    const eventData = {
+      value: Number(formData.pembayaran),
+      currency: 'IDR',
+      content_type: 'product',
+      content_name: selectedCourse?.name || 'Unknown',
+      content_category: 'payment_info',
+    };
+
+    if (eventParams.utm_source === 'FB') {
       try {
-        sendEventMetaPixel(
-          'InitiateCheckout',
-          {
-            value: Number(formData.pembayaran),
-            currency: 'IDR',
-            content_type: 'product',
-            content_ids: [eventParams?.utm_content || 'Unknown'],
-            content_name: selectedCourse?.name || 'Unknown',
-            content_category: 'payment_info',
-          }
-        );
+        sendEventMetaPixel('InitiateCheckout', {
+          ...eventData,
+          content_ids: [eventParams.utm_content || 'Unknown'],
+        });
       } catch (err) {
         console.error("Error sending Meta Pixel event:", err);
       }
-    } else if (eventParams?.utm_source === 'TTADS') {
-      sendEventTiktokPixel(
-        'InitiateCheckout',
-        {
-          value: Number(formData.pembayaran),
-          currency: 'IDR',
-          content_type: 'product',
-          content_id: eventParams?.utm_content || 'Unknown',
-          content_name: selectedCourse?.name || 'Unknown',
-          content_category: 'payment_info',
+    } else if (eventParams.utm_source === 'TTADS') {
+      try {
+        sendEventTiktokPixel('InitiateCheckout', {
+          ...eventData,
+          content_id: eventParams.utm_content || 'Unknown',
           quantity: 1,
-        }
-      );
+        });
+      } catch (err) {
+        console.error("Error sending TikTok Pixel event:", err);
+      }
     }
+  }, [eventParams, formData.pembayaran, selectedCourse, sendEventMetaPixel, sendEventTiktokPixel]);
 
-  };
-
-    useEffect(() => {
+  useEffect(() => {
     if (eventParams) {
       setEventParams(eventParams);
       initiateCheckoutEvent();
     }
-  }, [eventParams, setEventParams]);
+  }, [eventParams, setEventParams, initiateCheckoutEvent]);
+
+  // FIX: Make pixel tracking async and await completion
+  const trackPaymentInfo = async () => {
+    if (!eventParams) return;
+
+    const eventData = {
+      value: Number(formData.pembayaran),
+      currency: 'IDR',
+      content_type: 'product',
+      content_name: selectedCourse?.name || 'Unknown',
+      content_category: 'payment_info',
+    };
+
+    try {
+      if (eventParams.utm_source === 'FB') {
+        await sendEventMetaPixel('AddPaymentInfo', {
+          ...eventData,
+          content_ids: [eventParams.utm_content || 'Unknown'],
+        });
+      } else if (eventParams.utm_source === 'TTADS') {
+        await sendEventTiktokPixel('AddPaymentInfo', {
+          ...eventData,
+          content_id: eventParams.utm_content || 'Unknown',
+          quantity: 1,
+        });
+      }
+    } catch (err) {
+      console.error("Error sending payment info event:", err);
+      // Don't block registration on pixel errors
+    }
+  };
 
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const result = konfirmasiSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: { [key: string]: string } = {};
-      result.error.errors.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
-      });
-      setErrors(fieldErrors);
-    } else {
+
+    try {
+      // Validate with Zod
+      const result = konfirmasiSchema.safeParse(formData);
+      if (!result.success) {
+        const fieldErrors: { [key: string]: string } = {};
+        result.error.errors.forEach((err) => {
+          fieldErrors[err.path[0]] = err.message;
+        });
+        setErrors(fieldErrors);
+        setIsSubmitting(false);
+        return;
+      }
+      
       setErrors({});
-    }
 
-    const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
-
-    // Combine form data with query params
-    const combainedData = {
-      ...formData,
-      ...Object.fromEntries(
-        Object.entries(queryParams || {}).map(([key, value]) => [key, value ?? ''])
-      ),
-    }
-    if (isValid) {
-
-      if (eventParams?.utm_source === 'FB') {
-        try {
-          await sendEventMetaPixel(
-            'AddPaymentInfo',
-            {
-              value: Number(formData.pembayaran),
-              currency: 'IDR',
-              content_type: 'product',
-              content_ids: [eventParams?.utm_content || 'Unknown'],
-              content_name: selectedCourse?.name || 'Unknown',
-              content_category: 'payment_info',
-            }
-          );
-        } catch (err) {
-          console.error("Error sending Meta Pixel event:", err);
-        }
-      } else if (eventParams?.utm_source === 'TTADS') {
-        sendEventTiktokPixel(
-          'AddPaymentInfo',
-          {
-            value: Number(formData.pembayaran),
-            currency: 'IDR',
-            content_type: 'product',
-            content_id: eventParams?.utm_content || 'Unknown',
-            content_name: selectedCourse?.name || 'Unknown',
-            content_category: 'payment_info',
-            quantity: 1,
-          }
-        );
+      // Validate required fields
+      const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
+      
+      if (!isValid) {
+        const missingLabels = missingFields.map((item) => item.label);
+        toast.error("Mohon lengkapi data berikut: " + missingLabels.join(", "));
+        setIsSubmitting(false);
+        return;
       }
 
-      return;
+      // Combine data
+      const combainedData = {
+        ...formData,
+        ...Object.fromEntries(
+          Object.entries(queryParams || {}).map(([key, value]) => [key, value ?? ''])
+        ),
+      };
 
-      await registrationService
-        .register(combainedData)
-        .then((res) => {
-          toast.dismiss();
+      // Register
+      const res = await registrationService.register(combainedData);
+      
+      toast.dismiss();
 
-          // Track payment info events
+      if (res.status === 500) {
+        throw new Error("Server error");
+      }
 
-          setIsSubmitting(false);
-          if (res.status !== 500) {
-            setRegistrationResult(res.data.result);
-            resetForm();
-            setPersonalDataIsValid(false);
-            setCourseDataIsValid(false);
-            router.push("/pages/thankyou");
-          };
-        })
-        .catch((err) => {
-          toast.dismiss();
-          console.error("Error registering:", err);
-          toast.error("Terjadi kesalahan di server, silahkan coba lagi");
-          setIsSubmitting(false);
-        });
+      // FIX: Await pixel tracking before navigation
+      await trackPaymentInfo();
 
-    } else {
-      const missingLabels = missingFields.map((item) => item.label);
+      // Success - navigate
+      setRegistrationResult(res.data.result);
+      resetForm();
+      setPersonalDataIsValid(false);
+      setCourseDataIsValid(false);
+      router.push("/pages/thankyou");
+
+    } catch (err) {
+      toast.dismiss();
+      console.error("Error registering:", err);
+      toast.error("Terjadi kesalahan di server, silahkan coba lagi");
+    } finally {
       setIsSubmitting(false);
-      toast.error(
-        "Mohon lengkapi data berikut: " + missingLabels.join(", ")
-      );
     }
   };
 
-  const capitalizeFirstLetter = (val: | string | number | undefined) => {
-    if (val === null || val === undefined) return val; // Return the value as is if it's null or undefined
+  const capitalizeFirstLetter = (val: string | number | undefined) => {
+    if (val === null || val === undefined) return val;
     const result = String(val).charAt(0).toUpperCase() + String(val).slice(1);
-
     return result;
-  }
+  };
 
+  // FIX: Correct logic error
   const handleTosConfirmation = () => {
     if (formData.tos) {
       setTos(true);
-    } {
+    } else {
       setTos(false);
       setModalTosIsOpen(true);
       toast.warning("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
     }
-  }
+  };
 
-  const calculateVoucher = (discount: number) => {
-    const totalPembayaran = Number(formData.pembayaranCourse) - Number(discount) + Number(formData.pembayaranGrade) + Number(formData.pembayaranPenjemputan) + Number(adminFee);
+  const calculateVoucher = useCallback((discount: number) => {
+    const totalPembayaran = 
+      Number(formData.pembayaranCourse) - 
+      Number(discount) + 
+      Number(formData.pembayaranGrade) + 
+      Number(formData.pembayaranPenjemputan) + 
+      Number(adminFee);
+    
     updateField("diskonNominal", discount);
     updateField("pembayaran", totalPembayaran);
-  }
+  }, [formData.pembayaranCourse, formData.pembayaranGrade, formData.pembayaranPenjemputan, adminFee, updateField]);
 
   const handleVoucherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     updateField("diskon", value);
     setVoucher(value);
-  }
+  };
+
+  const checkVoucher = useCallback(async (code: string) => {
+    toast.loading("Memeriksa kode voucher...");
+    
+    const filter = {
+      voucher_code: code,
+      course_id: Number(formData.paket),
+    };
+
+    try {
+      const res = await voucherService.getVoucher(filter);
+      toast.dismiss();
+
+      if (res.data === null) {
+        toast.error("Kode voucher tidak valid");
+        calculateVoucher(0);
+        return;
+      }
+
+      if (res.data.percent === 0) {
+        calculateVoucher(res.data.nominal);
+        updateField("diskonPersen", res.data.percent);
+        toast.success(
+          "Kamu berhasil mendapatkan diskon sebesar " + 
+          changeTotalPaymentToIndonesianCurrency(res.data.nominal)
+        );
+      } else if (res.data.nominal === 0) {
+        const discount = (formData.pembayaranCourse * res.data.percent) / 100;
+        calculateVoucher(discount);
+        updateField("diskonPersen", res.data.percent);
+        toast.success(
+          "Kamu berhasil mendapatkan diskon sebesar " + 
+          changeTotalPaymentToIndonesianCurrency(discount)
+        );
+      }
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Kode voucher tidak valid");
+      calculateVoucher(0);
+      console.error("Voucher check error:", err);
+    }
+  }, [formData.paket, formData.pembayaranCourse, calculateVoucher, updateField]);
 
   useEffect(() => {
     if (debouncedValue !== "") {
       checkVoucher(debouncedValue);
     }
-  }, [debouncedValue]);
-
-  const checkVoucher = async (code: string) => {
-    toast.loading("Memeriksa kode voucher...");
-    const filter = {
-      voucher_code: code,
-      course_id: Number(formData.paket),
-    };
-    await voucherService.getVoucher(filter)
-      .then((res) => {
-        toast.dismiss();
-        if (res.data === null) {
-          toast.error("Kode voucher tidak valid");
-          calculateVoucher(0);
-        } else {
-          if (res.data.percent === 0) {
-            calculateVoucher(res.data.nominal);
-            updateField("diskonPersen", res.data.percent);
-            toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(res.data.nominal));
-          }
-          if (res.data.nominal === 0) {
-            const discount = (formData.pembayaranCourse * res.data.percent) / 100;
-            calculateVoucher(discount);
-            toast.success("Kamu berhasil mendapatkan diskon sebesar " + changeTotalPaymentToIndonesianCurrency(discount));
-          }
-        }
-      })
-      .catch(() => {
-        // toast.error("Kode voucher tidak valid");
-      });
-
-  }
+  }, [debouncedValue, checkVoucher]);
 
   return {
     formData,

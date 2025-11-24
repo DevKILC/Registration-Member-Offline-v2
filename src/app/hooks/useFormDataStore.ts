@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useForm, PaymentMethod, ClidData } from "@/app/_backend/_utils/Interfaces";
+import { useForm, PaymentMethod } from "@/app/_backend/_utils/Interfaces";
 
 
 const initialFormData: useForm = {
@@ -70,8 +70,6 @@ interface FormActions {
   setSelectedPaymentMethod: (value: PaymentMethod) => void;
   setPersonalDataIsValid: (value: boolean) => void;
   setCourseDataIsValid: (value: boolean) => void;
-  // New action: populate clid from event params returned by a hook in a component
-  setEventParams: (params: ClidData) => void;
 }
 
 export const useFormDataStore = create<formDataState & FormActions>()(
@@ -97,21 +95,7 @@ export const useFormDataStore = create<formDataState & FormActions>()(
       setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
       courseDataIsValid: false,
       setPersonalDataIsValid: (value: boolean) => set({ personalDataIsValid: value }),
-      // Implementation of setEventParams: merge event params into clid
-      setEventParams: (params: ClidData) =>
-        set((state) => {
-          const clid = {
-            id: params.id || "",
-            source: params.source || "",
-          };
-          console.log("Set clid in formData:", clid);
-          return {
-            formData: {
-              ...state.formData,
-              clid,
-            },
-          };
-        }),
+
     }),
     {
       name: "form-data-storage", // nama key di localStorage

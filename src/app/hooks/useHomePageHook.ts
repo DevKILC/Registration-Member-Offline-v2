@@ -58,14 +58,14 @@ export const useHomePageHooks = () => {
   useEffect(() => {
     if (eventParamsData) {
       const clidData = {
-        id: eventParamsData.ttclid || eventParamsData.fbc || "",
-        source: eventParamsData.source || "",
+        id: eventParamsData.ttclid || eventParamsData.fbc || null,
+        source: eventParamsData.source || null,
       };
       
       // Only update if we have valid data
       if (clidData.id || clidData.source) {
         console.log("Saving clid to formData:", clidData);
-        updateField("clid", JSON.stringify(clidData));
+        updateField("clid", clidData as any);
       }
     }
   }, [eventParamsData, updateField]);

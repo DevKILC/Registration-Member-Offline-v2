@@ -16,7 +16,7 @@ import useTiktokTracking from "./useTiktokPixelEvent";
 import { useEventParamsData } from "./useEventParamsDataHook";
 
 export const useConfirmationPageHooks = () => {
-  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, setEventParams } = useFormDataStore();
+  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const { queryParams } = useQueryParamsDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -73,10 +73,9 @@ export const useConfirmationPageHooks = () => {
 
   useEffect(() => {
     if (eventParams) {
-      setEventParams(eventParams);
       initiateCheckoutEvent();
     }
-  }, [eventParams, setEventParams, initiateCheckoutEvent]);
+  }, [eventParams, initiateCheckoutEvent]);
 
   // FIX: Make pixel tracking async and await completion
   const trackPaymentInfo = async () => {

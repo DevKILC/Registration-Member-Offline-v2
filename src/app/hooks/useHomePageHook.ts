@@ -19,7 +19,7 @@ export const useEffectHomePageHooks = () => {
   const { getProvinces } = useProvincesData();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false); // Tambahkan loading state
-  const { getClidData } = useEventParamsData();
+  const { getClidData, eventParamsData } = useEventParamsData();
   
   const {
     resetProvince,
@@ -52,7 +52,15 @@ export const useEffectHomePageHooks = () => {
   } = useAccomodationDataStore();
   const { setBranch } = useBranchDataStore();
 
-  const { formData, setPersonalDataIsValid, updateField } = useFormDataStore();
+  const { formData, setPersonalDataIsValid, updateField, setEventParams } = useFormDataStore();
+
+  const params = {
+    id : eventParamsData?.ttclid || eventParamsData?.fbc || "",
+    source : eventParamsData?.source || "",
+  }
+  const handleSaveEventParams = () => {
+    setEventParams(params);
+  }
 
   // Handle submit form - FIXED VERSION
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -152,6 +160,7 @@ export const useEffectHomePageHooks = () => {
     errors,
     handleSubmit,
     educationChangeHandler,
+    handleSaveEventParams,
     isSubmitting, // Return loading state untuk disable button
   };
 };

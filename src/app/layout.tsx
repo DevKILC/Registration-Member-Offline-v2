@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
 
+
 export const metadata: Metadata = {
   title: "Registrasi Language Center",
   description: "Registrasi Language Center",

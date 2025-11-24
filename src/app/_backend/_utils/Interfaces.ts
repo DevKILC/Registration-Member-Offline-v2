@@ -64,7 +64,10 @@ export interface EventParamsData {
     source: string | null;
 }
 
-
+export interface ClidData {
+  id: string;
+  source: string;
+}
 export interface ProvinceQuery {
   education: string | null;
 }

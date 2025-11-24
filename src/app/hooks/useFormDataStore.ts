@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { useForm, PaymentMethod, EventParamsData } from "@/app/_backend/_utils/Interfaces";
+import { useForm, PaymentMethod, ClidData } from "@/app/_backend/_utils/Interfaces";
 
 
 const initialFormData: useForm = {
@@ -71,7 +71,7 @@ interface FormActions {
   setPersonalDataIsValid: (value: boolean) => void;
   setCourseDataIsValid: (value: boolean) => void;
   // New action: populate clid from event params returned by a hook in a component
-  setEventParams: (params: EventParamsData) => void;
+  setEventParams: (params: ClidData) => void;
 }
 
 export const useFormDataStore = create<formDataState & FormActions>()(
@@ -98,11 +98,11 @@ export const useFormDataStore = create<formDataState & FormActions>()(
       courseDataIsValid: false,
       setPersonalDataIsValid: (value: boolean) => set({ personalDataIsValid: value }),
       // Implementation of setEventParams: merge event params into clid
-      setEventParams: (params: EventParamsData) =>
+      setEventParams: (params: ClidData) =>
         set((state) => {
           const clid = {
-            id: params?.ttclid || params?.fbc || "",
-            source: params?.source || "",
+            id: params.id || "",
+            source: params.source || "",
           };
           console.log("Set clid in formData:", clid);
           return {

@@ -26,12 +26,12 @@ export default function Page() {
     errors,
     handleSubmit,
     educationChangeHandler,
-
+    handleSaveEventParams,
   } = useEffectHomePageHooks();
 
   useEffect(() => {
     saveQueryParams();
-
+    handleSaveEventParams();
   }, []);
 
   const [showNationalityPopup, setShowNationalityPopup] = useState(false);

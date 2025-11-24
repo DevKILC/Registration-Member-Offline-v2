@@ -45,9 +45,9 @@ export interface useForm {
   // utm_term: string | null;
   // aff: string | null;
   // fbc: string | null;
-  clid: { id: string; source: string; };
-  
-  [key: string]: string | number | boolean | null | undefined | { value: string; label: string } | { id: string; source: string };
+  clid: { id: string | number | null; source: string | number | null; };
+
+  [key: string]: string | number | boolean | null | undefined | { value: string; label: string } | { id: string | number | null; source: string | number | null };
 }
 export interface EventParamsData {
     fbp: string | null;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { konfirmasiSchema } from "@/app/_backend/_utils/validationZod";
 import { validateFormDataKonfirmasi } from "@/app/_backend/_utils/validationAlert";
@@ -29,17 +29,20 @@ export const useConfirmationPageHooks = () => {
   const [voucher, setVoucher] = useState("");
   const [debouncedValue] = useDebounce(voucher, 200);
   
-  // FIX: Parse admin fee as number
-  const adminFee = Number(process.env.NEXT_PUBLIC_ADMIN_FEE) || 0;
+  // Track if InitiateCheckout has been sent
+  const initiateCheckoutSentRef = useRef(false);
+  
+  const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
   
   const { selectedCourse } = useCourseDataStore();
   const { sendEvent: sendEventMetaPixel } = useMetaTracking();
   const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
   const { eventParamsData: eventParams } = useEventParamsData();
 
-  // FIX: Use useCallback to stabilize function reference
-  const initiateCheckoutEvent = useCallback(() => {
-    if (!eventParams) return;
+  // Send InitiateCheckout ONLY when TOS is checked
+  const sendInitiateCheckout = useCallback(() => {
+    // Jangan kirim jika sudah pernah dikirim
+    if (initiateCheckoutSentRef.current || !eventParams) return;
 
     const eventData = {
       value: Number(formData.pembayaran),
@@ -49,35 +52,29 @@ export const useConfirmationPageHooks = () => {
       content_category: 'payment_info',
     };
 
-    if (eventParams.utm_source === 'FB') {
-      try {
+    try {
+      if (eventParams.utm_source === 'FB') {
         sendEventMetaPixel('InitiateCheckout', {
           ...eventData,
           content_ids: [eventParams.utm_content || 'Unknown'],
         });
-      } catch (err) {
-        console.error("Error sending Meta Pixel event:", err);
-      }
-    } else if (eventParams.utm_source === 'TTADS') {
-      try {
+        initiateCheckoutSentRef.current = true;
+        console.log('✅ InitiateCheckout sent to Meta Pixel');
+      } else if (eventParams.utm_source === 'TTADS') {
         sendEventTiktokPixel('InitiateCheckout', {
           ...eventData,
           content_id: eventParams.utm_content || 'Unknown',
           quantity: 1,
         });
-      } catch (err) {
-        console.error("Error sending TikTok Pixel event:", err);
+        initiateCheckoutSentRef.current = true;
+        console.log('✅ InitiateCheckout sent to TikTok Pixel');
       }
+    } catch (err) {
+      console.error("Error sending InitiateCheckout event:", err);
     }
   }, [eventParams, formData.pembayaran, selectedCourse, sendEventMetaPixel, sendEventTiktokPixel]);
 
-  useEffect(() => {
-    if (eventParams) {
-      initiateCheckoutEvent();
-    }
-  }, [eventParams, initiateCheckoutEvent]);
-
-  // FIX: Make pixel tracking async and await completion
+  // Track payment info (saat submit)
   const trackPaymentInfo = async () => {
     if (!eventParams) return;
 
@@ -95,16 +92,17 @@ export const useConfirmationPageHooks = () => {
           ...eventData,
           content_ids: [eventParams.utm_content || 'Unknown'],
         });
+        console.log('✅ AddPaymentInfo sent to Meta Pixel');
       } else if (eventParams.utm_source === 'TTADS') {
         await sendEventTiktokPixel('AddPaymentInfo', {
           ...eventData,
           content_id: eventParams.utm_content || 'Unknown',
           quantity: 1,
         });
+        console.log('✅ AddPaymentInfo sent to TikTok Pixel');
       }
     } catch (err) {
       console.error("Error sending payment info event:", err);
-      // Don't block registration on pixel errors
     }
   };
 
@@ -114,7 +112,6 @@ export const useConfirmationPageHooks = () => {
     setIsSubmitting(true);
 
     try {
-      // Validate with Zod
       const result = konfirmasiSchema.safeParse(formData);
       if (!result.success) {
         const fieldErrors: { [key: string]: string } = {};
@@ -128,7 +125,6 @@ export const useConfirmationPageHooks = () => {
       
       setErrors({});
 
-      // Validate required fields
       const { isValid, missingFields } = validateFormDataKonfirmasi(formData);
       
       if (!isValid) {
@@ -138,7 +134,6 @@ export const useConfirmationPageHooks = () => {
         return;
       }
 
-      // Combine data
       const combainedData = {
         ...formData,
         ...Object.fromEntries(
@@ -146,7 +141,6 @@ export const useConfirmationPageHooks = () => {
         ),
       };
 
-      // Register
       const res = await registrationService.register(combainedData);
       
       toast.dismiss();
@@ -155,10 +149,9 @@ export const useConfirmationPageHooks = () => {
         throw new Error("Server error");
       }
 
-      // FIX: Await pixel tracking before navigation
+      // Kirim AddPaymentInfo sebelum redirect
       await trackPaymentInfo();
 
-      // Success - navigate
       setRegistrationResult(res.data.result);
       resetForm();
       setPersonalDataIsValid(false);
@@ -180,11 +173,15 @@ export const useConfirmationPageHooks = () => {
     return result;
   };
 
-  // FIX: Correct logic error
+  // FIXED: Kirim InitiateCheckout HANYA saat checkbox di-centang
   const handleTosConfirmation = () => {
-    if (formData.tos) {
+    if (!formData.tos) {
+      // User baru centang checkbox
       setTos(true);
+      // Kirim InitiateCheckout HANYA SEKALI
+      sendInitiateCheckout();
     } else {
+      // User un-centang checkbox
       setTos(false);
       setModalTosIsOpen(true);
       toast.warning("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
@@ -277,6 +274,5 @@ export const useConfirmationPageHooks = () => {
     calculateVoucher,
     handleVoucherChange,
     isSubmitting,
-    initiateCheckoutEvent,
   };
 };

@@ -25,11 +25,9 @@ const useLayoutHook = () => {
   });
 
   useEffect(() => {
-    console.log("MAIN COLOR:", process.env.NEXT_PUBLIC_MAIN_COLOR);
     
     // Set the CSS variables dynamically
     const setCSSVariables = () => {
-      console.log("Setting CSS variables");
       document.documentElement.style.setProperty("--main-color", process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14");
       document.documentElement.style.setProperty("--main-color-50", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14").lighten(45).toString());
       document.documentElement.style.setProperty("--main-color-200", tinycolor(process.env.NEXT_PUBLIC_MAIN_COLOR || "#facc14").lighten(20).toString());
@@ -91,9 +89,6 @@ const useLayoutHook = () => {
       }
     };
 
-    console.log("NEXT_PUBLIC_MAIN_COLOR:", process.env.NEXT_PUBLIC_MAIN_COLOR);
-    console.log("NEXT_PUBLIC_IMAGE_THEME:", process.env.NEXT_PUBLIC_IMAGE_THEME);
-    
     setCSSVariables();
     loadThemeAssets();
   }, []); // Empty dependency array means it will only run on mount

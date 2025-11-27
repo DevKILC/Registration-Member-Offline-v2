@@ -70,6 +70,7 @@ interface FormActions {
   setSelectedPaymentMethod: (value: PaymentMethod) => void;
   setPersonalDataIsValid: (value: boolean) => void;
   setCourseDataIsValid: (value: boolean) => void;
+  resetPaymentMethod: () => void;
 }
 
 export const useFormDataStore = create<formDataState & FormActions>()(
@@ -77,7 +78,7 @@ export const useFormDataStore = create<formDataState & FormActions>()(
     (set) => ({
       formData: initialFormData,
       updateField: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
-      resetForm: () => set({ formData: initialFormData }),
+      resetForm: () => set({ formData: initialFormData}),
       handleTabClick: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
       handleOptionTabClick: (value: string | number) =>
         set((state) => ({
@@ -91,6 +92,7 @@ export const useFormDataStore = create<formDataState & FormActions>()(
       errors: initialFormData,
       selectedPaymentMethod: initialPaymentMethod,
       setSelectedPaymentMethod: (value: PaymentMethod) => set({ selectedPaymentMethod: value }),
+      resetPaymentMethod: () => set({ selectedPaymentMethod: initialPaymentMethod }),
       personalDataIsValid: false,
       setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
       courseDataIsValid: false,

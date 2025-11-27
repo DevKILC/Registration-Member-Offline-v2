@@ -45,7 +45,7 @@ export interface useForm {
   // utm_term: string | null;
   // aff: string | null;
   // fbc: string | null;
-  clid: { id: string | number | null; source: string | number | null; };
+  clid: null;
 
   [key: string]: string | number | boolean | null | undefined | { value: string; label: string } | { id: string | number | null; source: string | number | null };
 }

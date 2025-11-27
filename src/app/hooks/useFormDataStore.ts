@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { useForm, PaymentMethod } from "@/app/_backend/_utils/Interfaces";
 
-
 const initialFormData: useForm = {
   nama: "",
   email: "",
@@ -38,8 +37,7 @@ const initialFormData: useForm = {
   cs_id: "",
   bank_code: "",
   nationality: "",
-  //if empty, set to null
-  clid: { id: null, source: null },
+  clid: null,
 };
 
 const initialPaymentMethod: PaymentMethod = {
@@ -61,6 +59,7 @@ interface formDataState {
 
 interface FormActions {
   updateField: (field: string, value: string | number) => void;
+  updateClid: (id: string | number | null, source: string | number | null) => void;
   resetForm: () => void;
   handleTabClick: (field: string, value: string | number) => void;
   handleOptionTabClick: (value: string | number) => void;
@@ -77,33 +76,61 @@ export const useFormDataStore = create<formDataState & FormActions>()(
   persist(
     (set) => ({
       formData: initialFormData,
-      updateField: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
-      resetForm: () => set({ formData: initialFormData}),
-      handleTabClick: (field: string, value: string | number) => set((state) => ({ formData: { ...state.formData, [field]: value } })),
+      
+      updateField: (field: string, value: string | number) => 
+        set((state) => ({ 
+          formData: { ...state.formData, [field]: value } 
+        })),
+      
+      // Fungsi khusus untuk update clid dengan validasi
+      updateClid: (id: string | number | null, source: string | number | null) =>
+        set((state) => ({
+          formData: {
+            ...state.formData,
+            clid: (!id && !source) ? null : { id, source }
+          } as unknown as useForm
+        })),
+
+      resetForm: () => set({ formData: initialFormData }),
+      
+      handleTabClick: (field: string, value: string | number) => 
+        set((state) => ({ 
+          formData: { ...state.formData, [field]: value } 
+        })),
+      
       handleOptionTabClick: (value: string | number) =>
         set((state) => ({
           formData: { ...state.formData, grade: String(value) },
         })),
+      
       isPopupOpen: true,
       setIsPopupOpen: (value: boolean) => set({ isPopupOpen: value }),
-      setTos: (value: boolean) => set((state) => ({ formData: { ...state.formData, tos: value } })),
+      
+      setTos: (value: boolean) => 
+        set((state) => ({ 
+          formData: { ...state.formData, tos: value } 
+        })),
+      
       modalTosIsOpen: false,
       setModalTosIsOpen: (value: boolean) => set({ modalTosIsOpen: value }),
+      
       errors: initialFormData,
       selectedPaymentMethod: initialPaymentMethod,
-      setSelectedPaymentMethod: (value: PaymentMethod) => set({ selectedPaymentMethod: value }),
+      setSelectedPaymentMethod: (value: PaymentMethod) => 
+        set({ selectedPaymentMethod: value }),
+      
       resetPaymentMethod: () => set({ selectedPaymentMethod: initialPaymentMethod }),
+      
       personalDataIsValid: false,
       setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
+      
       courseDataIsValid: false,
-      setPersonalDataIsValid: (value: boolean) => set({ personalDataIsValid: value }),
-
+      setPersonalDataIsValid: (value: boolean) => 
+        set({ personalDataIsValid: value }),
     }),
     {
-      name: "form-data-storage", // nama key di localStorage
-      storage: createJSONStorage(() => localStorage), // menggunakan localStorage
-
-      // Optional: Pilih state mana yang ingin disimpan
+      name: "form-data-storage",
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         formData: state.formData,
         selectedPaymentMethod: state.selectedPaymentMethod,

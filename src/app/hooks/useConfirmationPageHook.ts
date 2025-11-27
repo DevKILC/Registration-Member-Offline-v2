@@ -16,7 +16,7 @@ import useTiktokTracking from "./useTiktokPixelEvent";
 import { useEventParamsData } from "./useEventParamsDataHook";
 
 export const useConfirmationPageHooks = () => {
-  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid } = useFormDataStore();
+  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, resetPaymentMethod } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const { queryParams } = useQueryParamsDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -154,6 +154,7 @@ export const useConfirmationPageHooks = () => {
 
       setRegistrationResult(res.data.result);
       resetForm();
+      resetPaymentMethod();
       setPersonalDataIsValid(false);
       setCourseDataIsValid(false);
       router.push("/pages/thankyou");

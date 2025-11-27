@@ -103,7 +103,7 @@ export default function CustomLayout({
           <div className="w-full h-full">
             <div className="lg:flex items-center justify-center w-full h-full relative">
               {/* Background image - Now using dynamic jkImage from hook */}
-              <Image src={jkImage} alt="Side Image" className="object-cover" layout="fill" priority/>
+              <Image src={jkImage} alt="Side Image" className="object-scale-down" layout="fill" priority/>
               {/* Tag image - Now using dynamic tagImage from hook */}
               <Image
                 src={tagImage}

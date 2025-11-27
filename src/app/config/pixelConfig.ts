@@ -7,7 +7,7 @@ export const metaPixelConfig = {
 };
 
 export const tiktokPixelConfig = {
-    pixelId: process.env.NEXT_TIKTOK_PIXEL_ID!,
-    accessToken: process.env.NEXT_TIKTOK_ACCESS_TOKEN!,
+    pixelId: process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID!,
+    accessToken: process.env.NEXT_PUBLIC_TIKTOK_ACCESS_TOKEN!,
     baseUrl: 'https://business-api.tiktok.com/open_api/v1.3/pixel/track/',
 }

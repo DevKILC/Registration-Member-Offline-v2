@@ -38,8 +38,8 @@ const initialFormData: useForm = {
   cs_id: "",
   bank_code: "",
   nationality: "",
-  // Initialize clid to empty strings; populate later by calling setEventParams from a component.
-  clid: { id: "", source: "" },
+  //if empty, set to null
+  clid: { id: null, source: null },
 };
 
 const initialPaymentMethod: PaymentMethod = {

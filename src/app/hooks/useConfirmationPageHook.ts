@@ -200,11 +200,19 @@ export const useConfirmationPageHooks = () => {
     updateField("diskonNominal", discount);
     updateField("pembayaran", totalPembayaran);
   }, [formData.pembayaranCourse, formData.pembayaranGrade, formData.pembayaranPenjemputan, adminFee, updateField]);
+  
+  const [voucherInput, setVoucherInput] = useState(voucher);
+  const [debouncedVoucherInput] = useDebounce(voucherInput, 500);
+
+  useEffect(() => {
+    // Setelah input stabil selama 500ms, update field dan state voucher
+    if (debouncedVoucherInput === undefined) return;
+    updateField("diskon", debouncedVoucherInput);
+    setVoucher(debouncedVoucherInput);
+  }, [debouncedVoucherInput, updateField, setVoucher]);
 
   const handleVoucherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    updateField("diskon", value);
-    setVoucher(value);
+    setVoucherInput(e.target.value);
   };
 
   const checkVoucher = useCallback(async (code: string) => {

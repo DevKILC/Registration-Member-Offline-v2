@@ -146,7 +146,7 @@ export default function KonfirmasiPage() {
               <Label htmlFor="diskon" className="font-bold">
                 Kode Voucher :
               </Label>
-              <Input type="text" name="diskon" placeholder="Ketikan disini (jika ada)" value={formData.diskon || ""} onChange={(e) => handleVoucherChange(e)} />
+              <Input type="text" name="diskon" placeholder="Ketikan disini (jika ada)" value={formData.diskon || ""} onBlur={(e) => handleVoucherChange(e)} />
             </div>
 
             <div className={`w-full lg:pt-0 lg:w-1/4 `}>

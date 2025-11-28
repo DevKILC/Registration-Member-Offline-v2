@@ -56,6 +56,11 @@ export const useHomePageHooks = () => {
 
   // ✅ FIXED: Automatically save event params using updateField
   useEffect(() => {
+
+    //clear all localstorage on mount( sementara pasca update )
+    sessionStorage.clear();
+    localStorage.clear();
+
     if (eventParamsData) {
       const clidData = {
         id: eventParamsData.ttclid || eventParamsData.fbc || null,

@@ -20,7 +20,7 @@ export const useHomePageHooks = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getClidData, eventParamsData } = useEventParamsData();
-  
+
   const {
     resetProvince,
     resetCategoryCourse,
@@ -53,13 +53,7 @@ export const useHomePageHooks = () => {
   const { setBranch } = useBranchDataStore();
 
   const { formData, setPersonalDataIsValid, updateField } = useFormDataStore();
-
-  // ✅ FIXED: Automatically save event params using updateField
   useEffect(() => {
-
-    //clear all localstorage on mount( sementara pasca update )
-    sessionStorage.clear();
-    localStorage.clear();
 
     if (eventParamsData) {
       const clidData = {

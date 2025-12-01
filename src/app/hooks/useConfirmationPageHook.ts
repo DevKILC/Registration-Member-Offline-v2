@@ -155,6 +155,8 @@ export const useConfirmationPageHooks = () => {
       setRegistrationResult(res.data.result);
       resetForm();
       resetPaymentMethod();
+      localStorage.clear();
+      sessionStorage.clear();
       setPersonalDataIsValid(false);
       setCourseDataIsValid(false);
       router.push("/pages/thankyou");

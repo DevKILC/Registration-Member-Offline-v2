@@ -87,7 +87,7 @@ export const useFormDataStore = create<formDataState & FormActions>()(
         set((state) => ({
           formData: {
             ...state.formData,
-            clid: (!id && !source) ? null : { id, source }
+            clid: (!id && !source) ? null : { id : id? String(id) : "", source: source ? String(source) : "" }
           } as unknown as useForm
         })),
 

@@ -52,7 +52,7 @@ export const useHomePageHooks = () => {
   } = useAccomodationDataStore();
   const { setBranch } = useBranchDataStore();
 
-  const { formData, setPersonalDataIsValid, updateField } = useFormDataStore();
+  const { formData, setPersonalDataIsValid, updateField, updateClid } = useFormDataStore();
   useEffect(() => {
 
     if (eventParamsData) {
@@ -62,12 +62,12 @@ export const useHomePageHooks = () => {
       };
       
       // Only update if we have valid data
-      if (clidData.id || clidData.source) {
+      if (clidData.id && clidData.source) {
         console.log("Saving clid to formData:", clidData);
-        updateField("clid", clidData as any);
+        updateClid(clidData.id, clidData.source);
       }
     }
-  }, [eventParamsData, updateField]);
+  }, [eventParamsData, updateClid]);
 
   // Safe sessionStorage wrapper
   const saveToSessionStorage = (key: string, data: any) => {

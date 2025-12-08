@@ -60,6 +60,7 @@ interface formDataState {
 interface FormActions {
   updateField: (field: string, value: string | number) => void;
   updateClid: (id: string | number | null, source: string | number | null) => void;
+  checkClidExists: (id: string | number | null, source: string | number | null) => void;
   resetForm: () => void;
   handleTabClick: (field: string, value: string | number) => void;
   handleOptionTabClick: (value: string | number) => void;
@@ -87,9 +88,23 @@ export const useFormDataStore = create<formDataState & FormActions>()(
         set((state) => ({
           formData: {
             ...state.formData,
-            clid: (!id && !source) ? null : { id : id? String(id) : "", source: source ? String(source) : "" }
+            clid: (!id && !source) ? null : { id : id, source: source }
           } as unknown as useForm
         })),
+
+        checkClidExists: (id: string | number | null, source: string | number | null) => {
+          set((state) => {
+            if (!id && !source) {
+              return {
+                formData: {
+                  ...state.formData,
+                  clid: null
+                } as unknown as useForm
+              };
+            }
+            return {};
+          });
+        },
 
       resetForm: () => set({ formData: initialFormData }),
       

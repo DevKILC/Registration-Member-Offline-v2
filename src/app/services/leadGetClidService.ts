@@ -6,7 +6,7 @@ export const clidService = {
   async getClid(data: ClidQuery) {
     try {
       const response = await axios.get(
-        `https://lead-service.devkilc.lcpare.com/api/retrieve-lead/clid?whatsapp=${data.phone_number}`
+        `${process.env.NEXT_PUBLIC_LEAD_SERVICE_URL}retrieve-lead/clid?whatsapp=${data.phone_number}`
       );
       
       toast.dismiss();

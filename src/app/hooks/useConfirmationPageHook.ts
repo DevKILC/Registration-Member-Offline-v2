@@ -16,7 +16,7 @@ import useTiktokTracking from "./useTiktokPixelEvent";
 import { useEventParamsData } from "./useEventParamsDataHook";
 
 export const useConfirmationPageHooks = () => {
-  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, resetPaymentMethod } = useFormDataStore();
+  const { formData, resetForm, setTos, updateField, setModalTosIsOpen, setPersonalDataIsValid, setCourseDataIsValid, resetPaymentMethod, checkClidExists } = useFormDataStore();
   const { setRegistrationResult } = useRegistrationResultDataStore();
   const { queryParams } = useQueryParamsDataStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -110,6 +110,12 @@ export const useConfirmationPageHooks = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Safely extract clid fields with a cast to avoid 'never' type errors
+    const clidId = (formData.clid as any)?.id ?? null;
+    const clidSource = (formData.clid as any)?.source ?? null;
+    console.log("Checking clid existence with ID:", clidId, "and Source:", clidSource);
+    checkClidExists(clidId, clidSource);
 
     try {
       const result = konfirmasiSchema.safeParse(formData);

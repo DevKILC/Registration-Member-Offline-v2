@@ -180,7 +180,13 @@ export default function KonfirmasiPage() {
           <div className="">
             <div className="flex flex-col gap-3 pb-4 items-center justify-center">
               <div className="flex items-center justify-between gap-4">
-                <input type="checkbox" id="privacy" checked={formData.tos} onChange={handleTosConfirmation} className="mr-2" />
+                {/* disablen when page is still on render */}
+                <input type="checkbox" id="privacy" 
+                checked={!!formData.tos} 
+                onChange={() => { updateField("tos", Number(!formData.tos)); handleTosConfirmation(); }} 
+                className="mr-2"  
+                disabled={!formData.metode_pembayaran} />
+
                 <label htmlFor="privacy" className="text-sm text-black">
                   Dengan mencentang ini, kamu menyetujui{" "}
                   <a onClick={() => setModalTosIsOpen(true)} className="text-blue-600 hover:underline animate-pulse cursor-pointer">

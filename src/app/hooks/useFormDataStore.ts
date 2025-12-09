@@ -77,70 +77,71 @@ export const useFormDataStore = create<formDataState & FormActions>()(
   persist(
     (set) => ({
       formData: initialFormData,
-      
-      updateField: (field: string, value: string | number) => 
-        set((state) => ({ 
-          formData: { ...state.formData, [field]: value } 
+
+      updateField: (field: string, value: string | number) =>
+        set((state) => ({
+          formData: { ...state.formData, [field]: value }
         })),
-      
+
       // Fungsi khusus untuk update clid dengan validasi
       updateClid: (id: string | number | null, source: string | number | null) =>
         set((state) => ({
           formData: {
             ...state.formData,
-            clid: (!id && !source) ? null : { id : id, source: source }
+            clid: (!id && !source) ? null : { id: id, source: source }
           } as unknown as useForm
         })),
 
-        checkClidExists: (id: string | number | null, source: string | number | null) => {
-          set((state) => {
-            if (!id && !source) {
-              return {
-                formData: {
-                  ...state.formData,
-                  clid: null
-                } as unknown as useForm
-              };
+      // FIXED: Hanya update state jika benar-benar ada perubahan
+      checkClidExists: (id: string | number | null, source: string | number | null) => {
+        set((state) => {
+          if (!id && !source) {
+            if (state.formData.clid === null) {
+              return state; 
             }
-            return {};
-          });
-        },
+            return {
+              formData: { ...state.formData, clid: null }
+            };
+          }
+          return state; 
+        });
+      },
 
       resetForm: () => set({ formData: initialFormData }),
-      
-      handleTabClick: (field: string, value: string | number) => 
-        set((state) => ({ 
-          formData: { ...state.formData, [field]: value } 
+
+      handleTabClick: (field: string, value: string | number) =>
+        set((state) => ({
+          formData: { ...state.formData, [field]: value }
         })),
-      
+
       handleOptionTabClick: (value: string | number) =>
         set((state) => ({
           formData: { ...state.formData, grade: String(value) },
         })),
-      
+
       isPopupOpen: true,
       setIsPopupOpen: (value: boolean) => set({ isPopupOpen: value }),
-      
-      setTos: (value: boolean) => 
-        set((state) => ({ 
-          formData: { ...state.formData, tos: value } 
+
+      setTos: (value: boolean) =>
+        set((state) => ({
+          formData: { ...state.formData, tos: value }
         })),
-      
+
       modalTosIsOpen: false,
       setModalTosIsOpen: (value: boolean) => set({ modalTosIsOpen: value }),
-      
+
       errors: initialFormData,
       selectedPaymentMethod: initialPaymentMethod,
-      setSelectedPaymentMethod: (value: PaymentMethod) => 
+      setSelectedPaymentMethod: (value: PaymentMethod) =>
         set({ selectedPaymentMethod: value }),
-      
+
       resetPaymentMethod: () => set({ selectedPaymentMethod: initialPaymentMethod }),
-      
+
       personalDataIsValid: false,
       setCourseDataIsValid: (value: boolean) => set({ courseDataIsValid: value }),
-      
+
       courseDataIsValid: false,
-      setPersonalDataIsValid: (value: boolean) => 
+      setPersonalDataIsValid: (value: boolean) =>
         set({ personalDataIsValid: value }),
     }),
     {

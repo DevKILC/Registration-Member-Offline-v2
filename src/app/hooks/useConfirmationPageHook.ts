@@ -26,10 +26,8 @@ export const useConfirmationPageHooks = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [voucher, setVoucher] = useState("");
-  const [debouncedValue] = useDebounce(voucher, 200);
-  
-  // Track if InitiateCheckout has been sent
+  const [voucherInput, setVoucherInput] = useState("");
+  const [debouncedVoucherInput] = useDebounce(voucherInput, 500);
   const initiateCheckoutSentRef = useRef(false);
   
   const adminFee = process.env.NEXT_PUBLIC_ADMIN_FEE || 0;
@@ -39,9 +37,8 @@ export const useConfirmationPageHooks = () => {
   const { sendEvent: sendEventTiktokPixel } = useTiktokTracking();
   const { eventParamsData: eventParams } = useEventParamsData();
 
-  // Send InitiateCheckout ONLY when TOS is checked
   const sendInitiateCheckout = useCallback(() => {
-    // Jangan kirim jika sudah pernah dikirim
+    console.log('render 1')
     if (initiateCheckoutSentRef.current || !eventParams) return;
 
     const eventData = {
@@ -59,7 +56,6 @@ export const useConfirmationPageHooks = () => {
           content_ids: [eventParams.utm_content || 'Unknown'],
         });
         initiateCheckoutSentRef.current = true;
-        console.log('✅ InitiateCheckout sent to Meta Pixel');
       } else if (eventParams.utm_source === 'TTADS') {
         sendEventTiktokPixel('InitiateCheckout', {
           ...eventData,
@@ -67,15 +63,14 @@ export const useConfirmationPageHooks = () => {
           quantity: 1,
         });
         initiateCheckoutSentRef.current = true;
-        console.log('✅ InitiateCheckout sent to TikTok Pixel');
       }
     } catch (err) {
       console.error("Error sending InitiateCheckout event:", err);
     }
-  }, [eventParams, formData.pembayaran, selectedCourse, sendEventMetaPixel, sendEventTiktokPixel]);
+  }, [eventParams, formData.pembayaran, selectedCourse?.name, sendEventMetaPixel, sendEventTiktokPixel]);
 
-  // Track payment info (saat submit)
   const trackPaymentInfo = async () => {
+    console.log('render 2')
     if (!eventParams) return;
 
     const eventData = {
@@ -92,32 +87,29 @@ export const useConfirmationPageHooks = () => {
           ...eventData,
           content_ids: [eventParams.utm_content || 'Unknown'],
         });
-        console.log('✅ AddPaymentInfo sent to Meta Pixel');
       } else if (eventParams.utm_source === 'TTADS') {
         await sendEventTiktokPixel('AddPaymentInfo', {
           ...eventData,
           content_id: eventParams.utm_content || 'Unknown',
           quantity: 1,
         });
-        console.log('✅ AddPaymentInfo sent to TikTok Pixel');
       }
     } catch (err) {
       console.error("Error sending payment info event:", err);
     }
   };
 
-  // Handle submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Safely extract clid fields with a cast to avoid 'never' type errors
     const clidId = (formData.clid as any)?.id ?? null;
     const clidSource = (formData.clid as any)?.source ?? null;
-    console.log("Checking clid existence with ID:", clidId, "and Source:", clidSource);
-    checkClidExists(clidId, clidSource);
-
+    
     try {
+      if(clidId || clidSource){
+        checkClidExists(clidId, clidSource)
+      }
+
       const result = konfirmasiSchema.safeParse(formData);
       if (!result.success) {
         const fieldErrors: { [key: string]: string } = {};
@@ -154,8 +146,6 @@ export const useConfirmationPageHooks = () => {
       if (res.status === 500) {
         throw new Error("Server error");
       }
-
-      // Kirim AddPaymentInfo sebelum redirect
       await trackPaymentInfo();
 
       setRegistrationResult(res.data.result);
@@ -182,15 +172,11 @@ export const useConfirmationPageHooks = () => {
     return result;
   };
 
-  // FIXED: Kirim InitiateCheckout HANYA saat checkbox di-centang
   const handleTosConfirmation = () => {
     if (!formData.tos) {
-      // User baru centang checkbox
       setTos(true);
-      // Kirim InitiateCheckout HANYA SEKALI
       sendInitiateCheckout();
     } else {
-      // User un-centang checkbox
       setTos(false);
       setModalTosIsOpen(true);
       toast.warning("Mohon membaca dan menyetujui syarat dan ketentuan terlebih dahulu");
@@ -208,16 +194,6 @@ export const useConfirmationPageHooks = () => {
     updateField("diskonNominal", discount);
     updateField("pembayaran", totalPembayaran);
   }, [formData.pembayaranCourse, formData.pembayaranGrade, formData.pembayaranPenjemputan, adminFee, updateField]);
-  
-  const [voucherInput, setVoucherInput] = useState(voucher);
-  const [debouncedVoucherInput] = useDebounce(voucherInput, 500);
-
-  useEffect(() => {
-    // Setelah input stabil selama 500ms, update field dan state voucher
-    if (debouncedVoucherInput === undefined) return;
-    updateField("diskon", debouncedVoucherInput);
-    setVoucher(debouncedVoucherInput);
-  }, [debouncedVoucherInput, updateField, setVoucher]);
 
   const handleVoucherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVoucherInput(e.target.value);
@@ -265,11 +241,17 @@ export const useConfirmationPageHooks = () => {
     }
   }, [formData.paket, formData.pembayaranCourse, calculateVoucher, updateField]);
 
+  // PERBAIKAN: useEffect untuk voucher hanya bergantung pada debouncedVoucherInput
   useEffect(() => {
-    if (debouncedValue !== "") {
-      checkVoucher(debouncedValue);
+    console.log('render 3')
+    if (!debouncedVoucherInput || debouncedVoucherInput === "") {
+      return;
     }
-  }, [debouncedValue, checkVoucher]);
+    
+    // Update formData diskon dan check voucher
+    updateField("diskon", debouncedVoucherInput);
+    checkVoucher(debouncedVoucherInput);
+  }, [debouncedVoucherInput]); // Hanya dependency yang benar-benar diperlukan
 
   return {
     formData,
